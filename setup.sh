@@ -1,6 +1,13 @@
-if [ -f /Users/ehdens/.zshrc ]; then
+if [ -f ~/.zshrc ]; then
 	echo "backup up ~/.zshrc"
-	mv /Users/ehdens/.zshrc /Users/ehdens/.zshrc.bak
+	mv ~/.zshrc ~/.zshrc.bak
 fi
 
-ln -s .zshrc /Users/ehdens/.config/.zshrc
+if [ -f ~/.tmux.conf]; then
+	echo "backup up ~/.zshrc"
+	git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+	mv ~/.tmux.conf ~/.tmux.conf.bak
+fi
+
+ln -s .zshrc /.config/.zshrc
+ln -s tmux.conf /.config/tmux.conf
