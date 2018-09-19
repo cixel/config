@@ -1,1 +1,1 @@
-cp ~/.zshrc ~/.zshrc.bak && ln -s ./zshrc ~/.zshrc
+cp ~/.zshrc ~/.zshrc.bak && rm ~/.zshrc && ln -s ./zshrc ~/.zshrc
