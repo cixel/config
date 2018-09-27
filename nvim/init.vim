@@ -1,4 +1,8 @@
 call plug#begin()
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 " Plug 'fatih/vim-go', { 'tag': '*', 'do': ':GoUpdateBinaries'}
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 
@@ -6,7 +10,7 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 Plug 'zchee/deoplete-go', { 'do': 'make' }
-Plug 'mdempsky/gocode', { 'rtp': 'nvim', 'do': '~/.nvim/plugged/gocode/nvim/symlink.sh' }
+" Plug 'mdempsky/gocode', { 'rtp': 'nvim', 'do': '~/.config/nvim/plugged/gocode/nvim/symlink.sh' }
 
 Plug 'majutsushi/tagbar' " source code nav in sidebar
 Plug 'w0rp/ale'
@@ -36,8 +40,8 @@ Plug 'rip-rip/clang_complete'
 
 " Rust
 Plug 'rust-lang/rust.vim'
-Plug 'racer-rust/vim-racer'
-Plug 'sebastianmarkow/deoplete-rust'
+" Plug 'racer-rust/vim-racer'
+" Plug 'sebastianmarkow/deoplete-rust'
 
 " PHP
 Plug 'StanAngeloff/php.vim'
@@ -52,6 +56,7 @@ Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'chriskempson/base16-vim'
 Plug 'iCyMind/NeoSolarized'
 Plug 'morhetz/gruvbox'
+Plug 'sonph/onehalf', { 'rtp': 'vim/' }
 
 "Plug 'maksimr/vim-jsbeautify'
 "Plug 'Chiel92/vim-autoformat'
@@ -86,6 +91,8 @@ vnoremap <silent> <leader>b c<c-r>=base64#encode(@")<cr><esc>`[v`]h
 nnoremap <leader>b/ :%s/\v()/\=base64#encode(submatch(1))/<home><right><right><right><right><right><right>
 nnoremap <leader>B/ :%s/\v()/\=base64#decode(submatch(1))/<home><right><right><right><right><right><right>
 
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+
 " set folding method to be language defined and files are not folded when
 " opened
 set foldmethod=syntax
@@ -116,7 +123,9 @@ let g:airline_symbols.linenr = ''
 let g:airline_symbols.maxlinenr = '☰'
 let g:airline_left_alt_sep = ''
 let g:airline_right_alt_sep = ''
-let g:airline#extensions#whitespace#checks = [ 'trailing', 'long' ]
+" let g:airline#extensions#whitespace#checks = [ 'trailing', 'long' ]
+let g:airline#extensions#whitespace#checks = [ 'trailing' ]
+let g:airline#extensions#ale#enabled = 1
 "let g:airline#extensions#whitespace#checks = [ 'trailing', 'long', 'mixed-indent-file' ]
 let g:tmuxline_separators = {
     \ 'left' : '',
@@ -201,6 +210,14 @@ let g:neoformat_enabled_javascript = ['eslint_d']
 "nmap <leader>.. :lclose<CR>
 nmap <script> <silent> <leader>.. :call ToggleLocationList()<CR>
 
+let g:LanguageClient_diagnosticsEnable = 0
+let g:LanguageClient_diagnosticsDisplay = {
+  \1: {'name': 'Error', 'texthl': 'ALEError', 'signText': 'E', 'signTexthl': 'ALEErrorSign',},
+  \2: {"name": "Warning", "texthl": "ALEWarning", "signText": "W", "signTexthl": "ALEWarningSign",},
+  \3: {"name": "Information", "texthl": "ALEInfo", "signText": "i", "signTexthl": "ALEInfoSign",},
+  \4: {"name": "Hint", "texthl": "ALEInfo", "signText": "h", "signTexthl": "ALEInfoSign",},
+\}
+
 " ale -- linting
 let g:ale_sign_error = 'E'
 let g:ale_sign_warning = 'W'
@@ -208,9 +225,9 @@ let g:ale_sign_style_warning = 'WS'
 let g:ale_sign_style_error = 'WS'
 let g:ale_list_window_size = 7
 let g:ale_echo_msg_format = '%s (%linter%)'
-"let g:ale_linters = {
-"\   'javascript': ['eslint'],
-"\}
+let g:ale_linters = {
+\   'javascript': ['eslint_d'],
+\}
 "let g:ale_open_list = 'on_save'
 nmap <silent> <C-Q> <Plug>(ale_previous_wrap)
 nmap <silent> <C-q> <Plug>(ale_next_wrap)
@@ -238,10 +255,10 @@ autocmd CompleteDone * silent! pclose!
 "au FileType js set completeopt-=preview
 "set completeopt-=preview " look into setting this by filetype
 "autocmd FileType js set completeopt-=preview "look into setting this by filetype
-let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
-let g:deoplete#sources#go#use_cache = 1
-let g:deoplete#sources#go#json_directory = '~/.nvim/deoplete/go/$GOOS_$GOARCH'
-let g:deoplete#sources#go#source_importer = 1
+" let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+" let g:deoplete#sources#go#use_cache = 1
+" let g:deoplete#sources#go#json_directory = '~/.nvim/deoplete/go/$GOOS_$GOARCH'
+" let g:deoplete#sources#go#source_importer = 1
 
 " C++
 let g:clang_library_path='/usr/local/Cellar/llvm/6.0.0/lib/libclang.dylib'
@@ -251,6 +268,7 @@ iabbrev </ </<C-X><C-O>
 
 map <silent> \e :NERDTreeToggle<CR>
 map <silent> \E :NERDTreeFind<CR>
+let NERDTreeShowHidden=1
 
 nmap <silent> \t :TagbarToggle<CR>
 
@@ -297,6 +315,7 @@ hi Normal ctermbg=NONE
 " go-vim stuff
 "let g:neomake_go_enabled_makers = ['']
 "let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck'] " remove golint fromt the defaults
+let g:ale_go_langserver_executable = 'gopls'
 let g:ale_go_gometalinter_options = '
   \ --aggregate
   \ --sort=line
@@ -335,10 +354,16 @@ let g:go_highlight_structs = 1
 
 " rust
 let g:rustfmt_autosave = 1
-" set hidden
+set hidden
 let g:racer_cmd = "/Users/ehdensinai/.cargo/bin/racer"
-let g:deoplete#sources#rust#racer_binary='/Users/ehdensinai/.cargo/bin/racer'
-let g:deoplete#sources#rust#rust_source_path='/Users/ehdensinai/.cargo/registry/src'
+let g:deoplete#sources#rust#racer_binary='/Users/ehdens/.cargo/bin/racer'
+let g:deoplete#sources#rust#rust_source_path='/Users/ehdens/.cargo/registry/src'
+let g:racer_experimental_completer = 1
+let g:LanguageClient_serverCommands = {
+    \ 'go': ['gopls'],
+    \ 'rust': ['rustup', 'run', 'stable', 'rls'],
+	\}
+autocmd FileType rust nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 
 function! WordFrequency() range
   let all = split(join(getline(a:firstline, a:lastline)), '\A\+')

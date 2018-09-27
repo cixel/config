@@ -6,5 +6,25 @@ contrast:
   user_name: contrast_admin
   api_key: demo
   service_key: demo
+
+agent:
+  logger:
+    level: debug
+
+assess:
+  enable: true
+
+protect:
+  enable: true
+endsnippet
+
+snippet assess "contrast config disable assess"
+assess:
+  enable: false
+endsnippet
+
+snippet protect "contrast config disable assess"
+protect:
+  enable: false
 endsnippet
 
