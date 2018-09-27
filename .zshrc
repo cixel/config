@@ -2,7 +2,7 @@
 # zmodload zsh/zprof
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/ehdensinai/.oh-my-zsh
+export ZSH=~/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -44,8 +44,9 @@ DISABLE_AUTO_UPDATE="true"
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
-export NVM_DIR=~/.nvm
-export NVM_LAZY_LOAD=true
+source ~/.config/lazynvm.sh
+# export NVM_DIR=~/.nvm
+# export NVM_LAZY_LOAD=true
 # source $(brew --prefix nvm)/nvm.sh --no-use
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
@@ -104,7 +105,7 @@ alias maven-teamserver='mvn clean verify -s ~/.m2/contrast-settings.xml -Develop
 # alias maven-teamserver='mvn clean verify -s ~/.m2/contrast-settings.xml -Develop -Ddevelop-debug -Dcargo.container.devargs="-Dcontrast.superadmin.key=demodemo" -Dmail.enabled=false -Dcontrast.skip.copy.agents=true'
 alias maven-teamserver-test='mvn -s ~/.m2/contrast-settings.xml -Pencrypt-properties clean compile tomcat:run-war'
 alias maven-eclipse='mvn -s ~/.m2/contrast-settings.xml clean compile install'
-alias maven-hub='cd /Users/ehdensinai/Documents/contrast-repos/hub/ && setJDK8 && mvn clean compile package tomcat:run -s ~/.contrast/contrast-settings.xml -Dcontrast.data.dir=/Users/ehdensinai/.hub -DskipTests'
+alias maven-hub='cd ~/Documents/contrast-repos/hub/ && setJDK8 && mvn clean compile package tomcat:run -s ~/.contrast/contrast-settings.xml -Dcontrast.data.dir=~/.hub -DskipTests'
 # some things require settings from ~/.m2/contrast-settings.xml
 
 #alias vim='mvim -v'
@@ -112,9 +113,9 @@ alias vim='nvim'
 alias v='nvim'
 
 alias tomcat='sh /Applications/apache-tomcat-7.0.56/bin/catalina.sh run'
-alias webgoat-java-logging='java -javaagent:/Applications/apache-tomcat-7.0.56/contrast.jar -Dcontrast.level=debug -Dcontrast.log=/Users/ehdensinai/Desktop/contrast.log -jar /Applications/apache-tomcat-7.0.56/WebGoat-6.0.1-war-exec.jar'
+alias webgoat-java-logging='java -javaagent:/Applications/apache-tomcat-7.0.56/contrast.jar -Dcontrast.level=debug -Dcontrast.log=~/Desktop/contrast.log -jar /Applications/apache-tomcat-7.0.56/WebGoat-6.0.1-war-exec.jar'
 alias webgoat-java='java -javaagent:/Applications/apache-tomcat-7.0.56/contrast.jar -jar /Applications/apache-tomcat-7.0.56/WebGoat-6.0.1-war-exec.jar'
-alias webgoat-java-eclipse='java -javaagent:/Users/ehdensinai/Documents/workspaces/ticketbook/.metadata/.plugins/com.contrastsecurity.eclipse/.contrast/contrast-engine-3.1.6.jar -Dcontrast.noteamserver.enable=true -jar /Applications/apache-tomcat-7.0.56/WebGoat-6.0.1-war-exec.jar'
+alias webgoat-java-eclipse='java -javaagent:~/Documents/workspaces/ticketbook/.metadata/.plugins/com.contrastsecurity.eclipse/.contrast/contrast-engine-3.1.6.jar -Dcontrast.noteamserver.enable=true -jar /Applications/apache-tomcat-7.0.56/WebGoat-6.0.1-war-exec.jar'
 
 alias tmux='tmux -2'
 
@@ -150,14 +151,14 @@ alias ack='ag --ignore-dir=node_modules --ignore-dir=labs --ignore-dir=docs --ig
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-#[[ -s "/Users/ehdensinai/.gvm/scripts/gvm" ]] && source "/Users/ehdensinai/.gvm/scripts/gvm"
-export GOROOT_BOOTSTRAP="/usr/local/Cellar/go/1.10/libexec"
+#[[ -s "~/.gvm/scripts/gvm" ]] && source "~/.gvm/scripts/gvm"
+export GOROOT_BOOTSTRAP="/usr/local/Cellar/go/1.11/libexec"
 export GOPATH="$HOME/go/:$HOME/Documents/tinkers/go/:$HOME/Documents/contrast-repos/go"
 # export PATH=$PATH:/usr/local/opt/go/libexec/bin
-export PATH=$PATH:/Users/ehdensinai/go/bin
-export PATH=$PATH:/Users/ehdensinai/golang/bin
+export PATH=$PATH:~/go/bin
+export PATH=$PATH:~/golang/bin
 export PATH="$HOME/.cargo/bin:$PATH"
-export RUST_SRC_PATH="/Users/ehdensinai/.cargo/registry/src"
+export RUST_SRC_PATH="~/.cargo/registry/src"
 
 bindkey '^[OA' up-line-or-search
 bindkey '^[OB' down-line-or-search
@@ -173,8 +174,6 @@ alias gitlines="git ls-files | xargs wc -l"
 alias find_people='ifconfig | grep broadcast | arp -a'
 alias hide_desktop='defaults write com.apple.finder CreateDesktop false' # set true to reenable
 
-alias rw='/Users/ehdensinai/Documents/contrast-repos/i13n/rw'
-
 # https://theptrk.com/2018/07/11/did-txt-file/
 alias did="vim +'normal Go' +'r!date' ~/did.txt"
 
@@ -185,7 +184,7 @@ alias did="vim +'normal Go' +'r!date' ~/did.txt"
 export PATH="$PATH:$HOME/.rvm/bin"
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/ehdensinai/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/ehdensinai/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f '~/google-cloud-sdk/path.zsh.inc' ]; then source '~/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/ehdensinai/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/ehdensinai/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f '~/google-cloud-sdk/completion.zsh.inc' ]; then source '~/google-cloud-sdk/completion.zsh.inc'; fi
