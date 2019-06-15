@@ -143,7 +143,7 @@ function watchNodeMemory() {
 	top -pid $(pgrep -lfa node | grep "$1" | awk '{print $1}')
 }
 
-alias ack='ag --ignore-dir=node_modules --ignore-dir=labs --ignore-dir=docs --ignore-dir=dist'
+alias ack='ag --ignore-dir=node_modules --ignore-dir=labs --ignore-dir=docs --ignore-dir=dist --ignore-dir=code-coverage-report'
 
 # Color scheme
 #[[ $TMUX  = "" ]] && export TERM="xterm-256color"
@@ -152,13 +152,14 @@ alias ack='ag --ignore-dir=node_modules --ignore-dir=labs --ignore-dir=docs --ig
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 #[[ -s "~/.gvm/scripts/gvm" ]] && source "~/.gvm/scripts/gvm"
-export GOROOT_BOOTSTRAP="/usr/local/Cellar/go/1.11/libexec"
-export GOPATH="$HOME/go/:$HOME/Documents/tinkers/go/:$HOME/Documents/contrast-repos/go"
+export GOROOT_BOOTSTRAP="/usr/local/Cellar/go/1.12/libexec"
+export GOPATH="$HOME/gopath/"
 # export PATH=$PATH:/usr/local/opt/go/libexec/bin
+export PATH=$PATH:~/gopath/bin
 export PATH=$PATH:~/go/bin
 export PATH=$PATH:~/golang/bin
 export PATH="$HOME/.cargo/bin:$PATH"
-export RUST_SRC_PATH="~/.cargo/registry/src"
+export RUST_SRC_PATH=$(rustc --print sysroot)/lib/rustlib/src/rust/src
 
 bindkey '^[OA' up-line-or-search
 bindkey '^[OB' down-line-or-search
@@ -177,6 +178,8 @@ alias hide_desktop='defaults write com.apple.finder CreateDesktop false' # set t
 # https://theptrk.com/2018/07/11/did-txt-file/
 alias did="vim +'normal Go' +'r!date' ~/did.txt"
 
+alias gd="go doc"
+
 # uncomment to enable startup time logging
 # zprof
 
@@ -188,3 +191,5 @@ if [ -f '~/google-cloud-sdk/path.zsh.inc' ]; then source '~/google-cloud-sdk/pat
 
 # The next line enables shell command completion for gcloud.
 if [ -f '~/google-cloud-sdk/completion.zsh.inc' ]; then source '~/google-cloud-sdk/completion.zsh.inc'; fi
+
+source ~/.sensitive
