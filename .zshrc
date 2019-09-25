@@ -2,19 +2,19 @@
 # zmodload zsh/zprof
 
 # Path to your oh-my-zsh installation.
-export ZSH=~/.oh-my-zsh
+# export ZSH=~/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="robbyrussell"
+# ZSH_THEME="robbyrussell"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
-DISABLE_AUTO_UPDATE="true"
+# DISABLE_AUTO_UPDATE="true"
 
 # Uncomment the following line to change how often to auto-update (in days).
 # export UPDATE_ZSH_DAYS=13
@@ -54,15 +54,33 @@ source ~/.config/lazynvm.sh
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 # plugins=(git vi-mode node wd)
-plugins=(git vi-mode wd zsh-nvm)
+# plugins=(git vi-mode wd zsh-nvm)
+# plugins=(vi-mode wd fzf)
+plugins=(vi-mode wd)
+export KEYTIMEOUT=1
 
-# User configuration
+### Completion
+fpath=($HOME/.zsh/completions $fpath)
+autoload -U compinit && compinit -u
+zstyle ':completion:*' menu select
+
+# Colorize completions using default `ls` colors.
+export LS_COLORS=$LSCOLORS
+zstyle ':completion:*default' list-colors ${(s.:.)LS_COLORS}
+
+
+### User configuration
+export HISTFILE="$HOME/.zsh_history"
+export HISTSIZE=50000
+export SAVEHIST=10000
 
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Library/TeX/Distributions/.DefaultTeX/Contents/Programs/texbin:/usr/local/sbin:/usr/local/opt/mysql@5.6/bin"
 # export PATH="/usr/local/opt/python/libexec/bin:$PATH" # brew's python before OSX's in PATH
 # export MANPATH="/usr/local/man:$MANPATH"
 
-source $ZSH/oh-my-zsh.sh
+# source $ZSH/oh-my-zsh.sh
+
+source ~/.config/alias.sh
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -90,51 +108,14 @@ fi
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 #export JAVA_HOME=$(/usr/libexec/java_home -v 1.7)
-export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-alias setJDK6='export JAVA_HOME=$(/usr/libexec/java_home -v 1.6)'
-alias setJDK7='export JAVA_HOME=$(/usr/libexec/java_home -v 1.7)'
-alias setJDK8='export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)'
+# export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 
 export BITBUCKET_USERNAME=cixel
 export MYSQL_HOME=/usr/local/mysql
 
 export MAVEN_HOME=/usr/local/bin/mvn
 #export MAVEN_OPTS='-Xmx1g -XX:MaxPermSize=256m -Dcontrast.superadmin.key=demodemo'
-#alias maven-teamserver='mvn clean verify -s ~/.m2/contrast-settings.xml -Develop -Pencrypt-properties -Dcontrast.superadmin.key=demodemo -DskipTests'
-alias maven-teamserver='mvn clean verify -s ~/.m2/contrast-settings.xml -Develop -Ddevelop-debug -Dcargo.container.devargs="-Dcontrast.superadmin.key=demodemo" -Dmail.enabled=false -DskipTests -Dfmt.skip -Dcheckstyle.skip -Dcontrast.skip.copy.agents=true'
-# alias maven-teamserver='mvn clean verify -s ~/.m2/contrast-settings.xml -Develop -Ddevelop-debug -Dcargo.container.devargs="-Dcontrast.superadmin.key=demodemo" -Dmail.enabled=false -Dcontrast.skip.copy.agents=true'
-alias maven-teamserver-test='mvn -s ~/.m2/contrast-settings.xml -Pencrypt-properties clean compile tomcat:run-war'
-alias maven-eclipse='mvn -s ~/.m2/contrast-settings.xml clean compile install'
-alias maven-hub='cd ~/Documents/contrast-repos/hub/ && setJDK8 && mvn clean compile package tomcat:run -s ~/.contrast/contrast-settings.xml -Dcontrast.data.dir=~/.hub -DskipTests'
-# some things require settings from ~/.m2/contrast-settings.xml
 
-#alias vim='mvim -v'
-alias vim='nvim'
-alias v='nvim'
-
-alias tomcat='sh /Applications/apache-tomcat-7.0.56/bin/catalina.sh run'
-alias webgoat-java-logging='java -javaagent:/Applications/apache-tomcat-7.0.56/contrast.jar -Dcontrast.level=debug -Dcontrast.log=~/Desktop/contrast.log -jar /Applications/apache-tomcat-7.0.56/WebGoat-6.0.1-war-exec.jar'
-alias webgoat-java='java -javaagent:/Applications/apache-tomcat-7.0.56/contrast.jar -jar /Applications/apache-tomcat-7.0.56/WebGoat-6.0.1-war-exec.jar'
-alias webgoat-java-eclipse='java -javaagent:~/Documents/workspaces/ticketbook/.metadata/.plugins/com.contrastsecurity.eclipse/.contrast/contrast-engine-3.1.6.jar -Dcontrast.noteamserver.enable=true -jar /Applications/apache-tomcat-7.0.56/WebGoat-6.0.1-war-exec.jar'
-
-alias tmux='tmux -2'
-
-# Node run configs
-#alias contrast-screener='(cd ~/Documents/contrast-repos/node-screener/apps/node_express && DEBUG=contrast:* node-contrast run ~/Documents/contrast-repos/node-screener/apps/node_express/index.js)'
-alias contrast-screener='cd ~/Documents/contrast-repos/node-screener/apps/node_express && DEBUG=contrast:* node-contrast ~/Documents/contrast-repos/node-screener/apps/node_express/index.js'
-alias contrast-ghost='cd ~/Documents/tinkers/nodejs/ghost-0.6.4/ && nvm use 0.12.7 && DEBUG=contrast:* node-contrast ~/Documents/tinkers/nodejs/ghost-0.6.4/index.js'
-alias contrast-ghost-debug='cd ~/Documents/tinkers/nodejs/ghost-0.6.4/ && nvm use 0.12.7 && DEBUG=contrast:* node-debug node-contrast ~/Documents/tinkers/nodejs/ghost-0.6.4/index.js'
-#alias contrast-screener-debug='(cd ~/Documents/contrast-repos/node-screener/apps/node_express && DEBUG=contrast:* slc debug node-contrast run ~/Documents/contrast-repos/node-screener/apps/node_express/index.js)'
-#alias contrast-screener-debug='cd ~/Documents/contrast-repos/node-screener/apps/node_express && DEBUG=contrast:* slc debug node-contrast run ~/Documents/contrast-repos/node-screener/apps/node_express/index.js'
-alias contrast-screener-debug='cd ~/Documents/contrast-repos/node-screener/apps/node_express && DEBUG=contrast:* node-debug node-contrast ~/Documents/contrast-repos/node-screener/apps/node_express/index.js'
-alias contrast-mocha='DEBUG=contrast:* /usr/local/lib/node_modules/mocha/bin/_mocha'
-alias contrast-mocha-debug='DEBUG=contrast:* node-debug /usr/local/lib/node_modules/mocha/bin/_mocha'
-alias reset-node-log='rm ~/node-contrast.log && touch ~/node-contrast.log'
-export CONTRAST_DEBUG="1"
-
-alias update-contrast-repos='cd ~/Documents/contrast-repos && find . -type d -depth 1 -exec git --git-dir={}/.git --work-tree=$PWD/{} pull \;'
-
-alias delete-swaps='find ./ -type f -name "\.*sw[klmnop]" -delete'
 # $ functionName server.js
 function getNodeMemory() {
 	ps -p $(pgrep -lfa node | grep "$1" | awk '{print $1}') -o rss,vsz
@@ -147,14 +128,29 @@ alias ack='ag --ignore-dir=node_modules --ignore-dir=labs --ignore-dir=docs --ig
 
 # Color scheme
 #[[ $TMUX  = "" ]] && export TERM="xterm-256color"
-[[ $TMUX  = "" ]] && export TERM="screen-256color"
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_COMPLETION_TRIGGER='~~'
+# Use fd (https://github.com/sharkdp/fd) instead of the default find
+# command for listing path candidates.
+# - The first argument to the function ($1) is the base path to start traversal
+# - See the source code (completion.{bash,zsh}) for the details.
+# _fzf_compgen_path() {
+#   fd --hidden --follow --exclude ".git" . "$1"
+# }
+# # Use fd to generate the list for directory completion
+# _fzf_compgen_dir() {
+#   fd --type d --hidden --follow --exclude ".git" . "$1"
+# }
+# FIXME: this is a stop-gap for until i have nix managing zsh
+. ~/.nix-profile/share/fzf/key-bindings.zsh
+. ~/.nix-profile/share/fzf/completion.zsh
+# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 #[[ -s "~/.gvm/scripts/gvm" ]] && source "~/.gvm/scripts/gvm"
 export GOROOT_BOOTSTRAP="/usr/local/Cellar/go/1.12/libexec"
 export GOPATH="$HOME/gopath/"
 # export PATH=$PATH:/usr/local/opt/go/libexec/bin
+# echo "please help lmao"
 export PATH=$PATH:~/gopath/bin
 export PATH=$PATH:~/go/bin
 export PATH=$PATH:~/golang/bin
@@ -171,25 +167,22 @@ bindkey '^[OB' down-line-or-search
 #tic $TERM.ti
 #infocmp $TERM | sed 's/kbs=^[hH]/kbs=\\177/' | tic
 
-alias gitlines="git ls-files | xargs wc -l"
-alias find_people='ifconfig | grep broadcast | arp -a'
-alias hide_desktop='defaults write com.apple.finder CreateDesktop false' # set true to reenable
-
-# https://theptrk.com/2018/07/11/did-txt-file/
-alias did="vim +'normal Go' +'r!date' ~/did.txt"
-
-alias gd="go doc"
-
-# uncomment to enable startup time logging
-# zprof
-
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
 
+source ~/.sensitive
+
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '~/google-cloud-sdk/path.zsh.inc' ]; then source '~/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f '/Users/ehdens/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/ehdens/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '~/google-cloud-sdk/completion.zsh.inc' ]; then source '~/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f '/Users/ehdens/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/ehdens/google-cloud-sdk/completion.zsh.inc'; fi
 
-source ~/.sensitive
+export NIX_PATH=$HOME/.nix-defexpr/channels${NIX_PATH:+:}$NIX_PATH
+. /Users/ehdens/.nix-profile/etc/profile.d/nix.sh
+
+eval "$(starship init zsh)"
+
+# uncomment when startup time logging is enabled:
+# zprof
+# zmodload zsh/zprof

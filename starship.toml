@@ -1,0 +1,44 @@
+scan_timeout = 5
+format = """
+$cmd_duration\
+$time\
+$username$hostname\
+$git_branch\
+$directory\
+$nix_shell\
+$git_status\
+$jobs\
+$character\
+"""
+
+[directory]
+style = "bold blue"
+fish_style_pwd_dir_length = 1
+
+[cmd_duration]
+style = "dimmed white"
+show_milliseconds = true
+format = "[\\($duration\\)]($style)\n"
+
+[username]
+style_user = "bold dimmed blue"
+format = "[$user]($style)"
+
+[hostname]
+style = "bold dimmed blue"
+format = "[@$hostname]($style) "
+
+[time]
+disabled = true
+format = "[$time]($style) "
+style = "bold green"
+
+[git_branch]
+style = "purple"
+format = "[$symbol$branch]($style) "
+
+[battery]
+disabled = true
+
+[git_status]
+disabled = true

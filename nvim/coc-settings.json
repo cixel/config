@@ -1,0 +1,28 @@
+{
+	"languageserver": {
+		"nix": {
+			"command": "rnix-lsp",
+			"filetypes": ["nix"]
+		},
+		"clangd": {
+			"command": "clangd",
+			"args": ["--background-index"],
+			"rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
+			"filetypes": ["c", "cpp", "objc", "objcpp"]
+		}
+	},
+	"diagnostic.displayByAle": true,
+
+	"javascript.suggestionActions.enabled": false,
+	"javascript.showUnused": false,
+	"javascript.validate.enable": false,
+	"prettier.eslintIntegration": true,
+
+	"coc.preferences.formatOnSaveFiletypes": ["Markdown"],
+
+	"git.enableGutters": false,
+
+	"java.errors.incompleteClasspath.severity": "ignore",
+
+	"yaml.format.enable": true
+}

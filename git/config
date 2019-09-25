@@ -1,8 +1,12 @@
 [user]
 	name = Ehden Sinai
 	email = ehdens@gmail.com
+[credential]
+	helper = osxkeychain
 [core]
 	autocrlf = input
+	quotepath = false
+	commitGraph = true
 [alias]
 	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
 	aa = add -A .
@@ -29,9 +33,16 @@
     snapshot = !git stash save "snapshot: $(date)" && git stash apply "stash@{0}" --abbrev-commit --date=relative
     stash = git stash push
     save = commit -m "saving" --no-verify
+	rpull = pull -r
 [rerere]
 	enabled = true
 [http]
-	cookiefile = /Users/ehdensinai/.gitcookies
+	cookiefile = /Users/ehdens/.gitcookies
 [url "git@bitbucket.org:"]
 	insteadOf = https://bitbucket.org/
+[difftool "vimdiff"]
+    cmd = nvim -d $LOCAL $BASE
+[diff]
+    tool = vimdiff
+[gc]
+	writeCommitGraph = true
