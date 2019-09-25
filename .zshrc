@@ -186,10 +186,12 @@ alias gd="go doc"
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
 
+source ~/.sensitive
+
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '~/google-cloud-sdk/path.zsh.inc' ]; then source '~/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f '/Users/ehdens/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/ehdens/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '~/google-cloud-sdk/completion.zsh.inc' ]; then source '~/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f '/Users/ehdens/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/ehdens/google-cloud-sdk/completion.zsh.inc'; fi
 
-source ~/.sensitive
+# eval "$(starship init zsh)"
