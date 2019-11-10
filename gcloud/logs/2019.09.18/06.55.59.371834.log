@@ -1,0 +1,20 @@
+2019-09-18 06:55:59,374 DEBUG    root            Loaded Command Group: [u'gcloud', u'auth']
+2019-09-18 06:55:59,383 DEBUG    root            Loaded Command Group: [u'gcloud', u'auth', u'login']
+2019-09-18 06:55:59,386 DEBUG    root            Running [gcloud.auth.login] with arguments: []
+2019-09-18 06:55:59,673 INFO     ___FILE_ONLY___ Your browser has been opened to visit:
+
+    https://accounts.google.com/o/oauth2/auth?code_challenge=xqgQDgHT9egJUsocZmqT4rJIZaQz0LfnTISaCSzcQSs&prompt=select_account&code_challenge_method=S256&access_type=offline&redirect_uri=http%3A%2F%2Flocalhost%3A8085%2F&response_type=code&client_id=32555940559.apps.googleusercontent.com&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fappengine.admin+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcompute+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Faccounts.reauth
+
+
+
+2019-09-18 06:56:06,847 INFO     oauth2client.client Successfully retrieved access token
+2019-09-18 06:56:06,859 WARNING  root            `gcloud auth login` no longer writes application default credentials.
+If you need to use ADC, see:
+  gcloud auth application-default --help
+2019-09-18 06:56:06,860 INFO     ___FILE_ONLY___ 
+You are now logged in as [ehdens@gmail.com].
+Your current project is [None].  You can change this setting by running:
+  $ gcloud config set project PROJECT_ID
+
+2019-09-18 06:56:06,861 INFO     root            Display format: "none"
+2019-09-18 06:56:06,873 DEBUG    root            Metrics reporting process started...

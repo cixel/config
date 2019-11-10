@@ -1,7 +1,7 @@
 priority -50
 
 snippet config "contrast config yaml"
-contrast:
+api:
   url: http://localhost:19080/Contrast
   user_name: contrast_admin
   api_key: demo
@@ -10,9 +10,12 @@ contrast:
 agent:
   logger:
     level: debug
+  polling:
+    app_activity_ms: 6000
 
 assess:
   enable: true
+  enable_preflight: false
 
 protect:
   enable: true

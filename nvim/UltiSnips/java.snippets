@@ -158,11 +158,8 @@ snip.rv = snip.basename or "untitled"` {
 }
 endsnippet
 
-snippet cl "class" b
-public class ${1:`!p
-snip.rv = snip.basename or "untitled"`} {
-	$0
-}
+snippet cl "println"  b
+System.out.println($1);$0
 endsnippet
 
 snippet cos "constant string" b

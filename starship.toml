@@ -1,0 +1,93 @@
+# Don't print a new line at the start of the prompt
+add_newline = false
+
+prompt_order = [
+    "time",
+    "username",
+    "hostname",
+    "directory",
+    "git_branch",
+    "git_state",
+    "git_status",
+    "package",
+    "nodejs",
+    "ruby",
+    "rust",
+    "python",
+    "golang",
+    "java",
+    "nix_shell",
+    "cmd_duration",
+    "line_break",
+    "jobs",
+    "battery",
+    "character",
+]
+
+# default
+# prompt_order = [
+#     "username",
+#     "hostname",
+#     "directory",
+#     "git_branch",
+#     "git_state",
+#     "git_status",
+#     "package",
+#     "nodejs",
+#     "ruby",
+#     "rust",
+#     "python",
+#     "golang",
+#     "java",
+#     "nix_shell",
+#     "cmd_duration",
+#     "line_break",
+#     "jobs",
+#     "battery",
+#     "time",
+#     "character",
+# ]
+
+[character]
+# symbol = "$"
+
+[cmd_duration]
+style = "white"
+
+[line_break]
+disabled = true
+
+[time]
+disabled = false
+# format = "%T"
+style = "bold green"
+
+[git_branch]
+style = "purple"
+
+[package]
+disabled = true
+
+[nodejs]
+disabled = true
+
+[rust]
+disabled = true
+
+[golang]
+disabled = true
+
+[ruby]
+disabled = true
+
+[java]
+disabled = true
+
+[python]
+disabled = false
+
+[battery]
+disabled = true
+
+[git_status]
+disabled = true

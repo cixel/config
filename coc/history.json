@@ -1,0 +1,29 @@
+{
+  "extensions": {
+    "%2FUsers%2Fehdens%2Fcontrast%2Fnode-wiki": [
+      "cochigl"
+    ],
+    "%2FUsers%2Fehdens%2Fcontrast%2Fnode-agent%2Fnode-agent-core": [
+      "javaa"
+    ]
+  },
+  "lists": {
+    "%2FUsers%2Fehdens%2Fcontrast%2Fnode-agent%2Fnode-agent-core": [
+      "symb",
+      "ex"
+    ],
+    "%2FUsers%2Fehdens%2F": {
+      "config": [
+        "ex"
+      ]
+    },
+    "%2FUsers%2Fehdens%2FDocuments%2Fellie_school%2Fjava%2Flab5%2Fsrc": [
+      "etsnsion"
+    ]
+  },
+  "symbols": {
+    "%2FUsers%2Fehdens%2Fcontrast%2Fnode-agent%2Fnode-agent-core": [
+      "logger"
+    ]
+  }
+}

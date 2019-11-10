@@ -1,16 +1,11 @@
 call plug#begin()
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
-" Plug 'fatih/vim-go', { 'tag': '*', 'do': ':GoUpdateBinaries'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 
 Plug 'editorconfig/editorconfig-vim'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
-Plug 'zchee/deoplete-go', { 'do': 'make' }
-" Plug 'mdempsky/gocode', { 'rtp': 'nvim', 'do': '~/.config/nvim/plugged/gocode/nvim/symlink.sh' }
+" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
+" Plug 'zchee/deoplete-go', { 'do': 'make' }
 
 Plug 'majutsushi/tagbar' " source code nav in sidebar
 Plug 'w0rp/ale'
@@ -22,14 +17,14 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'mtth/scratch.vim'
 Plug 'SirVer/ultisnips'
 Plug 'godlygeek/tabular'
-Plug 'Raimondi/delimitMate'
+" Plug 'Raimondi/delimitMate'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'cohama/lexima.vim' " not sure if I use this
 Plug 'ervandew/supertab'
 Plug 'idanarye/vim-dutyl'
-Plug 'milkypostman/vim-togglelist' " toggle loclist and quickfix
+" Plug 'milkypostman/vim-togglelist' " toggle loclist and quickfix
 Plug 'rhysd/vim-crystal' " support for crystal lang
-Plug 'leafgarland/typescript-vim'
+" Plug 'leafgarland/typescript-vim'
 Plug 'christianrondeau/vim-base64' " base64 encode/decode
 Plug 'cespare/vim-toml'
 
@@ -40,12 +35,6 @@ Plug 'rip-rip/clang_complete'
 
 " Rust
 Plug 'rust-lang/rust.vim'
-" Plug 'racer-rust/vim-racer'
-" Plug 'sebastianmarkow/deoplete-rust'
-
-" PHP
-Plug 'StanAngeloff/php.vim'
-Plug 'padawan-php/deoplete-padawan', { 'do': 'composer install' }
 
 " i don't really use these
 " https://github.com/jceb/vim-orgmode/blob/master/doc/orgguide.txt
@@ -69,13 +58,14 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'vim-scripts/VisIncr'
 
-Plug 'elzr/vim-json'
+" Plug 'elzr/vim-json'
 " Plug 'othree/yajs.vim', { 'for': 'javascript' } " better syntax for javascript ** Very slow. Look into replacement
 Plug 'pangloss/vim-javascript'
 call plug#end()
 
 syntax on
 filetype plugin indent on
+set hidden
 let mapleader=","
 
 " Potential performance improvemenets (scrolling)
@@ -93,15 +83,15 @@ nnoremap <leader>B/ :%s/\v()/\=base64#decode(submatch(1))/<home><right><right><r
 
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
 " set folding method to be language defined and files are not folded when
 " opened
 set foldmethod=syntax
 set foldlevelstart=20
 "set nofoldenable
 
-" let g:python_host_prog = '/usr/local/bin/python3'
-" let g:python_host_prog = '/usr/local/bin/python2'
-" let g:python2_host_prog = '/usr/local/bin/python2'
 let g:python_host_prog = '/usr/local/bin/python3'
 let g:python3_host_prog = '/usr/local/bin/python3'
 
@@ -179,44 +169,19 @@ autocmd FocusGained * :set relativenumber
 :set nohlsearch
 
 " swap back and forth between 2 files
-:nmap <C-e> :e#<CR>
+nmap <C-e> :e#<CR>
 
 " next/previous buffer
-:nmap <C-n> :bnext<CR>
-:nmap <C-m> :bprev<CR>
+nmap <C-n> :bnext<CR>
+nmap <C-m> :bprev<CR>
 
-" js-beautify
-":nnoremap <leader>ff :%!js-beautify --editorconfig -q -f -<CR>
-"autocmd FileType javascript noremap <buffer>  <c-f> :call JsBeautify()<cr>
-"autocmd FileType javascript noremap <buffer>  <leader>ff :call JsBeautify()<cr>
-"autocmd FileType javascript noremap <buffer>  <leader>ff :Autoformat<cr>
+autocmd FileType rust,javascript,go nmap <silent> gd <Plug>(coc-definition)
+
+nmap <silent> <leader>ff :CocCommand prettier.formatFile<cr>
 au BufNewFile,BufRead *.ejs set filetype=html
-autocmd FileType javascript noremap <buffer>  <leader>ff :Neoformat<cr>
-" let g:neoformat_javascript_jscs = {
-"             \ 'exe': 'eslint_d',
-" 			\ 'args': ['--fix', '--no-colors', '--reporter', 'inline'],
-"             \ 'stdin': 1,
-"             \ 'no_append': 1,
-"             \ }
-let g:neoformat_enabled_javascript = ['eslint_d']
-" if I uncomment this, undo will skip over neoformat changes and undo the last
-" change which was mine
-"augroup fmt
-  "autocmd!
-  "autocmd BufWritePre * undojoin | Neoformat
-"augroup END
 
-"let g:formatters_js = ['jscs']
 "nmap <leader>.. :lclose<CR>
 nmap <script> <silent> <leader>.. :call ToggleLocationList()<CR>
-
-let g:LanguageClient_diagnosticsEnable = 0
-let g:LanguageClient_diagnosticsDisplay = {
-  \1: {'name': 'Error', 'texthl': 'ALEError', 'signText': 'E', 'signTexthl': 'ALEErrorSign',},
-  \2: {"name": "Warning", "texthl": "ALEWarning", "signText": "W", "signTexthl": "ALEWarningSign",},
-  \3: {"name": "Information", "texthl": "ALEInfo", "signText": "i", "signTexthl": "ALEInfoSign",},
-  \4: {"name": "Hint", "texthl": "ALEInfo", "signText": "h", "signTexthl": "ALEInfoSign",},
-\}
 
 " ale -- linting
 let g:ale_sign_error = 'E'
@@ -224,16 +189,16 @@ let g:ale_sign_warning = 'W'
 let g:ale_sign_style_warning = 'WS'
 let g:ale_sign_style_error = 'WS'
 let g:ale_list_window_size = 7
-let g:ale_echo_msg_format = '%s (%linter%)'
-let g:ale_linters = {
-\   'javascript': ['eslint_d'],
-\}
+let g:ale_echo_msg_format = '%s (%linter%%:code%)'
+" let g:ale_linters = {
+" \   'javascript': ['eslint_d'],
+" \}
 "let g:ale_open_list = 'on_save'
 nmap <silent> <C-Q> <Plug>(ale_previous_wrap)
 nmap <silent> <C-q> <Plug>(ale_next_wrap)
 
 " FZF.vim
-let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore-dir={dist,target,node_modules,docs,rulepack/xml,experiments} --ignore .git -g ""'
+let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore-dir={dist,target,node_modules,docs,rulepack/xml,experiments,code-coverage-report} --ignore .git -g ""'
 set rtp+=/usr/local/opt/fzf " for fzf to load on start from the brew install
 nmap ; :FZF<CR>
 
@@ -248,17 +213,15 @@ let g:SuperTabDefaultCompletionType = "<c-tab>"
 let g:UltiSnipsEditSplit="vertical"
 
 " deoplete
-let g:deoplete#enable_at_startup = 1
+" let g:deoplete#enable_at_startup = 1
 "let g:tern_show_signature_in_pum = '0'
 "autocmd CompleteDone * silent! pclose! *.js
-autocmd CompleteDone * silent! pclose!
+
+" autocmd CompleteDone * silent! pclose!
+
 "au FileType js set completeopt-=preview
-"set completeopt-=preview " look into setting this by filetype
+" set completeopt-=preview " look into setting this by filetype
 "autocmd FileType js set completeopt-=preview "look into setting this by filetype
-" let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
-" let g:deoplete#sources#go#use_cache = 1
-" let g:deoplete#sources#go#json_directory = '~/.nvim/deoplete/go/$GOOS_$GOARCH'
-" let g:deoplete#sources#go#source_importer = 1
 
 " C++
 let g:clang_library_path='/usr/local/Cellar/llvm/6.0.0/lib/libclang.dylib'
@@ -282,9 +245,9 @@ let g:scratch_insert_autohide = 0
 " to change default mappings, turn mapping off and set manually
 let g:scratch_no_mappings = 1
 let g:scratch_persistence_file = '~/.nvim/scratch'
-nmap gs <Plug>(scratch-insert-reuse)
-xmap gs <Plug>(scratch-selection-reuse)
-nmap gS :ScratchPreview<CR>
+" nmap gs <Plug>(scratch-insert-reuse)
+" xmap gs <Plug>(scratch-selection-reuse)
+" nmap gS :ScratchPreview<CR>
 
 " vim-json
 let g:vim_json_syntax_conceal = 0
@@ -315,19 +278,19 @@ hi Normal ctermbg=NONE
 " go-vim stuff
 "let g:neomake_go_enabled_makers = ['']
 "let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck'] " remove golint fromt the defaults
-let g:ale_go_langserver_executable = 'gopls'
-let g:ale_go_gometalinter_options = '
-  \ --aggregate
-  \ --sort=line
-  \ --vendor
-  \ --vendored-linters
-  \ --disable=gas
-  \ --disable=goconst
-  \ --disable=gocyclo
-  \ '
+" let g:ale_go_langserver_executable = 'gopls'
+" let g:ale_go_gometalinter_options = '
+"   \ --aggregate
+"   \ --sort=line
+"   \ --vendor
+"   \ --vendored-linters
+"   \ --disable=gas
+"   \ --disable=goconst
+"   \ --disable=gocyclo
+"   \ '
   " \ --severity=errcheck:warning
   " \ --fast
-let g:ale_linters = {'go': ['gometalinter']}
+" let g:ale_linters = {'go': ['gopls']}
 " let g:go_metalinter_deadline = "5s"
 let g:go_fmt_fail_silently = 1
 " let g:go_metalinter_enabled = [
@@ -353,17 +316,7 @@ let g:go_highlight_structs = 1
 "let g:go_auto_sameids = 1
 
 " rust
-let g:rustfmt_autosave = 1
-set hidden
-let g:racer_cmd = "/Users/ehdensinai/.cargo/bin/racer"
-let g:deoplete#sources#rust#racer_binary='/Users/ehdens/.cargo/bin/racer'
-let g:deoplete#sources#rust#rust_source_path='/Users/ehdens/.cargo/registry/src'
-let g:racer_experimental_completer = 1
-let g:LanguageClient_serverCommands = {
-    \ 'go': ['gopls'],
-    \ 'rust': ['rustup', 'run', 'stable', 'rls'],
-	\}
-autocmd FileType rust nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+" let g:rustfmt_autosave = 1
 
 function! WordFrequency() range
   let all = split(join(getline(a:firstline, a:lastline)), '\A\+')
@@ -448,3 +401,23 @@ function! WordFrequencySorted() range
 endfunction
 
 command! -range=% WordFrequencySorted <line1>,<line2>call WordFrequencySorted()
+
+" Documentation
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+let g:go_doc_keywordprg_enabled = 0 " let coc handle this
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight symbol under cursor on CursorHold
+" autocmd CursorHold * silent call CocActionAsync('highlight')
+
+augroup mygroup
+  autocmd!
+  " Update signature help on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end

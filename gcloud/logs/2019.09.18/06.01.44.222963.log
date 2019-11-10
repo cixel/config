@@ -1,0 +1,435 @@
+2019-09-18 06:01:50,366 DEBUG    root            Metrics collector initialized...
+2019-09-18 06:01:50,369 DEBUG    root            Loaded Command Group: [u'gcloud', u'components']
+2019-09-18 06:01:50,374 DEBUG    root            Loaded Command Group: [u'gcloud', u'components', u'update']
+2019-09-18 06:01:50,376 DEBUG    root            Running [gcloud.components.update] with arguments: [--allow-no-backup: "True", --quiet: "True", COMPONENT-IDS:5: "[u'core', u'gcloud-deps', u'bq', u'gcloud', u'gsutil']"]
+2019-09-18 06:01:50,524 INFO     ___FILE_ONLY___ 
+
+2019-09-18 06:01:50,524 INFO     ___FILE_ONLY___ 
+Your current Cloud SDK version is: 263.0.0
+
+2019-09-18 06:01:50,524 INFO     ___FILE_ONLY___ Installing components from version: 263.0.0
+
+2019-09-18 06:01:50,524 INFO     ___FILE_ONLY___ 
+
+2019-09-18 06:01:50,532 INFO     ___FILE_ONLY___ ┌────────────────────────────────────────────────────────────────────────────┐
+2019-09-18 06:01:50,532 INFO     ___FILE_ONLY___ 
+
+2019-09-18 06:01:50,532 INFO     ___FILE_ONLY___ │                    These components will be installed.                     │
+2019-09-18 06:01:50,532 INFO     ___FILE_ONLY___ 
+
+2019-09-18 06:01:50,533 INFO     ___FILE_ONLY___ ├─────────────────────────────────────────────────────┬────────────┬─────────┤
+2019-09-18 06:01:50,533 INFO     ___FILE_ONLY___ 
+
+2019-09-18 06:01:50,533 INFO     ___FILE_ONLY___ │                         Name                        │  Version   │   Size  │
+2019-09-18 06:01:50,533 INFO     ___FILE_ONLY___ 
+
+2019-09-18 06:01:50,533 INFO     ___FILE_ONLY___ ├─────────────────────────────────────────────────────┼────────────┼─────────┤
+2019-09-18 06:01:50,533 INFO     ___FILE_ONLY___ 
+
+2019-09-18 06:01:50,533 INFO     ___FILE_ONLY___ │ 
+2019-09-18 06:01:50,533 INFO     ___FILE_ONLY___ BigQuery Command Line Tool                         
+2019-09-18 06:01:50,533 INFO     ___FILE_ONLY___  
+2019-09-18 06:01:50,533 INFO     ___FILE_ONLY___ │ 
+2019-09-18 06:01:50,534 INFO     ___FILE_ONLY___     2.0.47
+2019-09-18 06:01:50,534 INFO     ___FILE_ONLY___  
+2019-09-18 06:01:50,534 INFO     ___FILE_ONLY___ │ 
+2019-09-18 06:01:50,534 INFO     ___FILE_ONLY___ < 1 MiB
+2019-09-18 06:01:50,534 INFO     ___FILE_ONLY___  
+2019-09-18 06:01:50,534 INFO     ___FILE_ONLY___ │
+2019-09-18 06:01:50,534 INFO     ___FILE_ONLY___ 
+
+2019-09-18 06:01:50,534 INFO     ___FILE_ONLY___ │ 
+2019-09-18 06:01:50,534 INFO     ___FILE_ONLY___ BigQuery Command Line Tool (Platform Specific)     
+2019-09-18 06:01:50,534 INFO     ___FILE_ONLY___  
+2019-09-18 06:01:50,535 INFO     ___FILE_ONLY___ │ 
+2019-09-18 06:01:50,535 INFO     ___FILE_ONLY___     2.0.46
+2019-09-18 06:01:50,535 INFO     ___FILE_ONLY___  
+2019-09-18 06:01:50,535 INFO     ___FILE_ONLY___ │ 
+2019-09-18 06:01:50,535 INFO     ___FILE_ONLY___ < 1 MiB
+2019-09-18 06:01:50,535 INFO     ___FILE_ONLY___  
+2019-09-18 06:01:50,535 INFO     ___FILE_ONLY___ │
+2019-09-18 06:01:50,535 INFO     ___FILE_ONLY___ 
+
+2019-09-18 06:01:50,535 INFO     ___FILE_ONLY___ │ 
+2019-09-18 06:01:50,535 INFO     ___FILE_ONLY___ Cloud SDK Core Libraries (Platform Specific)       
+2019-09-18 06:01:50,536 INFO     ___FILE_ONLY___  
+2019-09-18 06:01:50,536 INFO     ___FILE_ONLY___ │ 
+2019-09-18 06:01:50,536 INFO     ___FILE_ONLY___ 2019.08.16
+2019-09-18 06:01:50,536 INFO     ___FILE_ONLY___  
+2019-09-18 06:01:50,536 INFO     ___FILE_ONLY___ │ 
+2019-09-18 06:01:50,536 INFO     ___FILE_ONLY___ < 1 MiB
+2019-09-18 06:01:50,536 INFO     ___FILE_ONLY___  
+2019-09-18 06:01:50,536 INFO     ___FILE_ONLY___ │
+2019-09-18 06:01:50,536 INFO     ___FILE_ONLY___ 
+
+2019-09-18 06:01:50,536 INFO     ___FILE_ONLY___ │ 
+2019-09-18 06:01:50,537 INFO     ___FILE_ONLY___ Cloud Storage Command Line Tool                    
+2019-09-18 06:01:50,537 INFO     ___FILE_ONLY___  
+2019-09-18 06:01:50,537 INFO     ___FILE_ONLY___ │ 
+2019-09-18 06:01:50,537 INFO     ___FILE_ONLY___       4.42
+2019-09-18 06:01:50,537 INFO     ___FILE_ONLY___  
+2019-09-18 06:01:50,537 INFO     ___FILE_ONLY___ │ 
+2019-09-18 06:01:50,537 INFO     ___FILE_ONLY___ 3.6 MiB
+2019-09-18 06:01:50,537 INFO     ___FILE_ONLY___  
+2019-09-18 06:01:50,537 INFO     ___FILE_ONLY___ │
+2019-09-18 06:01:50,537 INFO     ___FILE_ONLY___ 
+
+2019-09-18 06:01:50,537 INFO     ___FILE_ONLY___ │ 
+2019-09-18 06:01:50,538 INFO     ___FILE_ONLY___ Cloud Storage Command Line Tool (Platform Specific)
+2019-09-18 06:01:50,538 INFO     ___FILE_ONLY___  
+2019-09-18 06:01:50,538 INFO     ___FILE_ONLY___ │ 
+2019-09-18 06:01:50,538 INFO     ___FILE_ONLY___       4.42
+2019-09-18 06:01:50,538 INFO     ___FILE_ONLY___  
+2019-09-18 06:01:50,538 INFO     ___FILE_ONLY___ │ 
+2019-09-18 06:01:50,538 INFO     ___FILE_ONLY___ < 1 MiB
+2019-09-18 06:01:50,538 INFO     ___FILE_ONLY___  
+2019-09-18 06:01:50,538 INFO     ___FILE_ONLY___ │
+2019-09-18 06:01:50,538 INFO     ___FILE_ONLY___ 
+
+2019-09-18 06:01:50,538 INFO     ___FILE_ONLY___ │ 
+2019-09-18 06:01:50,539 INFO     ___FILE_ONLY___ Default set of gcloud commands                     
+2019-09-18 06:01:50,539 INFO     ___FILE_ONLY___  
+2019-09-18 06:01:50,539 INFO     ___FILE_ONLY___ │ 
+2019-09-18 06:01:50,539 INFO     ___FILE_ONLY___           
+2019-09-18 06:01:50,539 INFO     ___FILE_ONLY___  
+2019-09-18 06:01:50,539 INFO     ___FILE_ONLY___ │ 
+2019-09-18 06:01:50,539 INFO     ___FILE_ONLY___        
+2019-09-18 06:01:50,539 INFO     ___FILE_ONLY___  
+2019-09-18 06:01:50,539 INFO     ___FILE_ONLY___ │
+2019-09-18 06:01:50,539 INFO     ___FILE_ONLY___ 
+
+2019-09-18 06:01:50,540 INFO     ___FILE_ONLY___ │ 
+2019-09-18 06:01:50,540 INFO     ___FILE_ONLY___ gcloud cli dependencies                            
+2019-09-18 06:01:50,540 INFO     ___FILE_ONLY___  
+2019-09-18 06:01:50,540 INFO     ___FILE_ONLY___ │ 
+2019-09-18 06:01:50,540 INFO     ___FILE_ONLY___ 2018.08.03
+2019-09-18 06:01:50,540 INFO     ___FILE_ONLY___  
+2019-09-18 06:01:50,540 INFO     ___FILE_ONLY___ │ 
+2019-09-18 06:01:50,540 INFO     ___FILE_ONLY___ 1.5 MiB
+2019-09-18 06:01:50,540 INFO     ___FILE_ONLY___  
+2019-09-18 06:01:50,540 INFO     ___FILE_ONLY___ │
+2019-09-18 06:01:50,540 INFO     ___FILE_ONLY___ 
+
+2019-09-18 06:01:50,541 INFO     ___FILE_ONLY___ └─────────────────────────────────────────────────────┴────────────┴─────────┘
+2019-09-18 06:01:50,541 INFO     ___FILE_ONLY___ 
+
+2019-09-18 06:01:50,541 INFO     ___FILE_ONLY___ 
+
+2019-09-18 06:01:50,651 INFO     ___FILE_ONLY___ For the latest full release notes, please visit:
+  https://cloud.google.com/sdk/release_notes
+
+
+2019-09-18 06:01:50,652 INFO     ___FILE_ONLY___ ╔════════════════════════════════════════════════════════════╗
+
+2019-09-18 06:01:50,652 INFO     ___FILE_ONLY___ ╠═ Creating update staging area                             ═╣
+
+2019-09-18 06:01:50,652 INFO     ___FILE_ONLY___ ╚
+2019-09-18 06:01:50,652 INFO     ___FILE_ONLY___ ══════
+2019-09-18 06:01:50,653 INFO     ___FILE_ONLY___ ══════
+2019-09-18 06:01:50,653 INFO     ___FILE_ONLY___ ══════
+2019-09-18 06:01:50,736 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:50,850 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:50,966 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:50,999 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:51,038 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:51,070 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:51,120 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:51,190 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:51,233 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:51,269 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:51,307 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:51,353 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:51,388 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:51,433 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:51,519 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:51,598 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:51,654 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:51,718 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:51,758 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:51,795 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:51,833 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:51,871 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:51,924 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:51,972 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:51,999 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:52,035 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:52,074 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:52,107 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:52,139 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:52,184 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:52,230 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:52,281 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:52,318 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:52,350 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:52,381 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:52,426 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:52,476 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:52,569 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:52,648 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:52,719 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:52,790 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,216 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,217 INFO     ___FILE_ONLY___ ╝
+2019-09-18 06:01:53,218 INFO     ___FILE_ONLY___ ╠════════════════════════════════════════════════════════════╣
+
+2019-09-18 06:01:53,218 INFO     ___FILE_ONLY___ ╠═ Installing: BigQuery Command Line Tool                   ═╣
+
+2019-09-18 06:01:53,218 INFO     ___FILE_ONLY___ ╚
+2019-09-18 06:01:53,294 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,297 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,300 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,305 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,309 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,310 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,312 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,313 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,314 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,317 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,318 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,321 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,321 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,323 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,323 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,325 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,326 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,326 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,327 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,328 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,330 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,330 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,331 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,332 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,333 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,333 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,337 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,337 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,338 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,339 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,369 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,372 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,374 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,376 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,378 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,381 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,383 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,385 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,386 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,389 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,391 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,393 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,395 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,397 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,399 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,400 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,402 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,404 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,407 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,410 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,413 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,416 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,418 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,421 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,423 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,427 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,431 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,432 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,436 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,440 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,440 INFO     ___FILE_ONLY___ ╝
+2019-09-18 06:01:53,444 INFO     ___FILE_ONLY___ ╠════════════════════════════════════════════════════════════╣
+
+2019-09-18 06:01:53,444 INFO     ___FILE_ONLY___ ╠═ Installing: BigQuery Command Line Tool (Platform Spec... ═╣
+
+2019-09-18 06:01:53,444 INFO     ___FILE_ONLY___ ╚
+2019-09-18 06:01:53,511 INFO     ___FILE_ONLY___ ══════════════════════════════
+2019-09-18 06:01:53,512 INFO     ___FILE_ONLY___ ═══════════════
+2019-09-18 06:01:53,513 INFO     ___FILE_ONLY___ ═══════════════
+2019-09-18 06:01:53,513 INFO     ___FILE_ONLY___ ╝
+2019-09-18 06:01:53,516 INFO     ___FILE_ONLY___ ╠════════════════════════════════════════════════════════════╣
+
+2019-09-18 06:01:53,516 INFO     ___FILE_ONLY___ ╠═ Installing: Cloud SDK Core Libraries (Platform Specific) ═╣
+
+2019-09-18 06:01:53,516 INFO     ___FILE_ONLY___ ╚
+2019-09-18 06:01:53,580 INFO     ___FILE_ONLY___ ══════════════════════════════
+2019-09-18 06:01:53,581 INFO     ___FILE_ONLY___ ══════════
+2019-09-18 06:01:53,582 INFO     ___FILE_ONLY___ ═════════
+2019-09-18 06:01:53,582 INFO     ___FILE_ONLY___ ═══════════
+2019-09-18 06:01:53,582 INFO     ___FILE_ONLY___ ╝
+2019-09-18 06:01:53,585 INFO     ___FILE_ONLY___ ╠════════════════════════════════════════════════════════════╣
+
+2019-09-18 06:01:53,585 INFO     ___FILE_ONLY___ ╠═ Installing: Cloud Storage Command Line Tool              ═╣
+
+2019-09-18 06:01:53,585 INFO     ___FILE_ONLY___ ╚
+2019-09-18 06:01:53,671 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,681 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,686 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,692 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,699 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,703 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,707 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,711 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,716 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,719 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,721 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,723 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,726 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,730 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,734 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,736 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,737 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,738 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,739 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,741 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,747 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,749 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,750 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,751 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,752 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,753 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,756 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,762 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,764 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:53,767 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,070 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,117 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,160 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,173 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,187 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,201 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,217 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,234 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,255 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,289 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,323 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,344 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,364 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,388 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,411 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,442 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,458 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,472 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,486 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,500 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,517 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,531 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,546 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,561 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,579 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,604 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,624 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,640 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,663 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,689 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,689 INFO     ___FILE_ONLY___ ╝
+2019-09-18 06:01:54,718 INFO     ___FILE_ONLY___ ╠════════════════════════════════════════════════════════════╣
+
+2019-09-18 06:01:54,718 INFO     ___FILE_ONLY___ ╠═ Installing: Cloud Storage Command Line Tool (Platform... ═╣
+
+2019-09-18 06:01:54,719 INFO     ___FILE_ONLY___ ╚
+2019-09-18 06:01:54,781 INFO     ___FILE_ONLY___ ══════════════════════════════
+2019-09-18 06:01:54,782 INFO     ___FILE_ONLY___ ═══════════════
+2019-09-18 06:01:54,783 INFO     ___FILE_ONLY___ ═══════════════
+2019-09-18 06:01:54,783 INFO     ___FILE_ONLY___ ╝
+2019-09-18 06:01:54,786 INFO     ___FILE_ONLY___ ╠════════════════════════════════════════════════════════════╣
+
+2019-09-18 06:01:54,786 INFO     ___FILE_ONLY___ ╠═ Installing: Default set of gcloud commands               ═╣
+
+2019-09-18 06:01:54,786 INFO     ___FILE_ONLY___ ╚
+2019-09-18 06:01:54,789 INFO     ___FILE_ONLY___ ════════════════════════════════════════════════════════════
+2019-09-18 06:01:54,789 INFO     ___FILE_ONLY___ ╝
+2019-09-18 06:01:54,789 INFO     ___FILE_ONLY___ ╠════════════════════════════════════════════════════════════╣
+
+2019-09-18 06:01:54,789 INFO     ___FILE_ONLY___ ╠═ Installing: gcloud cli dependencies                      ═╣
+
+2019-09-18 06:01:54,789 INFO     ___FILE_ONLY___ ╚
+2019-09-18 06:01:54,888 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,897 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,900 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,906 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,909 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,912 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,916 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,921 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,922 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,923 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,929 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,931 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,932 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,933 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,934 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,936 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,940 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,942 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,943 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,945 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,945 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,946 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,948 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,948 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,950 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,951 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,951 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,953 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,954 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,956 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,990 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,991 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,992 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,994 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,994 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,996 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,998 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,998 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,999 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:54,999 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:55,000 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:55,000 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:55,001 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:55,003 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:55,003 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:55,005 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:55,006 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:55,008 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:55,009 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:55,010 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:55,012 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:55,014 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:55,015 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:55,016 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:55,047 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:55,048 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:55,051 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:55,052 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:55,060 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:55,063 INFO     ___FILE_ONLY___ ═
+2019-09-18 06:01:55,063 INFO     ___FILE_ONLY___ ╝
+2019-09-18 06:01:55,070 INFO     ___FILE_ONLY___ ╠════════════════════════════════════════════════════════════╣
+
+2019-09-18 06:01:55,071 INFO     ___FILE_ONLY___ ╠═ Creating backup and activating new installation          ═╣
+
+2019-09-18 06:01:55,071 INFO     ___FILE_ONLY___ ╚
+2019-09-18 06:01:55,071 DEBUG    root            Attempting to move directory [/Users/ehdens/google-cloud-sdk] to [/Users/ehdens/google-cloud-sdk.staging/.install/.backup]
+2019-09-18 06:01:55,071 INFO     ___FILE_ONLY___ ══════════════════════════════
+2019-09-18 06:01:55,072 DEBUG    root            Attempting to move directory [/Users/ehdens/google-cloud-sdk.staging] to [/Users/ehdens/google-cloud-sdk]
+2019-09-18 06:01:55,072 INFO     ___FILE_ONLY___ ══════════════════════════════
+2019-09-18 06:01:55,072 INFO     ___FILE_ONLY___ ╝
+
+2019-09-18 06:01:55,077 DEBUG    root            Updating notification cache...
+2019-09-18 06:01:55,077 INFO     ___FILE_ONLY___ 
+
+2019-09-18 06:01:55,078 INFO     ___FILE_ONLY___ Performing post processing steps...
+2019-09-18 06:01:55,078 DEBUG    root            Executing command: ['/usr/local/Cellar/python@2/2.7.16_1/Frameworks/Python.framework/Versions/2.7/Resources/Python.app/Contents/MacOS/Python', u'-S', u'/Users/ehdens/google-cloud-sdk/lib/gcloud.py', u'components', u'post-process']
+2019-09-18 06:02:04,481 DEBUG    ___FILE_ONLY___ 
+2019-09-18 06:02:04,482 DEBUG    ___FILE_ONLY___ 
+2019-09-18 06:02:04,634 INFO     ___FILE_ONLY___ 
+Update done!
+
+
+2019-09-18 06:02:04,649 INFO     root            Display format: "none"
+2019-09-18 06:02:04,651 INFO     ___FILE_ONLY___ 
+
+To take a quick anonymous survey, run:
+  $ gcloud alpha survey
+
+
+2019-09-18 06:02:11,695 DEBUG    root            Metrics reporting process started...

@@ -1,0 +1,26 @@
+{
+ "languageserver": {
+  "rust": {
+    "command": "ra_lsp_server",
+    "filetypes": ["rust"],
+    "rootPatterns": ["Cargo.toml"]
+  },
+  "golang": {
+    "command": "gopls",
+    "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
+    "filetypes": ["go"]
+  }
+ },
+ "diagnostic.displayByAle": true,
+
+ "javascript.suggestionActions.enabled": false,
+ "javascript.showUnused": false,
+ "javascript.validate.enable": false,
+ "prettier.eslintIntegration": true,
+
+ "coc.preferences.formatOnSaveFiletypes": ["Markdown"],
+
+ "git.enableGutters": false,
+
+ "java.errors.incompleteClasspath.severity": "ignore"
+}
