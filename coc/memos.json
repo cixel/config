@@ -1534,5 +1534,8 @@
         "type": "VirtualEnv"
       }
     ]
+  },
+  "coc-rust-analyzer|global": {
+    "release": "2020-02-11"
   }
 }

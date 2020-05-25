@@ -1,2 +1,5 @@
 prettier.formatFile
+CocFormat
+markdownlint.fixAll
+rust-analyzer.syntaxTree
 tsserver.restart

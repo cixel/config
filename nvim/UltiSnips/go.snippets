@@ -157,7 +157,6 @@ endsnippet
 # error handling
 snippet err "Basic error handling" b
 if err != nil {
-	log.${1:Fatal}(err)
 }
 endsnippet
 
@@ -208,4 +207,47 @@ endsnippet
 
 snippet lef "Log errorf" b
 config.Log.Errorf(${1:msg})
+endsnippet
+
+snippet sample "sample app template"
+package main
+
+import (
+	"log"
+	"net/http"
+)
+
+func main() {
+	http.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
+		input := r.URL.Query().Get("input")
+		_, _ = w.Write([]byte(input))
+	})
+
+	log.Print("listening on :8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
+}
+endsnippet
+
+snippet fix "fixme"
+// FIXME(ehden):
+endsnippet
+
+snippet todo "todo"
+// TODO(GO-${1:ticket}):
+endsnippet
+
+snippet note "note"
+// NOTE(ehden):
+endsnippet
+
+snippet ccr "Contrast Copyright" b
+// Copyright © 2020 Contrast Security, Inc.
+// See https://www.contrastsecurity.com/enduser-terms-0317a for more details.
+endsnippet
+
+snippet fortest "test table loop" b
+for name, test := range tests {
+	t.Run(name, func(t *testing.T) {
+	})
+}
 endsnippet

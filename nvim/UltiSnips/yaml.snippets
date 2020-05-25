@@ -9,9 +9,15 @@ api:
 
 agent:
   logger:
+    stdout: true
     level: debug
   polling:
     app_activity_ms: 6000
+  service:
+    logger:
+      path: service.log
+      level: debug
+    socket: /tmp/service.sock
 
 assess:
   enable: true

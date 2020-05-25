@@ -55,7 +55,7 @@ source ~/.config/lazynvm.sh
 # Add wisely, as too many plugins slow down shell startup.
 # plugins=(git vi-mode node wd)
 # plugins=(git vi-mode wd zsh-nvm)
-plugins=(vi-mode)
+plugins=(vi-mode wd)
 
 # User configuration
 
@@ -63,13 +63,13 @@ export HISTFILE="$HOME/.zsh_history"
 export HISTSIZE=50000
 export SAVEHIST=10000
 
-source ~/.config/alias.sh
-
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Library/TeX/Distributions/.DefaultTeX/Contents/Programs/texbin:/usr/local/sbin:/usr/local/opt/mysql@5.6/bin"
 # export PATH="/usr/local/opt/python/libexec/bin:$PATH" # brew's python before OSX's in PATH
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
+
+source ~/.config/alias.sh
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -154,5 +154,8 @@ if [ -f '/Users/ehdens/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/ehdens/g
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/ehdens/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/ehdens/google-cloud-sdk/completion.zsh.inc'; fi
+
+export NIX_PATH=$HOME/.nix-defexpr/channels${NIX_PATH:+:}$NIX_PATH
+. /Users/ehdens/.nix-profile/etc/profile.d/nix.sh
 
 eval "$(starship init zsh)"
