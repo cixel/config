@@ -1,5 +1,7 @@
+rust-analyzer.syntaxTree
+workspace.clearWatchman
+rust-analyzer.upgrade
 prettier.formatFile
 CocFormat
 markdownlint.fixAll
-rust-analyzer.syntaxTree
 tsserver.restart

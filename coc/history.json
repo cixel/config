@@ -35,11 +35,21 @@
     ],
     "%2FUsers%2Fehdens%2Fcontrast%2Fi13n": [
       "ex"
+    ],
+    "%2FUsers%2Fehdens%2Fworkspace%2Fascii-images": [
+      "ex",
+      "e",
+      "dia"
     ]
   },
   "symbols": {
     "%2FUsers%2Fehdens%2Fcontrast%2Fnode-agent%2Fnode-agent-core": [
       "logger"
+    ]
+  },
+  "diagnostics": {
+    "%2FUsers%2Fehdens%2Fworkspace%2Fascii-images": [
+      "?"
     ]
   }
 }

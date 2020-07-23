@@ -5,7 +5,9 @@ set background=dark
 " colorscheme base16-solarized-dark
 " colorscheme dracula
 " colorscheme base16-tomorrow-night
+set termguicolors
 colorscheme gruvbox
+let g:gruvbox_contrast_dark = 'medium'
 
 "
 " powerline fonts

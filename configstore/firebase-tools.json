@@ -1,7 +1,14 @@
 {
 	"analytics-uuid": "b175c182-01c5-4c73-bcb4-6573e7f6fa82",
 	"motd": {
-		"minVersion": "3.0.5"
+		"cloudBuildErrorAfter": 1592870400000,
+		"cloudBuildWarnAfter": 1590019200000,
+		"defaultNode10After": 1592870400000,
+		"minVersion": "3.0.5",
+		"node8DeploysDisabledAfter": 1608076800000,
+		"node8RuntimeDisabledAfter": 1613347200000,
+		"node8WarnAfter": 1600128000000,
+		"fetched": 1591393656485
 	},
 	"motd.fetched": 1572446739530,
 	"usage": true,
@@ -12,13 +19,13 @@
 		"sub": "110468874513093410069",
 		"email": "ehdens@gmail.com",
 		"email_verified": true,
-		"at_hash": "yoAzDtxr0dUGoXCf6BedjQ",
-		"iat": 1568808366,
-		"exp": 1568811966
+		"at_hash": "Otg1pbgkXv_QXf_ixE1n3g",
+		"iat": 1591187649,
+		"exp": 1591191249
 	},
 	"tokens": {
-		"expires_at": 1572450339391,
-		"refresh_token": "1/ZuYSManJ2OH22UYQ_wt5VMuGvHmHfdemWq8nhKc4Vo4",
+		"expires_at": 1591397255515,
+		"refresh_token": "1//05V-bGprc37nUCgYIARAAGAUSNwF-L9IrxWZ-x6_e7lBAuigdSK1gQBGA6JLwpC8k5vfiSXtKUy7gLSqxOIbN1ApOF9q6MWsJHbc",
 		"scopes": [
 			"email",
 			"https://www.googleapis.com/auth/cloud-platform",
@@ -26,11 +33,11 @@
 			"https://www.googleapis.com/auth/firebase",
 			"openid"
 		],
-		"access_token": "ya29.ImGpB_sowyM1XOgXR8wOy6t6Pq1NwpEgIC9Q7w3WaofRmkqZQMjQUFRdNkRoYNAESGzw9mLNjG2s_zsCXnU3bYzVrS_Q6jU4rHWI8jeUJ2gg95g6ZRTrtg-sGocxmBh4vmBh",
-		"expires_in": 3600,
-		"scope": "openid https://www.googleapis.com/auth/firebase https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly",
+		"access_token": "ya29.a0AfH6SMBNRtEn3-0KI_mhEyy9bdIxVC-mpf6bkPHE1iawZprQxewj-sO8zPf5FtEbbjslt30lOHrN09_soqWXgVJYm_KFAIk7Q7aUyUbWUOSbA8jjVcCIXOGHJqZprIGBWZEAuU_xKAEWDNpR74hNhfwVTA3CV7EkdlMfr26tQRml",
+		"expires_in": 3599,
+		"scope": "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase https://www.googleapis.com/auth/cloud-platform openid",
 		"token_type": "Bearer",
-		"id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjhhNjNmZTcxZTUzMDY3NTI0Y2JiYzZhM2E1ODQ2M2IzODY0YzA3ODciLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiNTYzNTg0MzM1ODY5LWZncmhnbWQ0N2JxbmVraWo1aThiNXByMDNobzg0OWU2LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiNTYzNTg0MzM1ODY5LWZncmhnbWQ0N2JxbmVraWo1aThiNXByMDNobzg0OWU2LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTEwNDY4ODc0NTEzMDkzNDEwMDY5IiwiZW1haWwiOiJlaGRlbnNAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiJrVVJkNm5rUmlxOU5VVGFpcGhOTGNnIiwiaWF0IjoxNTcyNDQ2NzM5LCJleHAiOjE1NzI0NTAzMzl9.l2aIcjIHefKROzcnYCj1YzTndJ33V7aamX09NA6CwOyFw5VAQBSLlM9k1otKcyf8aHxDwScKVzOSGV9_8hobAq5O1y4n-P-udWuMO-RhnX7FHRu-0cFxdBssKtUCBJaslpPuh87B_9gLB1Z9FHvIEJ65PXuOQ1u8LgN9jYFC8Rlt_WMDOcJY8hjAy6p68JaFq1NKKZWsZrq3-9qojyeQFLekooObR0SEE7oJAYU5uwCCW0d7CKsWSgZNeCWiU9LHKic8KQOTK65Mmb4-Ho4B-1bird17pUFYvnT_IpwL81Eb4cMEtiad3FgsqJFcI1-4oEGMkBhfdpwwMN8IiukqlA"
+		"id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjQ5MjcxMGE3ZmNkYjE1Mzk2MGNlMDFmNzYwNTIwYTMyYzg0NTVkZmYiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiNTYzNTg0MzM1ODY5LWZncmhnbWQ0N2JxbmVraWo1aThiNXByMDNobzg0OWU2LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiNTYzNTg0MzM1ODY5LWZncmhnbWQ0N2JxbmVraWo1aThiNXByMDNobzg0OWU2LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTEwNDY4ODc0NTEzMDkzNDEwMDY5IiwiZW1haWwiOiJlaGRlbnNAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiJRSEE3SWpBMjk5ZE9SeXdEUEZ1NU9nIiwiaWF0IjoxNTkxMzkzNjU2LCJleHAiOjE1OTEzOTcyNTZ9.cbm6uutAqjM5eJcNUzcS4rryit6LuTyBIeu3_n4WHvCW39oZvbMAD_G3LrAgvyobvTAQfZJY7vl-MizgpnlEGqaSVsKLJb5BV-vd0b_YbL5mVREnRDXGzkx3e2lMK5qOJOCt8LBRzqb9dz8meOHhUd_1QHYsFbb8sXFj0mGDzWNZlID_8__WTnkDkBpjbahL28gNIxawP2LYoTDasZkhXz9eRTGxPDoKm948c11J1eGVXV1d1FaM841Sx7hdL0fpa1x_ezXXdGthwlOYpfahCLDDTHKBTlLlcj0N7fOMfBT073HripRW6DZkLMjMVOl62Dm6gDi8_nUDIXXKFj5jvw"
 	},
 	"activeProjects": {
 		"/Users/ehdens/Documents/ehden.net": "personal-site-253309"

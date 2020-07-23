@@ -3,7 +3,7 @@
 # Any items in the `env` entry below will be added as
 # environment variables. Some entries may override variables
 # set by alacritty it self.
-env:
+# env:
   # TERM env customization.
   #
   # If this property is not set, alacritty will set it to xterm-256color.
@@ -11,7 +11,7 @@ env:
   # Note that some xterm terminfo databases don't declare support for italics.
   # You can verify this by checking for the presence of `smso` and `sitm` in
   # `infocmp xterm-256color`.
-  TERM: screen-256color
+  # TERM: screen-256color
 
 window:
   # Window dimensions in character columns and lines
@@ -52,6 +52,9 @@ window:
   #   - SimpleFullscreen
   startup_mode: Windowed
 
+  # Allow terminal applications to change Alacritty's window title.
+  dynamic_title: true
+
 scrolling:
   # Maximum number of lines in the scrollback buffer.
   # Specifying '0' will disable scrolling.
@@ -88,6 +91,11 @@ font:
     # Style can be specified to pick a specific face.
     style: Italic
 
+  bold_italic:
+    family: Hack
+    # The `style` can be specified to pick a specific face.
+    style: Bold Italic
+
   # Point size of the font
   size: 11.0
 
@@ -107,215 +115,39 @@ font:
   # OS X only: use thin stroke font rendering. Thin strokes are suitable
   # for retina displays, but for non-retina you probably want this set to
   # false.
-  use_thin_strokes: true
+  use_thin_strokes: false
 
-# # Colors (Solarized Dark)
-# colors:
-#   # Default colors
-#   primary:
-#     background: '0x002b36'
-#     foreground: '0x839496'
 
-#   # cursor:
-#   #   text: '0x93a1a1'
-#   #   normal: '0x073642'
+# Colors (Gruvbox dark)
+colors:
+  # Default colors
+  primary:
+    # background: '0x1d2021' # hard contrast
+    background: '0x282828' # medium contrast
+    # background = '0x32302f' # soft contrast
+    foreground: '0xebdbb2'
 
-#   # Normal colors
-#   normal:
-#     black:   '0x073642'
-#     red:     '0xdc322f'
-#     green:   '0x859900'
-#     yellow:  '0xb58900'
-#     blue:    '0x268bd2'
-#     magenta: '0xd33682'
-#     cyan:    '0x2aa198'
-#     white:   '0xeee8d5'
+  # Normal colors
+  normal:
+    black:   '0x282828'
+    red:     '0xcc241d'
+    green:   '0x98971a'
+    yellow:  '0xd79921'
+    blue:    '0x458588'
+    magenta: '0xb16286'
+    cyan:    '0x689d6a'
+    white:   '0xa89984'
 
-#   # Bright colors
-#   bright:
-#     # ansi escape 90 sets "bright black", which should render as gray.
-#     # rendering it as the same as the BG color makes it invisible
-#     # black:   '0x002b36'
-#     black:   '0x0387ad'
-#     # black:   '0x073642'
-#     # black:   '0x586e75'
-#     red:     '0xcb4b16'
-#     green:   '0x586e75'
-#     yellow:  '0x657b83'
-#     blue:    '0x839496'
-#     magenta: '0x6c71c4'
-#     cyan:    '0x93a1a1'
-#     white:   '0xfdf6e3'
-
-# # Base16 Solarized Dark - alacritty color config
-# # Ethan Schoonover (http://ethanschoonover.com/solarized)
-# colors:
-#   # Default colors
-#   primary:
-#     background: '0x002b36'
-#     foreground: '0x93a1a1'
-
-#   # Colors the cursor will use if `custom_cursor_colors` is true
-#   cursor:
-#     text: '0x002b36'
-#     cursor: '0x93a1a1'
-
-#   # Normal colors
-#   normal:
-#     black:   '0x002b36'
-#     red:     '0xdc322f'
-#     green:   '0x859900'
-#     yellow:  '0xb58900'
-#     blue:    '0x268bd2'
-#     magenta: '0x6c71c4'
-#     cyan:    '0x2aa198'
-#     white:   '0x93a1a1'
-
-#   # Bright colors
-#   bright:
-#     black:   '0x657b83'
-#     red:     '0xcb4b16'
-#     green:   '0x073642'
-#     yellow:  '0x586e75'
-#     blue:    '0x839496'
-#     magenta: '0xeee8d5'
-#     cyan:    '0xd33682'
-#     white:   '0x93a1a1'
-
-# # Base16 Solarized Light - alacritty color config
-# # Ethan Schoonover (http://ethanschoonover.com/solarized)
-# colors:
-#   # Default colors
-#   primary:
-#     background: '0xfdf6e3'
-#     foreground: '0x586e75'
-
-#   # Colors the cursor will use if `custom_cursor_colors` is true
-#   cursor:
-#     text: '0xfdf6e3'
-#     cursor: '0x586e75'
-
-#   # Normal colors
-#   normal:
-#     black:   '0xfdf6e3'
-#     red:     '0xdc322f'
-#     green:   '0x859900'
-#     yellow:  '0xb58900'
-#     blue:    '0x268bd2'
-#     magenta: '0x6c71c4'
-#     cyan:    '0x2aa198'
-#     white:   '0x586e75'
-
-#   # Bright colors
-#   bright:
-#     black:   '0x839496'
-#     red:     '0xcb4b16'
-#     green:   '0xeee8d5'
-#     yellow:  '0x93a1a1'
-#     blue:    '0x657b83'
-#     magenta: '0x073642'
-#     cyan:    '0xd33682'
-#     white:   '0x586e75'
-
-# # Colors (Dracula)
-# colors:
-#   # Default colors
-#   primary:
-#     background: '0x282a36'
-#     foreground: '0xf8f8f2'
-
-#   # Normal colors
-#   normal:
-#     black:   '0x000000'
-#     red:     '0xff5555'
-#     green:   '0x50fa7b'
-#     yellow:  '0xf1fa8c'
-#     blue:    '0xcaa9fa'
-#     magenta: '0xff79c6'
-#     cyan:    '0x8be9fd'
-#     white:   '0xbfbfbf'
-
-#   # Bright colors
-#   bright:
-#     black:   '0x4d4f68'
-#     # black:   '0x282a35'
-#     red:     '0xff6e67'
-#     green:   '0x5af78e'
-#     yellow:  '0xf4f99d'
-#     blue:    '0xcaa9fa'
-#     magenta: '0xff92d0'
-#     cyan:    '0x9aedfe'
-#     white:   '0xe6e6e6'
-
-# # Base16 Tomorrow - alacritty color config
-# # Chris Kempson (http://chriskempson.com)
-# colors:
-#   # Default colors
-#   primary:
-#     background: '0xffffff'
-#     foreground: '0x4d4d4c'
-
-#   # Colors the cursor will use if `custom_cursor_colors` is true
-#   cursor:
-#     text: '0xffffff'
-#     cursor: '0x4d4d4c'
-
-#   # Normal colors
-#   normal:
-#     black:   '0xffffff'
-#     red:     '0xc82829'
-#     green:   '0x718c00'
-#     yellow:  '0xeab700'
-#     blue:    '0x4271ae'
-#     magenta: '0x8959a8'
-#     cyan:    '0x3e999f'
-#     white:   '0x4d4d4c'
-
-#   # Bright colors
-#   bright:
-#     black:   '0x8e908c'
-#     red:     '0xf5871f'
-#     green:   '0xe0e0e0'
-#     yellow:  '0xd6d6d6'
-#     blue:    '0x969896'
-#     magenta: '0x282a2e'
-#     cyan:    '0xa3685a'
-#     white:   '0x4d4d4c'
-
-# # Base16 Tomorrow Night - alacritty color config
-# # Chris Kempson (http://chriskempson.com)
-# colors:
-#   # Default colors
-#   primary:
-#     background: '0x1d1f21'
-#     foreground: '0xc5c8c6'
-
-#   # Colors the cursor will use if `custom_cursor_colors` is true
-#   cursor:
-#     text: '0x1d1f21'
-#     cursor: '0xc5c8c6'
-
-#   # Normal colors
-#   normal:
-#     black:   '0x1d1f21'
-#     red:     '0xcc6666'
-#     green:   '0xb5bd68'
-#     yellow:  '0xf0c674'
-#     blue:    '0x81a2be'
-#     magenta: '0xb294bb'
-#     cyan:    '0x8abeb7'
-#     white:   '0xc5c8c6'
-
-#   # Bright colors
-#   bright:
-#     black:   '0x969896'
-#     red:     '0xde935f'
-#     green:   '0x282a2e'
-#     yellow:  '0x373b41'
-#     blue:    '0xb4b7b4'
-#     magenta: '0xe0e0e0'
-#     cyan:    '0xa3685a'
-#     white:   '0xc5c8c6'
+  # Bright colors
+  bright:
+    black:   '0x928374'
+    red:     '0xfb4934'
+    green:   '0xb8bb26'
+    yellow:  '0xfabd2f'
+    blue:    '0x83a598'
+    magenta: '0xd3869b'
+    cyan:    '0x8ec07c'
+    white:   '0xebdbb2'
 
 # # Colors (Gruvbox light)
 # colors:
@@ -348,231 +180,53 @@ font:
 #     cyan:    '0x427b58'
 #     white:   '0x3c3836'
 
-# # Project:    Nord Alacritty
-# # Version:    0.1.0
-# # Repository: https://github.com/arcticicestudio/nord-alacritty
-# # License:    MIT
-# # References:
-# #   https://github.com/jwilm/alacritty
-# colors:
-#   primary:
-#     background: '0x2E3440'
-#     foreground: '0xD8DEE9'
-#   cursor:
-#     text: '0x2E3440'
-#     cursor: '0xD8DEE9'
-#   normal:
-#     black: '0x3B4252'
-#     red: '0xBF616A'
-#     green: '0xA3BE8C'
-#     yellow: '0xEBCB8B'
-#     blue: '0x81A1C1'
-#     magenta: '0xB48EAD'
-#     cyan: '0x88C0D0'
-#     white: '0xE5E9F0'
-#   bright:
-#     black: '0x4C566A'
-#     red: '0xBF616A'
-#     green: '0xA3BE8C'
-#     yellow: '0xEBCB8B'
-#     blue: '0x81A1C1'
-#     magenta: '0xB48EAD'
-#     cyan: '0x8FBCBB'
-#     white: '0xECEFF4'
 
-# # Colors (Gruvbox dark)
-colors:
-  # Default colors
-  primary:
-    # hard contrast: background = '0x1d2021'
-    background: '0x282828'
-    # soft contrast: background = '0x32302f'
-    foreground: '0xebdbb2'
-
-  # Normal colors
-  normal:
-    black:   '0x282828'
-    red:     '0xcc241d'
-    green:   '0x98971a'
-    yellow:  '0xd79921'
-    blue:    '0x458588'
-    magenta: '0xb16286'
-    cyan:    '0x689d6a'
-    white:   '0xa89984'
-
-  # Bright colors
-  bright:
-    black:   '0x928374'
-    red:     '0xfb4934'
-    green:   '0xb8bb26'
-    yellow:  '0xfabd2f'
-    blue:    '0x83a598'
-    magenta: '0xd3869b'
-    cyan:    '0x8ec07c'
-    white:   '0xebdbb2'
-
-# # Colors (One Half Dark)
-# # may not work
-# colors:
-#   primary:
-#     background: '0x282c34'
-#     foreground: '0xdcdfe4'
-
-#   normal:
-#     black: '0x282c34'
-#     red: '0xe06c75'
-#     green: '0x98c379'
-#     yellow: '0xe5c07b'
-#     blue: '0x61afef'
-#     magenta: '0xc678dd'
-#     cyan: '0x56b6c2'
-#     white: '0xdcdfe4'
-
-#   bright:
-#     black: '0x282c34'
-#     red: '0xe06c75'
-#     green: '0x98c379'
-#     yellow: '0xe5c07b'
-#     blue: '0x61afef'
-#     magenta: '0xc678dd'
-#     cyan: '0x56b6c2'
-#     white: '0xdcdfe4'
-
-# # Base16 Dracula - alacritty color config
-# # Mike Barkmin (http://github.com/mikebarkmin) based on Dracula Theme (http://github.com/dracula)
-# colors:
-#   # Default colors
-#   primary:
-#     background: '0x282936'
-#     foreground: '0xe9e9f4'
-
-#   # Colors the cursor will use if `custom_cursor_colors` is true
-#   cursor:
-#     text: '0x282936'
-#     cursor: '0xe9e9f4'
-
-#   # Normal colors
-#   normal:
-#     black:   '0x282936'
-#     red:     '0xea51b2'
-#     green:   '0x00f769'
-#     yellow:  '0xebff87'
-#     blue:    '0x62d6e8'
-#     magenta: '0xb45bcf'
-#     cyan:    '0xa1efe4'
-#     white:   '0xe9e9f4'
-
-#   # Bright colors
-#   bright:
-#     black:   '0x4d4f68'
-#     red:     '0xb45bcf'
-#     green:   '0x3a3c4e'
-#     yellow:  '0x626483'
-#     blue:    '0x62d6e8'
-#     magenta: '0xf1f2f8'
-#     cyan:    '0x00f769'
-#     white:   '0xe9e9f4'
-
-# Base16 Solarized Light - alacritty color config
-# Ethan Schoonover (http://ethanschoonover.com/solarized)
-# colors:
-#   # Default colors
-#   primary:
-#     background: '0xfdf6e3'
-#     foreground: '0x586e75'
-
-#   # Colors the cursor will use if `custom_cursor_colors` is true
-#   cursor:
-#     text: '0xfdf6e3'
-#     cursor: '0x586e75'
-
-#   # Normal colors
-#   normal:
-#     black:   '0xfdf6e3'
-#     red:     '0xdc322f'
-#     green:   '0x859900'
-#     yellow:  '0xb58900'
-#     blue:    '0x268bd2'
-#     magenta: '0x6c71c4'
-#     cyan:    '0x2aa198'
-#     white:   '0x586e75'
-
-#   # Bright colors
-#   bright:
-#     black:   '0x839496'
-#     red:     '0xcb4b16'
-#     green:   '0xeee8d5'
-#     yellow:  '0x93a1a1'
-#     blue:    '0x657b83'
-#     magenta: '0x073642'
-#     cyan:    '0xd33682'
-#     white:   '0x586e75'
-
-# # Base16 Atelier Cave Light - alacritty color config
-# # Bram de Haan (http://atelierbramdehaan.nl)
-# colors:
-#   # Default colors
-#   primary:
-#     background: '0xefecf4'
-#     foreground: '0x585260'
-
-#   # Colors the cursor will use if `custom_cursor_colors` is true
-#   cursor:
-#     text: '0xefecf4'
-#     cursor: '0x585260'
-
-#   # Normal colors
-#   normal:
-#     black:   '0xefecf4'
-#     red:     '0xbe4678'
-#     green:   '0x2a9292'
-#     yellow:  '0xa06e3b'
-#     blue:    '0x576ddb'
-#     magenta: '0x955ae7'
-#     cyan:    '0x398bc6'
-#     white:   '0x585260'
-
-#   # Bright colors
-#   bright:
-#     black:   '0x7e7887'
-#     red:     '0xaa573c'
-#     green:   '0xe2dfe7'
-#     yellow:  '0x8b8792'
-#     blue:    '0x655f6d'
-#     magenta: '0x26232a'
-#     cyan:    '0xbf40bf'
-#     white:   '0x585260'
-
-# Visual Bell
+# Bell
 #
-# Any time the BEL code is received, Alacritty "rings" the visual bell. Once
-# rung, the terminal background will be set to white and transition back to the
-# default background color. You can control the rate of this transition by
-# setting the `duration` property (represented in milliseconds). You can also
-# configure the transition function by setting the `animation` property.
-#
-# Possible values for `animation`
-# `Ease`
-# `EaseOut`
-# `EaseOutSine`
-# `EaseOutQuad`
-# `EaseOutCubic`
-# `EaseOutQuart`
-# `EaseOutQuint`
-# `EaseOutExpo`
-# `EaseOutCirc`
-# `Linear`
-#
-# To completely disable the visual bell, set its duration to 0.
-#
-visual_bell:
+# The bell is rung every time the BEL control character is received.
+bell:
+  # Visual Bell Animation
+  #
+  # Animation effect for flashing the screen when the visual bell is rung.
+  #
+  # Values for `animation`:
+  #   - Ease
+  #   - EaseOut
+  #   - EaseOutSine
+  #   - EaseOutQuad
+  #   - EaseOutCubic
+  #   - EaseOutQuart
+  #   - EaseOutQuint
+  #   - EaseOutExpo
+  #   - EaseOutCirc
+  #   - Linear
   animation: EaseOutExpo
+
+  # Duration of the visual bell flash. A `duration` of `0` will disable the
+  # visual bell animation.
   duration: 0
+
+  # Visual bell animation color.
+  #color: '#ffffff'
+
+  # Bell Command
+  #
+  # This program is executed whenever the bell is rung.
+  #
+  # When set to `command: None`, no command will be executed.
+  #
+  # Example:
+  #   command:
+  #     program: notify-send
+  #     args: ["Hello, World!"]
+  #
+  command: None
 
 # Background opacity
 #
 # Window opacity as a floating point number from `0.0` to `1.0`.
 # The value `0.0` is completely transparent and `1.0` is opaque.
+# background_opacity: 1.0
 background_opacity: 1.0
 
 # Mouse bindings
@@ -605,13 +259,11 @@ mouse:
   # If this is `true`, the cursor is temporarily hidden when typing.
   hide_when_typing: true
 
-selection:
-  semantic_escape_chars: ",│`|:\"' ()[]{}<>"
+# selection:
+#   semantic_escape_chars: ",│`|:\"' ()[]{}<>"
 
-  # When set to `true`, selected text will be copied to the primary clipboard.
-  save_to_clipboard: false
-
-dynamic_title: true
+#   # When set to `true`, selected text will be copied to the primary clipboard.
+#   save_to_clipboard: false
 
 cursor:
   # Cursor style
@@ -626,6 +278,18 @@ cursor:
   # window is not focused.
   unfocused_hollow: true
 
+  # Vi mode cursor style
+  #
+  # If the vi mode cursor style is `None` or not specified, it will fall back to
+  # the style of the active value of the normal cursor.
+  #
+  # See `cursor.style` for available options.
+  #vi_mode_style: None
+
+  # Thickness of the cursor relative to the cell width as floating point number
+  # from `0.0` to `1.0`.
+  #thickness: 0.15
+
 # Live config reload (changes require restart)
 live_config_reload: true
 
@@ -636,9 +300,13 @@ live_config_reload: true
 # Entries in shell.args are passed unmodified as arguments to the shell.
 #
 shell:
-  program: /bin/zsh
-#   args:
-#     - --login
+  # program: zsh
+  # XXX: I really want to not have to hardcode this but I don't know how I can
+  # create a substitution without having nix manage this file.
+  program: /Users/ehdens/.nix-profile/bin/zsh
+  # program: ${HOME}/.nix-profile/bin/zsh
+  args:
+    - --login
 
 # Key bindings
 #
@@ -685,7 +353,7 @@ debug:
   render_timer: false
 
   # Keep the log file after quitting Alacritty.
-  #persistent_logging: false
+  persistent_logging: false
 
   # Log level
   #
@@ -696,7 +364,7 @@ debug:
   #   - Info
   #   - Debug
   #   - Trace
-  #log_level: Warn
+  # log_level: Warn
 
   # Print all received window events.
   #print_events: false

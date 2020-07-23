@@ -1,90 +1,41 @@
-# Don't print a new line at the start of the prompt
-add_newline = false
+scan_timeout = 5
+format = """
+$cmd_duration\
+$time\
+$username$hostname\
+$git_branch\
+$directory\
+$nix_shell\
+$git_status\
+$jobs\
+$character\
+"""
 
-prompt_order = [
-    "time",
-    "username",
-    "hostname",
-    "directory",
-    "git_branch",
-    "git_state",
-    "git_status",
-    "package",
-    "nodejs",
-    "ruby",
-    "rust",
-    "python",
-    "golang",
-    "java",
-    "nix_shell",
-    "cmd_duration",
-    "line_break",
-    "jobs",
-    "battery",
-    "character",
-]
-
-# default
-# prompt_order = [
-#     "username",
-#     "hostname",
-#     "directory",
-#     "git_branch",
-#     "git_state",
-#     "git_status",
-#     "package",
-#     "nodejs",
-#     "ruby",
-#     "rust",
-#     "python",
-#     "golang",
-#     "java",
-#     "nix_shell",
-#     "cmd_duration",
-#     "line_break",
-#     "jobs",
-#     "battery",
-#     "time",
-#     "character",
-# ]
-
-[character]
-# symbol = "$"
+[directory]
+style = "bold blue"
+fish_style_pwd_dir_length = 1
 
 [cmd_duration]
-style = "white"
+style = "dimmed white"
+show_milliseconds = true
+format = "[\\($duration\\)]($style)\n"
 
-[line_break]
-disabled = true
+[username]
+style_user = "bold dimmed blue"
+format = "[$user]($style)"
+
+[hostname]
+style = "bold dimmed blue"
+format = "[@$hostname]($style) "
 
 [time]
-disabled = false
-# format = "%T"
+disabled = true
+format = "[$time]($style) "
 style = "bold green"
 
 [git_branch]
 style = "purple"
-
-[package]
-disabled = true
-
-[nodejs]
-disabled = true
-
-[rust]
-disabled = true
-
-[golang]
-disabled = true
-
-[ruby]
-disabled = true
-
-[java]
-disabled = true
-
-[python]
-disabled = false
+format = "[$symbol$branch]($style) "
 
 [battery]
 disabled = true

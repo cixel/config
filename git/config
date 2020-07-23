@@ -1,6 +1,8 @@
 [user]
 	name = Ehden Sinai
 	email = ehdens@gmail.com
+[credential]
+	helper = osxkeychain
 [core]
 	autocrlf = input
 	quotepath = false

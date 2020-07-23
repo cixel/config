@@ -1,10 +1,12 @@
 call plug#begin()
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
+Plug 'junegunn/fzf'
+Plug 'LnL7/vim-nix'
+" Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 
 Plug 'editorconfig/editorconfig-vim'
 " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-" Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 " Plug 'zchee/deoplete-go', { 'do': 'make' }
 
 Plug 'majutsushi/tagbar' " source code nav in sidebar
@@ -153,7 +155,7 @@ nmap <C-e> :e#<CR>
 nmap <C-n> :bnext<CR>
 nmap <C-m> :bprev<CR>
 
-autocmd FileType rust,javascript,go nmap <silent> gd <Plug>(coc-definition)
+" autocmd FileType rust,javascript,go nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> <leader>ff :call CocAction('format')<CR>
 
 au BufNewFile,BufRead *.ejs set filetype=html
@@ -171,8 +173,10 @@ let g:ale_linters_explicit = 1
 
 " FZF.vim
 " let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore-dir={dist,target,node_modules,docs,rulepack/xml,experiments,code-coverage-report} --ignore .git -g ""'
-let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore-dir={dist,node_modules,docs,rulepack/xml,experiments,code-coverage-report} --ignore .git -g ""'
-set rtp+=/usr/local/opt/fzf " for fzf to load on start from the brew install
+" set rtp+=/usr/local/opt/fzf " for fzf to load on start from the brew install
+" set rtp+= " for fzf to load on start from the brew install
+" let $FZF_DEFAULT_COMMAND = "fd --type f --hidden -E '.git' -E 'target/**'"
+let $FZF_DEFAULT_COMMAND = "fd --type f --hidden -E '.git'"
 nmap ; :FZF<CR>
 
 " UltiSnips

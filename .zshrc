@@ -2,7 +2,7 @@
 # zmodload zsh/zprof
 
 # Path to your oh-my-zsh installation.
-export ZSH=~/.oh-my-zsh
+# export ZSH=~/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -55,10 +55,21 @@ source ~/.config/lazynvm.sh
 # Add wisely, as too many plugins slow down shell startup.
 # plugins=(git vi-mode node wd)
 # plugins=(git vi-mode wd zsh-nvm)
+# plugins=(vi-mode wd fzf)
 plugins=(vi-mode wd)
+export KEYTIMEOUT=1
 
-# User configuration
+### Completion
+fpath=($HOME/.zsh/completions $fpath)
+autoload -U compinit && compinit -u
+zstyle ':completion:*' menu select
 
+# Colorize completions using default `ls` colors.
+export LS_COLORS=$LSCOLORS
+zstyle ':completion:*default' list-colors ${(s.:.)LS_COLORS}
+
+
+### User configuration
 export HISTFILE="$HOME/.zsh_history"
 export HISTSIZE=50000
 export SAVEHIST=10000
@@ -67,7 +78,7 @@ export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Library/
 # export PATH="/usr/local/opt/python/libexec/bin:$PATH" # brew's python before OSX's in PATH
 # export MANPATH="/usr/local/man:$MANPATH"
 
-source $ZSH/oh-my-zsh.sh
+# source $ZSH/oh-my-zsh.sh
 
 source ~/.config/alias.sh
 
@@ -97,7 +108,7 @@ fi
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 #export JAVA_HOME=$(/usr/libexec/java_home -v 1.7)
-export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+# export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 
 export BITBUCKET_USERNAME=cixel
 export MYSQL_HOME=/usr/local/mysql
@@ -117,14 +128,29 @@ alias ack='ag --ignore-dir=node_modules --ignore-dir=labs --ignore-dir=docs --ig
 
 # Color scheme
 #[[ $TMUX  = "" ]] && export TERM="xterm-256color"
-[[ $TMUX  = "" ]] && export TERM="screen-256color"
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_COMPLETION_TRIGGER='~~'
+# Use fd (https://github.com/sharkdp/fd) instead of the default find
+# command for listing path candidates.
+# - The first argument to the function ($1) is the base path to start traversal
+# - See the source code (completion.{bash,zsh}) for the details.
+# _fzf_compgen_path() {
+#   fd --hidden --follow --exclude ".git" . "$1"
+# }
+# # Use fd to generate the list for directory completion
+# _fzf_compgen_dir() {
+#   fd --type d --hidden --follow --exclude ".git" . "$1"
+# }
+# FIXME: this is a stop-gap for until i have nix managing zsh
+. ~/.nix-profile/share/fzf/key-bindings.zsh
+. ~/.nix-profile/share/fzf/completion.zsh
+# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 #[[ -s "~/.gvm/scripts/gvm" ]] && source "~/.gvm/scripts/gvm"
 export GOROOT_BOOTSTRAP="/usr/local/Cellar/go/1.12/libexec"
 export GOPATH="$HOME/gopath/"
 # export PATH=$PATH:/usr/local/opt/go/libexec/bin
+# echo "please help lmao"
 export PATH=$PATH:~/gopath/bin
 export PATH=$PATH:~/go/bin
 export PATH=$PATH:~/golang/bin
@@ -141,9 +167,6 @@ bindkey '^[OB' down-line-or-search
 #tic $TERM.ti
 #infocmp $TERM | sed 's/kbs=^[hH]/kbs=\\177/' | tic
 
-# uncomment to enable startup time logging
-# zprof
-
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
 
@@ -159,3 +182,7 @@ export NIX_PATH=$HOME/.nix-defexpr/channels${NIX_PATH:+:}$NIX_PATH
 . /Users/ehdens/.nix-profile/etc/profile.d/nix.sh
 
 eval "$(starship init zsh)"
+
+# uncomment when startup time logging is enabled:
+# zprof
+# zmodload zsh/zprof
