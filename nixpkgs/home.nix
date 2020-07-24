@@ -45,6 +45,7 @@ in
 
 
   home.packages = [
+    nixpkgs.git
     nixpkgs.bat
     nixpkgs.exa
     nixpkgs.fd
