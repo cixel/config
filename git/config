@@ -46,3 +46,5 @@
     tool = vimdiff
 [gc]
 	writeCommitGraph = true
+[pull]
+	rebase = true
