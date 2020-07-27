@@ -241,6 +241,9 @@ in
       #### mouse mode
       set -g mouse on
 
+      #### send prefix (so C-b works as prefix on remote)
+      bind-key -n C-b send-prefix
+
       ## COLORSCHEME: gruvbox dark
       set-option -g status "on"
 
