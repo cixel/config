@@ -37,7 +37,7 @@
 [rerere]
 	enabled = true
 [http]
-	cookiefile = /Users/ehdens/.gitcookies
+	cookiefile = $HOME/.gitcookies
 [url "git@bitbucket.org:"]
 	insteadOf = https://bitbucket.org/
 [difftool "vimdiff"]
