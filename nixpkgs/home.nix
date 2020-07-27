@@ -167,12 +167,44 @@ in
     shortcut = "a";
     keyMode = "vi";
     escapeTime = 0;
+    clock24 = true;
     # baseIndex = 1;
     sensibleOnTop = true;
     terminal = "screen-256color";
     plugins =  with nixpkgs; [
-      tmuxPlugins.cpu
-      tmuxPlugins.battery
+      {
+        plugin = tmuxPlugins.cpu;
+        extraConfig = ''
+          ### I can put these all in the color scheme section at the bottom,
+          ### maybe? then use #{cpu_bg_color} instead of the color strings I'm
+          ### using
+          # set -g @cpu_low_fg_color "#[fg=colour246]"
+          # set -g @cpu_medium_fg_color "#[fg=colour246]"
+          # set -g @cpu_high_fg_color "#[fg=colour246]"
+          # set -g @cpu_low_bg_color "#[bg=colour237]"
+          # set -g @cpu_medium_bg_color "#[bg=colour237]"
+          # set -g @cpu_high_bg_color "#[bg=colour237]"
+          set -g @cpu_percentage_format " cpu: %3.1f%% "
+
+          # set -g @ram_low_fg_color "#[fg=colour246]"
+          # set -g @ram_medium_fg_color "#[fg=colour246]"
+          # set -g @ram_high_fg_color "#[fg=colour246]"
+          # set -g @ram_low_bg_color "#[bg=colour239]"
+          # set -g @ram_medium_bg_color "#[bg=colour239]"
+          # set -g @ram_high_bg_color "#[bg=colour239]"
+          set -g @ram_percentage_format " ram: %3.1f%% "
+
+          set-option  -g status-right '#[fg=colour246, bg=colour237] #{cpu_percentage} '
+          # set-option  -g status-right '#[fg=colour246, bg=colour237, nobold, nounderscore, noitalics] #{cpu_percentage} '
+          set-option -ag status-right '#[fg=colour246, bg=colour238, nobold, nounderscore, noitalics] #{ram_percentage} '
+        '';
+      }
+      {
+        plugin = tmuxPlugins.battery;
+        extraConfig = ''
+          set-option  -ag status-right '#[fg=colour246, bg=colour239, nobold, nounderscore, noitalics] batt: #{battery_percentage} '
+        '';
+      }
       tmuxPlugins.vim-tmux-navigator
       tmuxPlugins.resurrect
       {
@@ -210,7 +242,6 @@ in
       #### mouse mode
       set -g mouse on
 
-
       ## COLORSCHEME: gruvbox dark
       set-option -g status "on"
 
@@ -247,6 +278,9 @@ in
       set-window-option -g window-status-bell-style bg=colour167,fg=colour235 # bg=red, fg=bg
 
       ## Theme settings mixed with colors (unfortunately, but there is no cleaner way)
+      ## NOTE(ehden): there actually may be a cleaner way to set backgrounds on
+      # individual plugins via their own options. see
+      # https://github.com/tmux-plugins/tmux-cpu#customization
       set-option -g status-justify "left"
       set-option -g status-left-style none
       set-option -g status-left-length "80"
@@ -255,12 +289,7 @@ in
       set-window-option -g window-status-separator ""
 
       set-option -g status-left "#[fg=colour247, bg=colour241] #S "
-      set-option -g status-right '#[fg=colour246, bg=colour237, nobold, nounderscore, noitalics] cpu: #{cpu_percentage} #[fg=colour246,bg=colour238] mem: #{ram_percentage} #[fg=colour246,bg=colour239] batt: #{battery_percentage} #[fg=colour237, bg=colour248] %l:%M %p %a %d-%b-%y '
-      # set-option -g status-right '#[fg=colour246, bg=colour237, nobold, nounderscore, noitalics] cpu: #{cpu_percentage} #[fg=colour246,bg=colour238] mem: #{ram_percentage} #[fg=colour246,bg=colour239] batt: #{battery_percentage} #[fg=colour237, bg=colour248] %H:%M %a %d-%b-%y '
-
-      set-window-option -g window-status-current-format "#[fg=colour239, bg=colour214] #I:#[fg=colour239, bg=colour214, bold] #W #[fg=colour214, bg=colour237, nobold, noitalics, nounderscore]"
-      # set-window-option -g window-status-current-format "#[fg=colour239, bg=colour247] #I:#[fg=colour239, bg=colour247, bold] #W #[fg=colour214, bg=colour237, nobold, noitalics, nounderscore]"
-      set-window-option -g window-status-format         "#[fg=colour223, bg=colour239] #I:#[fg=colour223, bg=colour239      ] #W #[fg=colour239, bg=colour237, noitalics]"
+      set-option -ag status-right "#[fg=colour237, bg=colour248]%l:%M %p %a %d-%b-%y "
       # END COLORSCHEME
     '';
   };
