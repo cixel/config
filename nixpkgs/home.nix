@@ -192,11 +192,10 @@ in
           # set -g @ram_low_bg_color "#[bg=colour239]"
           # set -g @ram_medium_bg_color "#[bg=colour239]"
           # set -g @ram_high_bg_color "#[bg=colour239]"
-          set -g @ram_percentage_format " ram: %3.1f%% "
+          set -g @ram_percentage_format " mem: %3.1f%% "
 
-          set-option  -g status-right '#[fg=colour246, bg=colour237] #{cpu_percentage} '
-          # set-option  -g status-right '#[fg=colour246, bg=colour237, nobold, nounderscore, noitalics] #{cpu_percentage} '
-          set-option -ag status-right '#[fg=colour246, bg=colour238, nobold, nounderscore, noitalics] #{ram_percentage} '
+          set-option  -g status-right '#[fg=colour246, bg=colour237]#{cpu_percentage}'
+          set-option -ag status-right '#[fg=colour246, bg=colour238]#{ram_percentage}'
         '';
       }
       {
