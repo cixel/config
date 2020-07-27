@@ -149,6 +149,7 @@ in
     '';
     plugins = [
       {
+        # https://github.com/Aloxaf/fzf-tab
         name = "fzf-tab";
         file = "fzf-tab.zsh";
         src = pkgs.fetchFromGitHub {
