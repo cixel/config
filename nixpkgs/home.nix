@@ -5,18 +5,22 @@ let
   nixpkgs = import <nixpkgs> {};
 
   # https://discourse.nixos.org/t/is-it-possible-to-override-cargosha256-in-buildrustpackage/4393/2
-  starship = nixpkgs.starship.overrideAttrs (drv: rec {
-    src = nixpkgs.fetchFromGitHub {
-      owner = "starship";
-      repo = "starship";
-      rev = "a89f41f8e8e3691d6499357509ff5f293dcf8007";
-      sha256 = "0fqbbax783bp066wqhb3qmiw262da25kjb2ypsfcq3k8bxxw8qlr";
-    };
-    cargoDeps = drv.cargoDeps.overrideAttrs (nixpkgs.lib.const {
-      inherit src;
-      outputHash = "0j0l5gngkdyns83r5aplr9psvhd9mff7s9r4h2dfial07jm5rwds";
-    });
-  });
+  starship = nixpkgs.starship.overrideAttrs (
+    drv: rec {
+      src = nixpkgs.fetchFromGitHub {
+        owner = "starship";
+        repo = "starship";
+        rev = "a89f41f8e8e3691d6499357509ff5f293dcf8007";
+        sha256 = "0fqbbax783bp066wqhb3qmiw262da25kjb2ypsfcq3k8bxxw8qlr";
+      };
+      cargoDeps = drv.cargoDeps.overrideAttrs (
+        nixpkgs.lib.const {
+          inherit src;
+          outputHash = "0j0l5gngkdyns83r5aplr9psvhd9mff7s9r4h2dfial07jm5rwds";
+        }
+      );
+    }
+  );
 
   # starship_src = import ./starship.nix;
   # starship = nixpkgs.callPackage starship_src { Security= nixpkgs.darwin.apple_sdk.frameworks.Security; };
@@ -120,47 +124,5 @@ in
   #   goBin = "${builtins.getEnv "HOME"}/gobin";
   # };
 
-  #programs.git = {
-  #	package = pkgs.gitAndTools.gitFull;
-  #  userName = Ehden Sinai;
-  #  userEmail = ehdens@gmail.com;
-
-  #  extraConfig = {
-  #  	core = {
-  #  		autocrlf = input;
-  #  		quotepath = false;
-  #  		commitGraph = true;
-  #  	};
-  #  	rerere = { enabled = true; };
-  #  };
-
-  #  aliases = {
-  #  	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
-  #  	aa = add -A .
-  #  	fpush = push --force-with-lease
-  #  	st = status
-  #  	ci = commit
-  #  	co = checkout
-  #  	cp = cherry-pick
-  #  	put = push origin HEAD
-  #  	fixup = !sh -c 'git commit --no-verify -m \"fixup! $(git log -1 --format='\\''%s'\\'' $@)\"' -
-  #  	squash = !sh -c 'git commit --no-verify -m \"squash! $(git log -1 --format='\\''%s'\\'' $@)\"' -
-  #  	doff = reset head^
-  #  	ri = rebase --interactive
-  #  	br = branch
-  #  	pruneremote = remote prune origin
-  #  	tree = log --graph --oneline --decorate --color --all
-  #  	tr = log --graph --oneline --decorate --color
-  #  	unpushed = !"PROJ_BRANCH=$(git symbolic-ref HEAD | sed 's|refs/heads/||') && git log origin/$PROJ_BRANCH..HEAD"
-  #  	unpulled = !"PROJ_BRANCH=$(git symbolic-ref HEAD | sed 's|refs/heads/||') && git fetch && git log HEAD..origin/$PROJ_BRANCH"
-  #  	add-untracked = !"git status --porcelain | awk '/\\?\\?/{ print $2 }' | xargs git add"
-  #  	ln = log --pretty=format:'%Cblue%h %Cred* %C(yellow)%s'
-  #  	reset-authors = commit --amend --reset-author -CHEAD
-  #  	rmbranch = "!f(){ git branch -d ${1} && git push origin --delete ${1}; };f"
-  #  	snapshot = !git stash save "snapshot: $(date)" && git stash apply "stash@{0}" --abbrev-commit --date=relative
-  #  	stash = git stash push
-  #  	save = commit -m "saving" --no-verify
-  #  	rpull = pull -r
-  #  };
-  #};
 }
+
