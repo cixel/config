@@ -1,3 +1,7 @@
 nvim/plugged
 node_modules/
 coc/extensions/
+coc/memos.json
+coc/history.json
+configstore
+
