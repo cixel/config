@@ -76,11 +76,14 @@
     bind % split-window -h -c "#{pane_current_path}"
     bind c new-window -c "#{pane_current_path}"
 
+    #### reload config
+    bind r source-file ~/.tmux.conf \; display-message "Config reloaded..."
+
     #### mouse mode
     set -g mouse on
 
     #### send prefix (so C-b works as prefix on remote)
-    bind-key -n C-b send-prefix
+    bind-key -n C-Tab send-prefix
 
     ## COLORSCHEME: gruvbox dark
     set-option -g status "on"
@@ -129,7 +132,9 @@
     set-window-option -g window-status-separator ""
 
     set-option -g status-left "#[fg=colour247, bg=colour241] #S "
-    set-option -ag status-right "#[fg=colour237, bg=colour248]%l:%M %p %a %d-%b-%y "
+    set-option -ag status-right "#[fg=colour237, bg=colour248] %l:%M %p %a %d-%b-%y "
+    set-window-option -g window-status-current-format "#[fg=colour239, bg=colour214] #I:#[fg=colour239, bg=colour214, bold] #W #[fg=colour214, bg=colour237, nobold, noitalics, nounderscore]"
+    set-window-option -g window-status-format         "#[fg=colour223, bg=colour239] #I:#[fg=colour223, bg=colour239      ] #W #[fg=colour239, bg=colour237, noitalics]"
     # END COLORSCHEME
   '';
 }

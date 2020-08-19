@@ -21,12 +21,6 @@ let
       );
     }
   );
-
-  # starship_src = import ./starship.nix;
-  # starship = nixpkgs.callPackage starship_src { Security= nixpkgs.darwin.apple_sdk.frameworks.Security; };
-  # mozilla-overlays = fetchTarball {
-  #     url = https://github.com/mozilla/nixpkgs-mozilla/archive/master.tar.gz;
-  # };
 in
 {
   # Let Home Manager install and manage itself.
@@ -71,6 +65,8 @@ in
     nixpkgs.lldb_10
     nixpkgs.libwebp
 
+    nixpkgs.delve
+
     # nixpkgs.coreutils-full
 
     nixpkgs.python
@@ -89,9 +85,6 @@ in
 
     # nix language server
     nixpkgs.rnix-lsp
-
-    # I can add the tmux.conf here as well
-    nixpkgs.tmux
   ];
 
   programs.zsh = import ./zsh-conf.nix { pkgs = nixpkgs; };
@@ -99,6 +92,7 @@ in
 
   programs.neovim = {
     enable = true;
+    package = nixpkgs.neovim-unwrapped;
 
     vimdiffAlias = true;
     withNodeJs = true;
@@ -123,6 +117,4 @@ in
   #   goPath = "${builtins.getEnv "HOME"}/gopath";
   #   goBin = "${builtins.getEnv "HOME"}/gobin";
   # };
-
 }
-
