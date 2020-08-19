@@ -28,8 +28,6 @@
   initExtraBeforeCompInit = ''
     '';
   initExtra = ''
-    if [ -f $HOME/.sensitive ]; then . $HOME/.sensitive; fi
-
     ### Paste utils and auto escaping URLs
     autoload -Uz bracketed-paste-magic
     zle -N bracketed-paste bracketed-paste-magic
@@ -48,6 +46,9 @@
     eval "$(starship init zsh)"
   '';
   envExtra = ''
+    if [ -f $HOME/go/bin/go ]; then alias godev="$HOME/go/bin/go"; fi
+    if [ -f $HOME/.sensitive ]; then . $HOME/.sensitive; fi
+
     # may want to fiddle with these so ~/go is just my one source for all
     # things outside of the toolchain and ~/golang is for inside
     export GOBIN="$HOME/gobin"
