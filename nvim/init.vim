@@ -13,7 +13,6 @@ Plug 'majutsushi/tagbar' " source code nav in sidebar
 Plug 'dense-analysis/ale'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'alvan/vim-closetag'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 Plug 'mtth/scratch.vim'
@@ -21,7 +20,7 @@ Plug 'SirVer/ultisnips'
 Plug 'godlygeek/tabular'
 " Plug 'Raimondi/delimitMate'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'cohama/lexima.vim' " not sure if I use this
+Plug 'cohama/lexima.vim' " adds auto-closing; not sure how this interacts with tpop/vim-endwise
 Plug 'ervandew/supertab'
 " Plug 'milkypostman/vim-togglelist' " toggle loclist and quickfix
 Plug 'rhysd/vim-crystal' " support for crystal lang
@@ -57,7 +56,9 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-endwise'
 Plug 'vim-scripts/VisIncr'
+Plug 'machakann/vim-highlightedyank'
 
 " Plug 'elzr/vim-json'
 " Plug 'othree/yajs.vim', { 'for': 'javascript' } " better syntax for javascript ** Very slow. Look into replacement
@@ -69,9 +70,11 @@ source ~/.config/nvim/custom/go.vim
 source ~/.config/nvim/custom/coc.vim
 source ~/.config/nvim/custom/misc_funcs.vim
 
-if exists('##TextYankPost')
-	autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank('Substitute', 200)
-endif
+" XXX for vim-highlightedyank, can delete this on newer versions of neovim
+" if !exists('##TextYankPost')
+"   map y <Plug>(highlightedyank)
+" endif
+let g:highlightedyank_highlight_duration = 200
 
 set undodir=~/.vimdid
 set undofile

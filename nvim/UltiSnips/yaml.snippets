@@ -14,6 +14,7 @@ agent:
   polling:
     app_activity_ms: 6000
   service:
+    grpc: true
     logger:
       path: service.log
       level: debug
@@ -24,7 +25,7 @@ assess:
   enable_preflight: false
 
 protect:
-  enable: true
+  enable: false
 endsnippet
 
 snippet assess "contrast config disable assess"
