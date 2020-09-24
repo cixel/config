@@ -111,8 +111,9 @@ set foldmethod=syntax
 set foldlevelstart=20
 "set nofoldenable
 
-let g:python_host_prog = '/usr/local/bin/python3'
-let g:python3_host_prog = '/usr/local/bin/python3'
+" XXX don't set these to let home-manager set these to the correct paths
+" let g:python_host_prog = '/usr/local/bin/python3'
+" let g:python3_host_prog = '~/.nix-profile/bin/python3'
 
 
 " yank to clipboard
