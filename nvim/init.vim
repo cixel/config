@@ -100,6 +100,7 @@ nnoremap <leader>B/ :%s/\v()/\=base64#decode(submatch(1))/<home><right><right><r
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType rust setlocal expandtab
 autocmd FileType markdown setlocal textwidth=80 expandtab wrap spell
+autocmd FileType proto setlocal ts=4 expandtab
 
 
 " Remap for rename current word
