@@ -45,6 +45,7 @@ let g:go_highlight_structs = 1
 "let g:go_auto_sameids = 1
 
 
+" XXX can I get gopls to run these?
 let g:ale_linters = {
 \   'go': ['vet', 'golint'],
 \}

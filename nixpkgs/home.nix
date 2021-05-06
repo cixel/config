@@ -3,24 +3,6 @@
 let
   # set channel channel to nixpkgs-unstable
   nixpkgs = import <nixpkgs> {};
-
-  # https://discourse.nixos.org/t/is-it-possible-to-override-cargosha256-in-buildrustpackage/4393/2
-  starship = nixpkgs.starship.overrideAttrs (
-    drv: rec {
-      src = nixpkgs.fetchFromGitHub {
-        owner = "starship";
-        repo = "starship";
-        rev = "a89f41f8e8e3691d6499357509ff5f293dcf8007";
-        sha256 = "0fqbbax783bp066wqhb3qmiw262da25kjb2ypsfcq3k8bxxw8qlr";
-      };
-      cargoDeps = drv.cargoDeps.overrideAttrs (
-        nixpkgs.lib.const {
-          inherit src;
-          outputHash = "0j0l5gngkdyns83r5aplr9psvhd9mff7s9r4h2dfial07jm5rwds";
-        }
-      );
-    }
-  );
 in
 {
   # Let Home Manager install and manage itself.
@@ -41,7 +23,6 @@ in
   # nixpkgs.config.allowUnfree = true;
   # nixpkgs.overlays = [ (import "${mozilla-overlays}") ];
 
-
   home.packages = [
     nixpkgs.git
     nixpkgs.bat
@@ -49,8 +30,7 @@ in
     nixpkgs.fd
     nixpkgs.graphviz
     nixpkgs.jq
-    starship
-    # nixpkgs.starship
+    nixpkgs.starship
     nixpkgs.tokei
     nixpkgs.fd
     nixpkgs.modd
@@ -66,6 +46,7 @@ in
     nixpkgs.libwebp
 
     nixpkgs.delve
+    nixpkgs.protobuf
 
     # nixpkgs.coreutils-full
 
@@ -85,6 +66,8 @@ in
 
     # nix language server
     nixpkgs.rnix-lsp
+
+    nixpkgs.golangci-lint
   ];
 
   programs.zsh = import ./zsh-conf.nix { pkgs = nixpkgs; };
@@ -98,7 +81,12 @@ in
     withNodeJs = true;
     withPython3 = true;
 
-    extraConfig = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/init.vim";
+    # plugins = with nixpkgs; [
+    #   vimPlugins.gruvbox
+    # ];
+
+    # extraConfig = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/init.vim";
+    extraConfig = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/init.templ.vim";
   };
 
   programs.fzf = {

@@ -1,3 +1,6 @@
+workspace.showOutput
+go.version
+go.install.gopls
 rust-analyzer.syntaxTree
 workspace.clearWatchman
 rust-analyzer.upgrade

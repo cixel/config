@@ -12,6 +12,8 @@
 		}
 	},
 	"diagnostic.displayByAle": true,
+	"diagnostic.errorSign": "E",
+	"diagnostic.warningSign": "W",
 
 	"javascript.suggestionActions.enabled": false,
 	"javascript.showUnused": false,
@@ -26,3 +28,4 @@
 
 	"yaml.format.enable": true
 }
+

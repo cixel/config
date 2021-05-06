@@ -21,7 +21,8 @@
     ],
     "%2FUsers%2Fehdens%2F": {
       "config": [
-        "ex"
+        "ex",
+        "sou"
       ]
     },
     "%2FUsers%2Fehdens%2FDocuments%2Fellie_school%2Fjava%2Flab5%2Fsrc": [
@@ -51,5 +52,19 @@
     "%2FUsers%2Fehdens%2Fworkspace%2Fascii-images": [
       "?"
     ]
+  },
+  "services": {
+    "%2FUsers%2Fehdens%2F": {
+      "config": [
+        "q"
+      ]
+    }
+  },
+  "sources": {
+    "%2FUsers%2Fehdens%2F": {
+      "config": [
+        "sour"
+      ]
+    }
   }
 }
