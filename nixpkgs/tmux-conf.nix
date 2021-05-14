@@ -8,7 +8,8 @@
   clock24 = true;
   # baseIndex = 1;
   sensibleOnTop = true;
-  terminal = "screen-256color";
+  # terminal = "screen-256color"; # wanna mess with this to see if it changes anything about the weird prompt spacing issue
+  # terminal = "alacritty"; # wanna mess with this to see if it changes anything about the weird prompt spacing issue
   plugins = with pkgs; [
     {
       plugin = tmuxPlugins.cpu;
