@@ -4,3 +4,6 @@ coc/extensions/
 coc/memos.json
 coc/history.json
 configstore
+
+tmux/tmux.conf
+nvim/init.vim
