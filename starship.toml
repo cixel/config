@@ -4,11 +4,11 @@ format = """
 $cmd_duration\
 $time\
 $username$hostname\
+$nix_shell\
 $git_branch\
 $git_state\
 $git_status\
 $directory\
-$nix_shell\
 $jobs\
 $character\
 """
@@ -46,3 +46,17 @@ disabled = true
 [git_status]
 # re-enabling for now to see how it behaves with potential performance improvements
 # disabled = true
+
+[nix_shell]
+# this appears to add an extra space following "character" when enabled if
+# state is a snowflake, and not otherwise. starship (or alacritty? or tmux?)
+# may have trouble counting non-single width characters in the prompt
+#
+# in fucking around w/ this elsehwere, it may be tmux's fault
+format = '[$state \($name\)]($style) '
+# impure_msg = "❄️"
+# impure_msg = "🤗"
+impure_msg = "n"
+pure_msg = "[n](green)"
+
+
