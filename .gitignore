@@ -1,9 +1,13 @@
 nvim/plugged
+nvim/init.vim
+
 node_modules/
+
 coc/extensions/
 coc/memos.json
 coc/history.json
+coc/list-commands-history.json
+
 configstore
 
 tmux/tmux.conf
-nvim/init.vim
