@@ -1,9 +1,5 @@
 {
 	"languageserver": {
-		"nix": {
-			"command": "rnix-lsp",
-			"filetypes": ["nix"]
-		},
 		"clangd": {
 			"command": "clangd",
 			"args": ["--background-index"],
