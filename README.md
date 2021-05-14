@@ -6,4 +6,3 @@ TODO:
   to manage it entirely, because I like the update frequency I get with
   :PlugUpdate (especially for vim-go), but it means nix rollbacks won't do
   anything for nvim.
-* when starship merges formatting to master, drop the custom build
