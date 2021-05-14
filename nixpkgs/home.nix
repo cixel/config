@@ -1,12 +1,15 @@
 { config, pkgs, ... }:
 
 let
-  # set channel channel to nixpkgs-unstable
-  nixpkgs = import <nixpkgs> {};
+  # set channel channel to pkgs-unstable
+  pkgs = import <nixpkgs> {};
 in
 {
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
+  # home.username = "$USER";
+  # home.homeDirectory = builtins.toPath "$HOME";
 
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
@@ -20,68 +23,69 @@ in
 
   # Allow installation of propietary of "unfree" packages. Needed for parts of
   # mozilla overlay.
-  # nixpkgs.config.allowUnfree = true;
-  # nixpkgs.overlays = [ (import "${mozilla-overlays}") ];
+  # pkgs.config.allowUnfree = true;
+  # pkgs.overlays = [ (import "${mozilla-overlays}") ];
 
-  home.packages = [
-    nixpkgs.git
-    nixpkgs.bat
-    nixpkgs.exa
-    nixpkgs.fd
-    nixpkgs.graphviz
-    nixpkgs.jq
-    nixpkgs.starship
-    nixpkgs.tokei
-    nixpkgs.fd
-    nixpkgs.modd
-    nixpkgs.automake
-    nixpkgs.autoconf
-    nixpkgs.hugo
-    nixpkgs.ffmpeg-full
-    nixpkgs.age
-    nixpkgs.silver-searcher
-    nixpkgs.zlib
-    nixpkgs.llvm_10
-    nixpkgs.lldb_10
-    nixpkgs.libwebp
+  home.packages = with pkgs; [
+    git
+    bat
+    exa
+    fd
+    graphviz
+    jq
+    starship
+    tokei
+    hugo
+    ffmpeg-full
+    age
+    silver-searcher
+    zlib
+    llvm_10
+    lldb_10
+    libwebp
 
-    nixpkgs.delve
-    nixpkgs.protobuf
+    # pkgs.delve
+    # pkgs.protobuf
+    modd
+    automake
+    autoconf
 
-    # nixpkgs.coreutils-full
+    direnv
 
-    nixpkgs.python
-    nixpkgs.python3
+    # pkgs.coreutils-full
 
-    nixpkgs.lua5_3
+    python
+    python3
+
+    lua5_3
 
     # rust. eventually, see about using
-    # https://github.com/mozilla/nixpkgs-mozilla
+    # https://github.com/mozilla/pkgs-mozilla
     # rustup manages rustc, cargo, etc. perhaps it
     # should also manage rust-analyzer?
-    nixpkgs.rustup
-    nixpkgs.rust-analyzer
+    rustup
+    rust-analyzer
     # pkgs.cargo
     # pkgs.rustfmt
 
     # nix language server
-    nixpkgs.rnix-lsp
+    rnix-lsp
 
-    nixpkgs.golangci-lint
+    golangci-lint
   ];
 
-  programs.zsh = import ./zsh-conf.nix { pkgs = nixpkgs; };
-  programs.tmux = import ./tmux-conf.nix { pkgs = nixpkgs; };
+  programs.zsh = import ./zsh-conf.nix { pkgs = pkgs; };
+  programs.tmux = import ./tmux-conf.nix { pkgs = pkgs; };
 
   programs.neovim = {
     enable = true;
-    package = nixpkgs.neovim-unwrapped;
+    package = pkgs.neovim-unwrapped;
 
     vimdiffAlias = true;
     withNodeJs = true;
     withPython3 = true;
 
-    # plugins = with nixpkgs; [
+    # plugins = with pkgs; [
     #   vimPlugins.gruvbox
     # ];
 
