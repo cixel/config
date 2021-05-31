@@ -13,7 +13,6 @@ $jobs\
 $character\
 """
 
-
 [directory]
 style = "bold blue"
 fish_style_pwd_dir_length = 1
@@ -58,5 +57,3 @@ format = '[$state \($name\)]($style) '
 # impure_msg = "🤗"
 impure_msg = "n"
 pure_msg = "[n](green)"
-
-

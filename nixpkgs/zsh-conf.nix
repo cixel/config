@@ -24,6 +24,7 @@
   sessionVariables = {
     KEYTIMEOUT = 1;
     EDITOR = "nvim";
+    #XDG_RUNTIME_DIR="/run/user/$(id -u)"; # https://github.com/Trundle/NixOS-WSL/issues/18
   };
   initExtraBeforeCompInit = ''
     '';
@@ -43,6 +44,8 @@
     zle -N edit-command-line
     bindkey -M vicmd V edit-command-line
 
+    #sudo loginctl enable-linger "$USER" # https://github.com/Trundle/NixOS-WSL/issues/18
+    #eval "$(direnv hook zsh)"
     eval "$(starship init zsh)"
   '';
   envExtra = ''

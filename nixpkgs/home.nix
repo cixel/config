@@ -1,8 +1,9 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
-  # set channel channel to pkgs-unstable
+  # set channel channel to nixpkgs-unstable
   pkgs = import <nixpkgs> {};
+  # https://github.com/nix-community/neovim-nightly-overlay
 in
 {
   # Let Home Manager install and manage itself.
@@ -23,10 +24,19 @@ in
 
   # Allow installation of propietary of "unfree" packages. Needed for parts of
   # mozilla overlay.
-  # pkgs.config.allowUnfree = true;
-  # pkgs.overlays = [ (import "${mozilla-overlays}") ];
+  # nixpkgs.config.allowUnfree = true;
+  # nixpkgs.overlays = [ (import "${mozilla-overlays}") ];
+  nixpkgs.overlays = [
+    (import (builtins.fetchTarball {
+      url = https://github.com/nix-community/neovim-nightly-overlay/archive/master.tar.gz;
+    }))
+  ];
 
+  services.lorri.enable = true;
   home.packages = with pkgs; [
+    direnv
+    niv
+
     git
     bat
     exa
@@ -71,7 +81,9 @@ in
     # nix language server
     rnix-lsp
 
-    golangci-lint
+    # delve
+    # protobuf
+    # golangci-lint XXX fixme: maybe bring this guy back w/ lorri/direnv?
   ];
 
   programs.zsh = import ./zsh-conf.nix { pkgs = pkgs; };
@@ -79,15 +91,23 @@ in
 
   programs.neovim = {
     enable = true;
-    package = pkgs.neovim-unwrapped;
+    # package = pkgs.neovim-unwrapped;
 
     vimdiffAlias = true;
     withNodeJs = true;
     withPython3 = true;
 
-    # plugins = with pkgs; [
-    #   vimPlugins.gruvbox
-    # ];
+    plugins = with pkgs; [
+      vimPlugins.gruvbox
+      vimPlugins.nvim-lspconfig
+
+      vimPlugins.completion-tabnine
+      {
+        plugin = vimPlugins.completion-nvim;
+        # I'll want to move this to a .vim file and readFile it
+        config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/completion-nvim.vim";
+      }
+    ];
 
     # extraConfig = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/init.vim";
     extraConfig = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/init.templ.vim";
@@ -104,9 +124,9 @@ in
     changeDirWidgetCommand = "fd --type d --hidden --exclude '.git' --follow";
   };
 
-  # programs.go = {
-  #   enable = true;
-  #   goPath = "${builtins.getEnv "HOME"}/gopath";
-  #   goBin = "${builtins.getEnv "HOME"}/gobin";
-  # };
+  programs.go = {
+    enable = true;
+    goPath = "${builtins.getEnv "HOME"}/gopath";
+    goBin = "${builtins.getEnv "HOME"}/gobin";
+  };
 }

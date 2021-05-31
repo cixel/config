@@ -2,7 +2,7 @@
 " current plugin state. I may be able to generate one, commit it, add it as a
 " dependency in my nix conf.
 call plug#begin('~/.config/nvim/plugged')
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 Plug 'junegunn/fzf'
 Plug 'LnL7/vim-nix'
@@ -13,7 +13,7 @@ Plug 'editorconfig/editorconfig-vim'
 " Plug 'zchee/deoplete-go', { 'do': 'make' }
 
 Plug 'majutsushi/tagbar' " source code nav in sidebar
-Plug 'dense-analysis/ale'
+" Plug 'dense-analysis/ale'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'scrooloose/nerdtree'
@@ -24,7 +24,7 @@ Plug 'godlygeek/tabular'
 " Plug 'Raimondi/delimitMate'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'cohama/lexima.vim' " adds auto-closing; not sure how this interacts with tpop/vim-endwise
-Plug 'ervandew/supertab'
+" Plug 'ervandew/supertab'
 " Plug 'milkypostman/vim-togglelist' " toggle loclist and quickfix
 Plug 'rhysd/vim-crystal' " support for crystal lang
 " Plug 'leafgarland/typescript-vim'
@@ -47,7 +47,7 @@ Plug 'tpope/vim-speeddating'
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'chriskempson/base16-vim'
 Plug 'iCyMind/NeoSolarized'
-Plug 'morhetz/gruvbox'
+" Plug 'morhetz/gruvbox'
 Plug 'sonph/onehalf', { 'rtp': 'vim/' }
 
 "Plug 'maksimr/vim-jsbeautify'
@@ -68,10 +68,11 @@ Plug 'machakann/vim-highlightedyank'
 Plug 'pangloss/vim-javascript'
 call plug#end()
 
-source ~/.config/nvim/custom/looks.vim
-source ~/.config/nvim/custom/go.vim
-source ~/.config/nvim/custom/coc.vim
-source ~/.config/nvim/custom/misc_funcs.vim
+source ~/.config/nvim/config/looks.vim
+source ~/.config/nvim/config/go.vim
+" source ~/.config/nvim/config/coc.vim
+source ~/.config/nvim/config/misc_funcs.vim
+luafile ~/.config/nvim/config/lsp.lua
 
 " XXX for vim-highlightedyank, can delete this on newer versions of neovim
 " if !exists('##TextYankPost')
@@ -89,7 +90,7 @@ let mapleader=","
 
 " Potential performance improvemenets (scrolling)
 set noshowcmd
-set nolazyredraw
+" set nolazyredraw
 
 " base64 encoding/decoding
 " Visual Mode mappings
@@ -105,9 +106,6 @@ autocmd FileType rust setlocal expandtab
 autocmd FileType markdown setlocal textwidth=80 expandtab wrap spell
 autocmd FileType proto setlocal ts=4 expandtab
 
-
-" Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
 
 " set folding method to be language defined and files are not folded when
 " opened
@@ -163,19 +161,15 @@ nmap <C-e> :e#<CR>
 nmap <C-n> :bnext<CR>
 nmap <C-m> :bprev<CR>
 
-" autocmd FileType rust,javascript,go nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> <leader>ff :call CocAction('format')<CR>
 
 au BufNewFile,BufRead *.ejs set filetype=html
-" autocmd FileType html,javascript,css,typescript nmap <silent> <leader>ff :CocCommand prettier.formatFile<cr>
-" nmap <silent> <leader>ff :CocCommand prettier.formatFile<cr>
 
 "nmap <leader>.. :lclose<CR>
 nmap <script> <silent> <leader>.. :call ToggleLocationList()<CR>
 
 " ale
-nmap <silent> <C-Q> <Plug>(ale_previous_wrap)
-nmap <silent> <C-q> <Plug>(ale_next_wrap)
+" nmap <silent> <C-Q> <Plug>(ale_previous_wrap)
+" nmap <silent> <C-q> <Plug>(ale_next_wrap)
 " nmap <silent> <leader>Q <Plug>(ale_previous_wrap)
 " nmap <silent> <leader>q <Plug>(ale_next_wrap)
 " nmap <silent> <C-Q> <Plug>(coc-diagnostic-prev)
@@ -257,7 +251,7 @@ nmap <leader>" i"<Esc>p
 nmap <leader>' i'<Esc>p
 
 " https://github.com/neovim/neovim/issues/2528#issuecomment-239993819
-hi Normal ctermbg=NONE
+" hi Normal ctermbg=NONE
 
 " rust
 " let g:rustfmt_autosave = 1

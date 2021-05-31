@@ -5,7 +5,7 @@ set background=dark
 " colorscheme base16-solarized-dark
 " colorscheme dracula
 " colorscheme base16-tomorrow-night
-set termguicolors
+set notermguicolors
 " let g:gruvbox_contrast_dark = 'medium'
 let g:gruvbox_contrast_dark = 'hard'
 colorscheme gruvbox

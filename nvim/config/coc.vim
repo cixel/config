@@ -1,3 +1,6 @@
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
 " Documentation
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 let g:go_doc_keywordprg_enabled = 0 " let coc handle this
@@ -17,3 +20,9 @@ augroup mygroup
   " Update signature help on jump placeholder
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
+
+" autocmd FileType rust,javascript,go nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> <leader>ff :call CocAction('format')<CR>
+
+" autocmd FileType html,javascript,css,typescript nmap <silent> <leader>ff :CocCommand prettier.formatFile<cr>
+" nmap <silent> <leader>ff :CocCommand prettier.formatFile<cr>
