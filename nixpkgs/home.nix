@@ -32,7 +32,7 @@ in
     }))
   ];
 
-  services.lorri.enable = true;
+  # services.lorri.enable = true;
   home.packages = with pkgs; [
     direnv
     niv
