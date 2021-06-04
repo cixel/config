@@ -148,25 +148,6 @@ au BufNewFile,BufRead *.ejs set filetype=html
 "nmap <leader>.. :lclose<CR>
 nmap <script> <silent> <leader>.. :call ToggleLocationList()<CR>
 
-" ale
-" nmap <silent> <C-Q> <Plug>(ale_previous_wrap)
-" nmap <silent> <C-q> <Plug>(ale_next_wrap)
-" nmap <silent> <leader>Q <Plug>(ale_previous_wrap)
-" nmap <silent> <leader>q <Plug>(ale_next_wrap)
-" nmap <silent> <C-Q> <Plug>(coc-diagnostic-prev)
-" nmap <silent> <C-q> <Plug>(coc-diagnostic-next)
-" Only run linters named in ale_linters settings.
-" let g:ale_linters_explicit = 1
-
-" FZF.vim
-" let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore-dir={dist,target,node_modules,docs,rulepack/xml,experiments,code-coverage-report} --ignore .git -g ""'
-" set rtp+=/usr/local/opt/fzf " for fzf to load on start from the brew install
-" set rtp+= " for fzf to load on start from the brew install
-" let $FZF_DEFAULT_COMMAND = "fd --type f --hidden -E '.git' -E 'target/**'"
-" let $FZF_DEFAULT_COMMAND = "fd --type f --hidden -E '.git'"
-" nmap ; :FZF<CR>
-
-" UltiSnips
 " Trigger configuration. Do not use <tab>
 let g:UltiSnipsExpandTrigger="<c-q>"
 let g:UltiSnipsJumpForwardTrigger="<c-j>"
@@ -176,26 +157,11 @@ let g:SuperTabDefaultCompletionType = "<c-tab>"
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 
-" deoplete
-" let g:deoplete#enable_at_startup = 1
-"let g:tern_show_signature_in_pum = '0'
-"autocmd CompleteDone * silent! pclose! *.js
-
-" autocmd CompleteDone * silent! pclose!
-
-"au FileType js set completeopt-=preview
-" set completeopt-=preview " look into setting this by filetype
-"autocmd FileType js set completeopt-=preview "look into setting this by filetype
-
 " C++
 let g:clang_library_path='/usr/local/Cellar/llvm/6.0.0/lib/libclang.dylib'
 
 " autoclose html tags
 iabbrev </ </<C-X><C-O>
-
-" map <silent> \e :NERDTreeToggle<CR>
-" map <silent> \E :NERDTreeFind<CR>
-" let NERDTreeShowHidden=1
 
 nmap <silent> \t :TagbarToggle<CR>
 
@@ -214,18 +180,6 @@ let g:vim_json_syntax_conceal = 0
 " remap split switching
 map <tab> <c-w>
 map <tab><tab> <c-w><c-w>
-
-" tmux integrations
-" let g:tmux_navigator_no_mappings = 1
-" nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
-" nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
-" nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
-" nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
-" nnoremap <silent> <c-\> :TmuxNavigatePrevious<cr>
-" if exists('$TMUX')
-" 	autocmd BufReadPost,FileReadPost,BufNewFile,BufEnter * call system("tmux rename-window " . expand("%:t"))
-"     autocmd VimLeave * call system("tmux setw automatic-rename")
-" endif
 
 " copy clipboard in between "" or '
 nmap <leader>" i"<Esc>p
