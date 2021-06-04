@@ -10,6 +10,8 @@
   extraPackages = with pkgs; [
     fd # used by fzf
     rnix-lsp
+    rust-analyzer
+    nodePackages.typescript-language-server
   ];
 
   plugins = with pkgs.vimPlugins; [
@@ -106,6 +108,7 @@
         nmap ; :FZF<CR>
       '';
     }
+
     # {
     #   plugin = ultisnips;
     #   config = ''
