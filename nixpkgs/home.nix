@@ -79,7 +79,7 @@ in
     # pkgs.rustfmt
 
     # nix language server
-    rnix-lsp
+    # rnix-lsp
 
     # delve
     # protobuf
@@ -88,30 +88,7 @@ in
 
   programs.zsh = import ./zsh-conf.nix { pkgs = pkgs; };
   programs.tmux = import ./tmux-conf.nix { pkgs = pkgs; };
-
-  programs.neovim = {
-    enable = true;
-    # package = pkgs.neovim-unwrapped;
-
-    vimdiffAlias = true;
-    withNodeJs = true;
-    withPython3 = true;
-
-    plugins = with pkgs; [
-      vimPlugins.gruvbox
-      vimPlugins.nvim-lspconfig
-
-      vimPlugins.completion-tabnine
-      {
-        plugin = vimPlugins.completion-nvim;
-        # I'll want to move this to a .vim file and readFile it
-        config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/completion-nvim.vim";
-      }
-    ];
-
-    # extraConfig = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/init.vim";
-    extraConfig = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/init.templ.vim";
-  };
+  programs.neovim = import ./nvim-conf.nix { pkgs = pkgs; };
 
   programs.fzf = {
     enable = true;

@@ -2,32 +2,12 @@
 " current plugin state. I may be able to generate one, commit it, add it as a
 " dependency in my nix conf.
 call plug#begin('~/.config/nvim/plugged')
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
-Plug 'junegunn/fzf'
 Plug 'LnL7/vim-nix'
-" Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-
 Plug 'editorconfig/editorconfig-vim'
-" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-" Plug 'zchee/deoplete-go', { 'do': 'make' }
-
 Plug 'majutsushi/tagbar' " source code nav in sidebar
-" Plug 'dense-analysis/ale'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'scrooloose/nerdtree'
-Plug 'scrooloose/nerdcommenter'
 Plug 'mtth/scratch.vim'
-Plug 'SirVer/ultisnips'
-Plug 'godlygeek/tabular'
-" Plug 'Raimondi/delimitMate'
-Plug 'christoomey/vim-tmux-navigator'
 Plug 'cohama/lexima.vim' " adds auto-closing; not sure how this interacts with tpop/vim-endwise
-" Plug 'ervandew/supertab'
-" Plug 'milkypostman/vim-togglelist' " toggle loclist and quickfix
 Plug 'rhysd/vim-crystal' " support for crystal lang
-" Plug 'leafgarland/typescript-vim'
 Plug 'christianrondeau/vim-base64' " base64 encode/decode
 Plug 'cespare/vim-toml'
 
@@ -54,25 +34,26 @@ Plug 'sonph/onehalf', { 'rtp': 'vim/' }
 "Plug 'Chiel92/vim-autoformat'
 Plug 'sbdchd/neoformat'
 
-Plug 'tpope/vim-fugitive' " I should look into actually using this
-Plug 'tpope/vim-sensible'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-endwise'
+" Plug 'tpope/vim-fugitive' " I should look into actually using this
+" Plug 'tpope/vim-sensible'
+" Plug 'tpope/vim-commentary'
+" Plug 'tpope/vim-surround'
+" Plug 'tpope/vim-repeat'
+" Plug 'tpope/vim-endwise'
 Plug 'vim-scripts/VisIncr'
 Plug 'machakann/vim-highlightedyank'
+Plug 'SirVer/ultisnips'
 
 " Plug 'elzr/vim-json'
 " Plug 'othree/yajs.vim', { 'for': 'javascript' } " better syntax for javascript ** Very slow. Look into replacement
 Plug 'pangloss/vim-javascript'
 call plug#end()
 
-source ~/.config/nvim/config/looks.vim
-source ~/.config/nvim/config/go.vim
-" source ~/.config/nvim/config/coc.vim
+" source ~/.config/nvim/config/looks.vim
+" source ~/.config/nvim/config/go.vim
 source ~/.config/nvim/config/misc_funcs.vim
 luafile ~/.config/nvim/config/lsp.lua
+" source ~/.config/nvim/config/coc.vim
 
 " XXX for vim-highlightedyank, can delete this on newer versions of neovim
 " if !exists('##TextYankPost')
@@ -175,15 +156,15 @@ nmap <script> <silent> <leader>.. :call ToggleLocationList()<CR>
 " nmap <silent> <C-Q> <Plug>(coc-diagnostic-prev)
 " nmap <silent> <C-q> <Plug>(coc-diagnostic-next)
 " Only run linters named in ale_linters settings.
-let g:ale_linters_explicit = 1
+" let g:ale_linters_explicit = 1
 
 " FZF.vim
 " let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore-dir={dist,target,node_modules,docs,rulepack/xml,experiments,code-coverage-report} --ignore .git -g ""'
 " set rtp+=/usr/local/opt/fzf " for fzf to load on start from the brew install
 " set rtp+= " for fzf to load on start from the brew install
 " let $FZF_DEFAULT_COMMAND = "fd --type f --hidden -E '.git' -E 'target/**'"
-let $FZF_DEFAULT_COMMAND = "fd --type f --hidden -E '.git'"
-nmap ; :FZF<CR>
+" let $FZF_DEFAULT_COMMAND = "fd --type f --hidden -E '.git'"
+" nmap ; :FZF<CR>
 
 " UltiSnips
 " Trigger configuration. Do not use <tab>
@@ -212,9 +193,9 @@ let g:clang_library_path='/usr/local/Cellar/llvm/6.0.0/lib/libclang.dylib'
 " autoclose html tags
 iabbrev </ </<C-X><C-O>
 
-map <silent> \e :NERDTreeToggle<CR>
-map <silent> \E :NERDTreeFind<CR>
-let NERDTreeShowHidden=1
+" map <silent> \e :NERDTreeToggle<CR>
+" map <silent> \E :NERDTreeFind<CR>
+" let NERDTreeShowHidden=1
 
 nmap <silent> \t :TagbarToggle<CR>
 
@@ -235,16 +216,16 @@ map <tab> <c-w>
 map <tab><tab> <c-w><c-w>
 
 " tmux integrations
-let g:tmux_navigator_no_mappings = 1
-nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
-nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
-nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
-nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
-nnoremap <silent> <c-\> :TmuxNavigatePrevious<cr>
-if exists('$TMUX')
-	autocmd BufReadPost,FileReadPost,BufNewFile,BufEnter * call system("tmux rename-window " . expand("%:t"))
-    autocmd VimLeave * call system("tmux setw automatic-rename")
-endif
+" let g:tmux_navigator_no_mappings = 1
+" nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
+" nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
+" nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
+" nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
+" nnoremap <silent> <c-\> :TmuxNavigatePrevious<cr>
+" if exists('$TMUX')
+" 	autocmd BufReadPost,FileReadPost,BufNewFile,BufEnter * call system("tmux rename-window " . expand("%:t"))
+"     autocmd VimLeave * call system("tmux setw automatic-rename")
+" endif
 
 " copy clipboard in between "" or '
 nmap <leader>" i"<Esc>p
