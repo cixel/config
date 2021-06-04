@@ -49,3 +49,5 @@ let g:go_highlight_structs = 1
 let g:ale_linters = {
 \   'go': ['vet', 'golint'],
 \}
+
+let g:go_gopls_options = ['-remote=auto']
