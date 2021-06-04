@@ -85,12 +85,19 @@
     }
     nvim-lspconfig
 
+    # {
+    #   plugin = completion-nvim;
+    #   config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/completion-nvim.vim";
+    # }
+    # completion-tabnine
     {
-      plugin = completion-nvim;
-      config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/completion-nvim.vim";
+      plugin = nvim-compe;
+      config = "lua << EOF\n"
+        + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/nvim-compe.lua"
+        + "\nEOF";
     }
+    compe-tabnine
 
-    completion-tabnine
 
     {
       plugin = vim-go;
@@ -120,4 +127,3 @@
 
   extraConfig = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/init.templ.vim";
 }
-
