@@ -4,35 +4,35 @@
 call plug#begin('~/.config/nvim/plugged')
 Plug 'LnL7/vim-nix'
 Plug 'editorconfig/editorconfig-vim'
-Plug 'majutsushi/tagbar' " source code nav in sidebar
+" Plug 'majutsushi/tagbar' " source code nav in sidebar
 Plug 'mtth/scratch.vim'
 Plug 'cohama/lexima.vim' " adds auto-closing; not sure how this interacts with tpop/vim-endwise
-Plug 'rhysd/vim-crystal' " support for crystal lang
+" Plug 'rhysd/vim-crystal' " support for crystal lang
 Plug 'christianrondeau/vim-base64' " base64 encode/decode
 Plug 'cespare/vim-toml'
 
 Plug 'plasticboy/vim-markdown'
 
 " C++
-Plug 'rip-rip/clang_complete'
+" Plug 'rip-rip/clang_complete'
 
 " Rust
 Plug 'rust-lang/rust.vim'
 
 " i don't really use these
 " https://github.com/jceb/vim-orgmode/blob/master/doc/orgguide.txt
-Plug 'jceb/vim-orgmode'
-Plug 'tpope/vim-speeddating'
+" Plug 'jceb/vim-orgmode'
+" Plug 'tpope/vim-speeddating'
 
-Plug 'dracula/vim', { 'as': 'dracula' }
-Plug 'chriskempson/base16-vim'
-Plug 'iCyMind/NeoSolarized'
+" Plug 'dracula/vim', { 'as': 'dracula' }
+" Plug 'chriskempson/base16-vim'
+" Plug 'iCyMind/NeoSolarized'
 " Plug 'morhetz/gruvbox'
-Plug 'sonph/onehalf', { 'rtp': 'vim/' }
+" Plug 'sonph/onehalf', { 'rtp': 'vim/' }
 
 "Plug 'maksimr/vim-jsbeautify'
 "Plug 'Chiel92/vim-autoformat'
-Plug 'sbdchd/neoformat'
+" Plug 'sbdchd/neoformat'
 
 " Plug 'tpope/vim-fugitive' " I should look into actually using this
 " Plug 'tpope/vim-sensible'
@@ -52,7 +52,7 @@ call plug#end()
 " source ~/.config/nvim/config/looks.vim
 " source ~/.config/nvim/config/go.vim
 source ~/.config/nvim/config/misc_funcs.vim
-luafile ~/.config/nvim/config/lsp.lua
+" luafile ~/.config/nvim/config/lsp.lua
 " source ~/.config/nvim/config/coc.vim
 
 " XXX for vim-highlightedyank, can delete this on newer versions of neovim
@@ -152,7 +152,7 @@ nmap <script> <silent> <leader>.. :call ToggleLocationList()<CR>
 let g:UltiSnipsExpandTrigger="<c-q>"
 let g:UltiSnipsJumpForwardTrigger="<c-j>"
 let g:UltiSnipsJumpBackwardTrigger="<c-k>"
-let g:SuperTabDefaultCompletionType = "<c-tab>"
+" let g:SuperTabDefaultCompletionType = "<c-tab>"
 
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
@@ -179,7 +179,7 @@ let g:vim_json_syntax_conceal = 0
 
 " remap split switching
 map <tab> <c-w>
-map <tab><tab> <c-w><c-w>
+" map <tab><tab> <c-w><c-w>
 
 " copy clipboard in between "" or '
 nmap <leader>" i"<Esc>p

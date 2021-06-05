@@ -83,7 +83,18 @@
       plugin = nvim-ale-diagnostic;
       config = "lua require(\"nvim-ale-diagnostic\")";
     }
-    nvim-lspconfig
+    {
+     plugin = nvim-lspconfig;
+      config = "lua << EOF\n"
+      + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/lsp.lua"
+      + "\nEOF";
+    }
+    {
+      plugin = lspsaga-nvim;
+      config = "lua << EOF\n"
+      + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/nvim-compe.lua"
+      + "\nEOF";
+    }
 
     # {
     #   plugin = completion-nvim;
@@ -93,8 +104,8 @@
     {
       plugin = nvim-compe;
       config = "lua << EOF\n"
-        + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/nvim-compe.lua"
-        + "\nEOF";
+      + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/nvim-compe.lua"
+      + "\nEOF";
     }
     compe-tabnine
 

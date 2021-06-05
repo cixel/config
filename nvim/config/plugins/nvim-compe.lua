@@ -1,3 +1,5 @@
+vim.o.completeopt = "menuone,noselect,noinsert"
+
 require('compe').setup {
   enabled = true;
   autocomplete = true;
@@ -14,10 +16,13 @@ require('compe').setup {
 
   source = {
     path = true;
-    buffer = true;
+    -- buffer = true; -- this is nice but i think it may be redundant w/ tabnine
     nvim_lsp = true;
-    nvim_lua = true;
-	tabnine = true;
+    -- nvim_lua = true; -- probably only load this in lua files if possible
+	tabnine = {
+		sort = false;
+		priority = 0;
+	};
     ultisnips = true;
   };
 }
@@ -41,8 +46,6 @@ end
 _G.tab_complete = function()
   if vim.fn.pumvisible() == 1 then
     return t "<C-n>"
-  elseif vim.fn.call("vsnip#available", {1}) == 1 then
-    return t "<Plug>(vsnip-expand-or-jump)"
   elseif check_back_space() then
     return t "<Tab>"
   else
@@ -64,4 +67,3 @@ vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
-
