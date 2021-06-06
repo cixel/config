@@ -89,12 +89,12 @@
       + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/lsp.lua"
       + "\nEOF";
     }
-    {
-      plugin = lspsaga-nvim;
-      config = "lua << EOF\n"
-      + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/nvim-compe.lua"
-      + "\nEOF";
-    }
+    # {
+    #   plugin = lspsaga-nvim;
+    #   config = "lua << EOF\n"
+    #   + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/nvim-compe.lua"
+    #   + "\nEOF";
+    # }
 
     # {
     #   plugin = completion-nvim;
