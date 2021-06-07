@@ -35,15 +35,20 @@
     }
     vim-airline-themes
 
-
     fugitive
     vim-sensible
     vim-surround
     vim-repeat
     vim-endwise
     vim-commentary
-
+    lexima-vim
     tabular
+    editorconfig-vim
+    vim-toml
+    vim-markdown
+    rust-vim
+    vim-javascript
+
     {
       plugin = vim-tmux-navigator;
       config = ''
@@ -89,18 +94,6 @@
       + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/lsp.lua"
       + "\nEOF";
     }
-    # {
-    #   plugin = lspsaga-nvim;
-    #   config = "lua << EOF\n"
-    #   + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/nvim-compe.lua"
-    #   + "\nEOF";
-    # }
-
-    # {
-    #   plugin = completion-nvim;
-    #   config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/completion-nvim.vim";
-    # }
-    # completion-tabnine
     {
       plugin = nvim-compe;
       config = ''
@@ -115,10 +108,12 @@
     compe-tabnine
 
 
+    vim-nix
     {
       plugin = vim-go;
       config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/go.vim";
     }
+
     {
       plugin = fzf-vim;
       config = ''
@@ -141,6 +136,65 @@
         let g:UltiSnipsJumpForwardTrigger="<c-j>"
         let g:UltiSnipsJumpBackwardTrigger="<c-k>"
         let g:UltiSnipsEditSplit="vertical"
+      '';
+    }
+
+    # see about upstreaming these... esp scratch.vim since it has the most starts
+    {
+      plugin = pkgs.vimUtils.buildVimPluginFrom2Nix {
+        pname = "visincr";
+        version = "2011-08-18";
+        src = pkgs.fetchFromGitHub {
+          owner = "vim-scripts";
+          repo = "VisIncr";
+          rev = "13e8538cf332fd131ebb60422b4a01d69078794b";
+          sha256 = "1qfw3r6rp67nz0mrn603mm8knljm9ld9llra1nxyz54hs8xmhqfs";
+        };
+        meta.homepage = "https://github.com/vim-scripts/VisIncr";
+      };
+    }
+    {
+      plugin = pkgs.vimUtils.buildVimPluginFrom2Nix {
+        pname = "vim-base64";
+        version = "2021-02-20";
+        src = pkgs.fetchFromGitHub {
+          owner = "christianrondeau";
+          repo = "vim-base64";
+          rev = "d15253105f6a329cd0632bf9dcbf2591fb5944b8";
+          sha256 = "0im33dwmjjbd6lm2510lf7lyavza17lsl119cqjjdi9jdsrh5bbg";
+        };
+        meta.homepage = "https://github.com/christianrondeau/vim-base64";
+      };
+      config = ''
+        " Visual Mode mappings
+        vnoremap <silent> <leader>B c<c-r>=base64#decode(@")<cr><esc>`[v`]h
+        vnoremap <silent> <leader>b c<c-r>=base64#encode(@")<cr><esc>`[v`]h
+
+        " Regex mappings
+        nnoremap <leader>b/ :%s/\v()/\=base64#encode(submatch(1))/<home><right><right><right><right><right><right>
+        nnoremap <leader>B/ :%s/\v()/\=base64#decode(submatch(1))/<home><right><right><right><right><right><right>
+      '';
+    }
+    {
+      plugin = pkgs.vimUtils.buildVimPluginFrom2Nix {
+        pname = "scratch-vim";
+        version = "2021-05-03";
+        src = pkgs.fetchFromGitHub {
+          owner = "mtth";
+          repo = "scratch.vim";
+          rev = "adf826b1ac067cdb4168cb6066431cff3a2d37a3";
+          sha256 = "0im33dwmjjbd6lm2510lf7lyavza17lsl119cqjjdi9jdsrh5bbg";
+        };
+        meta.homepage = "https://github.com/mtth/scratch.vim";
+      };
+      config = ''
+        let g:scratch_insert_autohide = 0
+        " to change default mappings, turn mapping off and set manually
+        let g:scratch_no_mappings = 1
+        let g:scratch_persistence_file = '~/.nvim/scratch'
+        " nmap gs <Plug>(scratch-insert-reuse)
+        " xmap gs <Plug>(scratch-selection-reuse)
+        " nmap gS :ScratchPreview<CR>
       '';
     }
   ];
