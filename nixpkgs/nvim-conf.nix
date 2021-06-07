@@ -127,6 +127,8 @@
       '';
     }
 
+    # TODO: I may wanna make this require the ultisnips dir or find a way to
+    # separate custom snippets from defaults
     {
       plugin = ultisnips;
       config = ''
