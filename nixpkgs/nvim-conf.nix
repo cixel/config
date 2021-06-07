@@ -84,7 +84,7 @@
       config = "lua require(\"nvim-ale-diagnostic\")";
     }
     {
-     plugin = nvim-lspconfig;
+      plugin = nvim-lspconfig;
       config = "lua << EOF\n"
       + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/lsp.lua"
       + "\nEOF";
@@ -103,7 +103,12 @@
     # completion-tabnine
     {
       plugin = nvim-compe;
-      config = "lua << EOF\n"
+      config = ''
+        inoremap <silent><expr> <C-Space> compe#complete()
+        inoremap <silent><expr> <CR>      compe#confirm(lexima#expand('<LT>CR>', 'i'))
+        inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+      ''
+      + "lua << EOF\n"
       + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/nvim-compe.lua"
       + "\nEOF";
     }

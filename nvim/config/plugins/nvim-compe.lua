@@ -20,7 +20,7 @@ require('compe').setup {
     nvim_lsp = true;
     -- nvim_lua = true; -- probably only load this in lua files if possible
 	tabnine = {
-		sort = false;
+		sort = true;
 		priority = 0;
 	};
     ultisnips = true;
