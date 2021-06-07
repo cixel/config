@@ -127,13 +127,17 @@
       '';
     }
 
-    # {
-    #   plugin = ultisnips;
-    #   config = ''
-    #     " may need to use this to prevent hm switch from clobbering snippets directory
-    #     " let g:UltiSnipsSnippetDirectories = [home . '/.config/nixpkgs/extraConfigs/.vim/my-snippets']
-    #   '';
-    # }
+    {
+      plugin = ultisnips;
+      config = ''
+        " may need to use this to prevent hm switch from clobbering snippets directory
+        " let g:UltiSnipsSnippetDirectories = [home . '/.config/nixpkgs/extraConfigs/.vim/my-snippets']
+        let g:UltiSnipsExpandTrigger="<c-q>"
+        let g:UltiSnipsJumpForwardTrigger="<c-j>"
+        let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+        let g:UltiSnipsEditSplit="vertical"
+      '';
+    }
   ];
 
   extraConfig = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/init.templ.vim";

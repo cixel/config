@@ -42,7 +42,7 @@ Plug 'rust-lang/rust.vim'
 " Plug 'tpope/vim-endwise'
 Plug 'vim-scripts/VisIncr'
 Plug 'machakann/vim-highlightedyank'
-Plug 'SirVer/ultisnips'
+" Plug 'SirVer/ultisnips'
 
 " Plug 'elzr/vim-json'
 " Plug 'othree/yajs.vim', { 'for': 'javascript' } " better syntax for javascript ** Very slow. Look into replacement
@@ -147,15 +147,6 @@ au BufNewFile,BufRead *.ejs set filetype=html
 
 "nmap <leader>.. :lclose<CR>
 nmap <script> <silent> <leader>.. :call ToggleLocationList()<CR>
-
-" Trigger configuration. Do not use <tab>
-let g:UltiSnipsExpandTrigger="<c-q>"
-let g:UltiSnipsJumpForwardTrigger="<c-j>"
-let g:UltiSnipsJumpBackwardTrigger="<c-k>"
-" let g:SuperTabDefaultCompletionType = "<c-tab>"
-
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
 
 " C++
 let g:clang_library_path='/usr/local/Cellar/llvm/6.0.0/lib/libclang.dylib'
