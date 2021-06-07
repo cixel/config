@@ -85,7 +85,7 @@ map <tab> <c-w>
 nmap <leader>" i"<Esc>p
 nmap <leader>' i'<Esc>p
 
-" 
+"
 " misc funcs
 "
 
