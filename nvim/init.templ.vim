@@ -85,7 +85,10 @@ map <tab> <c-w>
 nmap <leader>" i"<Esc>p
 nmap <leader>' i'<Esc>p
 
-## misc funcs
+" 
+" misc funcs
+"
+
 function! WordFrequency() range
   let all = split(join(getline(a:firstline, a:lastline)), '\A\+')
   let frequencies = {}
