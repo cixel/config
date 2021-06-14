@@ -97,8 +97,9 @@
     {
       plugin = nvim-compe;
       config = ''
+        "inoremap <silent><expr> <CR>      compe#confirm('<CR>')
         inoremap <silent><expr> <C-Space> compe#complete()
-        inoremap <silent><expr> <CR>      compe#confirm(lexima#expand('<LT>CR>', 'i'))
+        "inoremap <silent><expr> <CR>      compe#confirm(lexima#expand('<LT>CR>', 'i'))
         inoremap <silent><expr> <C-e>     compe#close('<C-e>')
       ''
       + "lua << EOF\n"
