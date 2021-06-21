@@ -38,8 +38,10 @@ in
     niv
 
     git
-    bat
-    exa
+    bat # cat alternative
+    exa # ls alternative
+    glances # top alternative
+    hyperfine # benchmarking
     fd
     graphviz
     jq
