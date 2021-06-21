@@ -57,3 +57,6 @@ format = '[$state \($name\)]($style) '
 # impure_msg = "🤗"
 impure_msg = "n"
 pure_msg = "[n](green)"
+
+[aws]
+symbol = ""
