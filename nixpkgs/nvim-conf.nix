@@ -164,7 +164,7 @@
           owner = "christianrondeau";
           repo = "vim-base64";
           rev = "d15253105f6a329cd0632bf9dcbf2591fb5944b8";
-          sha256 = "0im33dwmjjbd6lm2510lf7lyavza17lsl119cqjjdi9jdsrh5bbg";
+          sha256 = "0gy3n1sqxmqya7xv9cb5k2y8jagvzkaz6205yjzcp44wj8qsxi1z";
         };
         meta.homepage = "https://github.com/christianrondeau/vim-base64";
       };
@@ -186,7 +186,7 @@
           owner = "mtth";
           repo = "scratch.vim";
           rev = "adf826b1ac067cdb4168cb6066431cff3a2d37a3";
-          sha256 = "0im33dwmjjbd6lm2510lf7lyavza17lsl119cqjjdi9jdsrh5bbg";
+          sha256 = "0gy3n1sqxmqya7xv9cb5k2y8jagvzkaz6205yjzcp44wj8qsxi1z";
         };
         meta.homepage = "https://github.com/mtth/scratch.vim";
       };
