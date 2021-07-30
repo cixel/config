@@ -1,7 +1,7 @@
 { pkgs }:
 {
   enable = true;
-  # package = pkgs.neovim-unwrapped;
+  package = pkgs.neovim-unwrapped;
 
   vimdiffAlias = true;
   withNodeJs = true;
