@@ -12,6 +12,7 @@
     rnix-lsp
     rust-analyzer
     nodePackages.typescript-language-server
+    git # treesitter README lists this as a requirement
   ];
 
   plugins = with pkgs.vimPlugins; [
@@ -49,6 +50,13 @@
     vim-markdown
     rust-vim
     vim-javascript
+
+    {
+      plugin = nvim-treesitter;
+      config = "lua << EOF\n"
+      + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/treesitter.lua"
+      + "\nEOF";
+    }
 
     {
       plugin = vim-tmux-navigator;
@@ -113,6 +121,8 @@
         lua << EOF
         require('nvim-autopairs').setup()
         require('nvim-autopairs.completion.compe').setup({
+          check_ts = true, -- check treesitter
+
           map_cr = true, --  map <CR> on insert mode
           map_complete = true -- it will auto insert `(` after select function or method item
         })

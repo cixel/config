@@ -14,6 +14,7 @@ filetype plugin indent on
 set hidden
 let mapleader=","
 
+
 " Potential performance improvemenets (scrolling)
 set noshowcmd
 " set nolazyredraw
@@ -23,10 +24,11 @@ autocmd FileType rust setlocal expandtab
 autocmd FileType markdown setlocal textwidth=80 expandtab wrap spell
 autocmd FileType proto setlocal ts=4 expandtab
 
-" set folding method to be language defined and files are not folded when
-" opened
-set foldmethod=syntax
+" set so files are not folded when vim starts
 set foldlevelstart=20
+" folding with treesitter
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
 "set nofoldenable
 
 " yank to clipboard
