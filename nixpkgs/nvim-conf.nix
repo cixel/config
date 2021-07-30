@@ -39,9 +39,10 @@
     vim-sensible
     vim-surround
     vim-repeat
-    vim-endwise
+    # endwise seems to interfere with nvim-autopairs at the moment, although
+    # the readme does have information about making it work with endwise
+    # vim-endwise
     vim-commentary
-    lexima-vim
     tabular
     editorconfig-vim
     vim-toml
@@ -97,7 +98,7 @@
     {
       plugin = nvim-compe;
       config = ''
-        inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+        "inoremap <silent><expr> <CR>      compe#confirm('<CR>')
         inoremap <silent><expr> <C-Space> compe#complete()
         "inoremap <silent><expr> <CR>      compe#confirm(lexima#expand('<LT>CR>', 'i'))
         inoremap <silent><expr> <C-e>     compe#close('<C-e>')
@@ -106,6 +107,19 @@
       + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/nvim-compe.lua"
       + "\nEOF";
     }
+    {
+      plugin = nvim-autopairs;
+      config = ''
+        lua << EOF
+        require('nvim-autopairs').setup()
+        require('nvim-autopairs.completion.compe').setup({
+          map_cr = true, --  map <CR> on insert mode
+          map_complete = true -- it will auto insert `(` after select function or method item
+        })
+        EOF
+      '';
+    }
+
     compe-tabnine
 
 
