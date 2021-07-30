@@ -97,7 +97,7 @@
     {
       plugin = nvim-compe;
       config = ''
-        "inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+        inoremap <silent><expr> <CR>      compe#confirm('<CR>')
         inoremap <silent><expr> <C-Space> compe#complete()
         "inoremap <silent><expr> <CR>      compe#confirm(lexima#expand('<LT>CR>', 'i'))
         inoremap <silent><expr> <C-e>     compe#close('<C-e>')
@@ -164,7 +164,7 @@
           owner = "christianrondeau";
           repo = "vim-base64";
           rev = "d15253105f6a329cd0632bf9dcbf2591fb5944b8";
-          sha256 = "0gy3n1sqxmqya7xv9cb5k2y8jagvzkaz6205yjzcp44wj8qsxi1z";
+          sha256 = "0im33dwmjjbd6lm2510lf7lyavza17lsl119cqjjdi9jdsrh5bbg";
         };
         meta.homepage = "https://github.com/christianrondeau/vim-base64";
       };

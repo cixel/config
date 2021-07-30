@@ -27,8 +27,8 @@ require('compe').setup {
   };
 }
 
-vim.api.nvim_set_keymap("i", "<C-y>", "compe#confirm(lexima#expand('<LT>CR>', 'i'))", {expr = true})
-vim.api.nvim_set_keymap("i", "<CR>", "<C-y>", {})
+-- vim.api.nvim_set_keymap("i", "<C-y>", "compe#confirm(lexima#expand('<LT>CR>', 'i'))", {expr = true})
+-- vim.api.nvim_set_keymap("i", "<CR>", "<C-y>", {})
 
 local t = function(str)
   return vim.api.nvim_replace_termcodes(str, true, true, true)
