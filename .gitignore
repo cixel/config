@@ -11,3 +11,5 @@ coc/list-commands-history.json
 configstore
 
 tmux/tmux.conf
+
+karabiner/automatic_backups/
