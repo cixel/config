@@ -44,6 +44,12 @@
     zle -N edit-command-line
     bindkey -M vicmd V edit-command-line
 
+    # shortcuts for spitting out an svg from .dot; TODO see about moving this
+    # into a derivation around graphviz
+    function svg {
+          dot -Tsvg $1 -o $1.svg
+    }
+
     #sudo loginctl enable-linger "$USER" # https://github.com/Trundle/NixOS-WSL/issues/18
     #eval "$(direnv hook zsh)"
     eval "$(starship init zsh)"
