@@ -48,7 +48,6 @@ in
     starship
     tokei
     hugo
-    ffmpeg-full
     age
     silver-searcher
     zlib
