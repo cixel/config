@@ -9,7 +9,7 @@ augroup END
 set undodir=~/.vimdid
 set undofile
 
-syntax on
+" syntax on
 filetype plugin indent on
 set hidden
 let mapleader=","
@@ -25,7 +25,7 @@ autocmd FileType markdown setlocal textwidth=80 expandtab wrap spell
 autocmd FileType proto setlocal ts=4 expandtab
 
 " set so files are not folded when vim starts
-set foldlevelstart=20
+set foldlevelstart=99
 " folding with treesitter
 set foldmethod=expr
 set foldexpr=nvim_treesitter#foldexpr()
