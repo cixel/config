@@ -1,7 +1,7 @@
 { pkgs }:
 {
   enable = true;
-  package = pkgs.neovim-unwrapped;
+  # package = pkgs.neovim-unwrapped;
 
   vimdiffAlias = true;
   withNodeJs = true;
@@ -30,11 +30,11 @@
     }
     nerdcommenter
 
-    {
-      plugin = vim-airline;
-      config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/airline.vim";
-    }
-    vim-airline-themes
+    # {
+    #   plugin = vim-airline;
+    #   config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/airline.vim";
+    # }
+    # vim-airline-themes
 
     fugitive
     vim-sensible

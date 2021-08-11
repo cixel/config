@@ -26,11 +26,11 @@ in
   # mozilla overlay.
   # nixpkgs.config.allowUnfree = true;
   # nixpkgs.overlays = [ (import "${mozilla-overlays}") ];
-  # nixpkgs.overlays = [
-  #   (import (builtins.fetchTarball {
-  #     url = https://github.com/nix-community/neovim-nightly-overlay/archive/master.tar.gz;
-  #   }))
-  # ];
+  nixpkgs.overlays = [
+    (import (builtins.fetchTarball {
+      url = https://github.com/nix-community/neovim-nightly-overlay/archive/master.tar.gz;
+    }))
+  ];
 
   # services.lorri.enable = true;
   home.packages = with pkgs; [

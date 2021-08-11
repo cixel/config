@@ -10,6 +10,7 @@ set undodir=~/.vimdid
 set undofile
 
 " syntax on
+syntax off
 filetype plugin indent on
 set hidden
 let mapleader=","
