@@ -23,7 +23,7 @@ require('compe').setup {
 		sort = true;
 		priority = 0;
 	};
-    ultisnips = true;
+    luasnip = true;
   };
 }
 
@@ -46,24 +46,39 @@ end
 -- Use (s-)tab to:
 --- move to prev/next item in completion menuone
 --- jump to prev/next snippet's placeholder
+--
+-- this is taken from the luasnip readme and used by the tab completion code
+-- below
+local function prequire(...)
+local status, lib = pcall(require, ...)
+if (status) then return lib end
+    return nil
+end
+local t = function(str)
+    return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+local luasnip = prequire('luasnip')
+-- this is from both the luasnip readme and nvim-compe docs
 _G.tab_complete = function()
-  if vim.fn.pumvisible() == 1 then
-    return t "<C-n>"
-  elseif check_back_space() then
-    return t "<Tab>"
-  else
-    return vim.fn['compe#complete']()
-  end
+    if vim.fn.pumvisible() == 1 then
+        return t "<C-n>"
+    elseif luasnip and luasnip.expand_or_jumpable() then
+        return t "<Plug>luasnip-expand-or-jump"
+    elseif check_back_space() then
+        return t "<Tab>"
+    else
+        return vim.fn['compe#complete']()
+    end
 end
 _G.s_tab_complete = function()
-  if vim.fn.pumvisible() == 1 then
-    return t "<C-p>"
-  elseif vim.fn.call("vsnip#jumpable", {-1}) == 1 then
-    return t "<Plug>(vsnip-jump-prev)"
-  else
-    -- If <S-Tab> is not working in your terminal, change it to <C-h>
-    return t "<S-Tab>"
-  end
+    if vim.fn.pumvisible() == 1 then
+        return t "<C-p>"
+    elseif luasnip and luasnip.jumpable(-1) then
+        return t "<Plug>luasnip-jump-prev"
+    else
+    	-- If <S-Tab> is not working in your terminal, change it to <C-h>
+        return t "<S-Tab>"
+    end
 end
 
 vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})

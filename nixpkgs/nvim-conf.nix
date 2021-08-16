@@ -5,7 +5,7 @@
 
   vimdiffAlias = true;
   withNodeJs = true;
-  withPython3 = true;
+  # withPython3 = true;
 
   extraPackages = with pkgs; [
     fd # used by fzf
@@ -152,19 +152,21 @@
       '';
     }
 
-    # TODO: I may wanna make this require the ultisnips dir or find a way to
-    # separate custom snippets from defaults
     {
-      plugin = ultisnips;
+      plugin = luasnip;
       config = ''
-        " may need to use this to prevent hm switch from clobbering snippets directory
-        " let g:UltiSnipsSnippetDirectories = [home . '/.config/nixpkgs/extraConfigs/.vim/my-snippets']
-        let g:UltiSnipsExpandTrigger="<c-q>"
-        let g:UltiSnipsJumpForwardTrigger="<c-j>"
-        let g:UltiSnipsJumpBackwardTrigger="<c-k>"
-        let g:UltiSnipsEditSplit="vertical"
+        lua << EOF
+        ${builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/luasnip.lua"}
+        -- re-enable if i ever want to use the premade snippets from friendly-snippets
+        -- for some reason, lazy_load isn't working
+        -- require("luasnip/loaders/from_vscode").load({ paths = "${friendly-snippets}/share/vim-plugins/friendly-snippets/" })
+        EOF
       '';
     }
+    #     let g:UltiSnipsExpandTrigger="<c-q>"
+    #     let g:UltiSnipsJumpForwardTrigger="<c-j>"
+    #     let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+    #     let g:UltiSnipsEditSplit="vertical"
 
     # see about upstreaming these... esp scratch.vim since it has the most starts
     {
