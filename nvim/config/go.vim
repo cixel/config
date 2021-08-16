@@ -22,6 +22,10 @@ let g:go_fmt_fail_silently = 1
 "let g:go_highlight_operators = 1
 "let g:go_highlight_types = 1
 "let g:go_auto_sameids = 1
+
+" don't do that weird hello world template
+let g:go_template_autocreate = 0
+
 let g:go_highlight_chan_whitespace_error = 0
 let g:go_highlight_extra_types = 0
 let g:go_highlight_space_tab_error = 0
