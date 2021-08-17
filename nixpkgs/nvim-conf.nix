@@ -4,7 +4,7 @@
   # package = pkgs.neovim-unwrapped;
 
   vimdiffAlias = true;
-  withNodeJs = true;
+  # withNodeJs = true;
   # withPython3 = true;
 
   extraPackages = with pkgs; [
@@ -30,11 +30,14 @@
     }
     nerdcommenter
 
-    # {
-    #   plugin = vim-airline;
-    #   config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/airline.vim";
-    # }
-    # vim-airline-themes
+    {
+      plugin = lualine-nvim;
+      config = ''
+        lua << EOF
+        ${builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/lualine.lua"}
+        EOF
+      '';
+    }
 
     fugitive
     vim-sensible
