@@ -57,6 +57,11 @@ autocmd FocusGained * :set relativenumber
 :nmap j gj
 :nmap k gk
 
+" https://github.com/neovim/neovim/issues/416 changed the default for Y to y$,
+" which is admittedly more sensible but my fingers refuse. double tapping y
+" feels worse/slower than shift-y just because of where y is
+map Y yy
+
 " search incrementally, emacs style
 :set incsearch
 " other search options
@@ -91,7 +96,6 @@ nmap <leader>' i'<Esc>p
 "
 " misc funcs
 "
-
 function! WordFrequency() range
   let all = split(join(getline(a:firstline, a:lastline)), '\A\+')
   let frequencies = {}
