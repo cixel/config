@@ -4,8 +4,9 @@
   # package = pkgs.neovim-unwrapped;
 
   vimdiffAlias = true;
-  # withNodeJs = true;
-  # withPython3 = true;
+  withNodeJs = false;
+  withPython3 = false;
+  withRuby = false;
 
   extraPackages = with pkgs; [
     fd # used by fzf
