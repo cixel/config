@@ -7,14 +7,21 @@ require('lualine').setup({
 		disabled_filetypes = {}
 	},
 	sections = {
-		lualine_c = {'filename', 'diff'},
+		lualine_c = {
+			{
+				'filename',
+				file_status = true, -- displays file status (readonly status, modified status)
+				path = 1 -- 0 = just filename, 1 = relative path, 2 = absolute path
+      		},
+			'diff',
+		},
 		lualine_x = {'encoding', 'bo:fileformat', 'filetype'},
   		lualine_z = {'location', {
 			'diagnostics',
 			sources = {'ale'}, -- don't do both this and nvim_lsp; lsp feeds into ale
         	sections = {'error', 'warn', 'info', 'hint'},
         	symbols = {error = 'E:', warn = 'W:', info = 'I:', hint = 'H:'},
-			color_error = gruvbox_material.normal.a.fg,
+			-- color_error = gruvbox_material.normal.a.fg,
 			color_warn  = gruvbox_material.normal.a.fg,
 			color_info  = gruvbox_material.normal.a.fg,
 			color_hint  = gruvbox_material.normal.a.fg,
