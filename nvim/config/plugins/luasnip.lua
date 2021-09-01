@@ -25,11 +25,11 @@ ls.snippets = {
 	go = {
 		ls.parser.parse_snippet(
 			{trig="cl", dscr="fmt.Println"},
-			[[fmt.Println("${1}")]]
+			[[fmt.Println(${1})]]
 		),
 		ls.parser.parse_snippet(
 			{trig="cf", dscr="fmt.Printf"},
-			[[fmt.Printf("${1}")]]
+			[[fmt.Printf(${1})]]
 		),
 		ls.parser.parse_snippet(
 			{trig="main", dscr="main file template"},
@@ -74,33 +74,33 @@ func main() {
 	yaml = {
 		s("config", {
 			t({
-				"api:",
-				"  url: http://localhost:19080/Contrast",
-				"  user_name: contrast_admin",
-				"  api_key: demo",
-				"  service_key: demo",
-				"",
-				"agent:",
-				"  go:",
-				"	dot_files: true",
-				"  logger:",
-				"	stdout: true",
-				"	level: info",
-				"  polling:",
-				"	app_activity_ms: 6000",
-				"  service:",
-				"	grpc: true",
-				"	logger:",
-				"	  path: service.log",
-				"	  level: debug",
-				"	socket: /tmp/service.sock",
-				"",
-				"assess:",
-				"  enable: true",
-				"  enable_preflight: false",
-				"",
-				"protect:",
-				"  enable: false"
+                "api:",
+                "  url: http://localhost:19080/Contrast",
+                "  user_name: contrast_admin",
+                "  api_key: demo",
+                "  service_key: demo",
+                "",
+                "agent:",
+                "  go:",
+                "    dot_files: true",
+                "  logger:",
+                "    stdout: true",
+                "    level: info",
+                "  polling:",
+                "    app_activity_ms: 6000",
+                "  service:",
+                "    grpc: true",
+                "    logger:",
+                "      path: service.log",
+                "      level: debug",
+                "    socket: /tmp/service.sock",
+                "",
+                "assess:",
+                "  enable: true",
+                "  enable_preflight: false",
+                "",
+                "protect:",
+                "  enable: false"
 			})
 		})
 	}
