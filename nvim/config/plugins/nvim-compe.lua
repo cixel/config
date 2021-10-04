@@ -16,13 +16,13 @@ require('compe').setup {
 
   source = {
     path = true;
-    -- buffer = true; -- this is nice but i think it may be redundant w/ tabnine
     nvim_lsp = true;
+    buffer = true; -- this is nice but i think it may be redundant w/ tabnine
     -- nvim_lua = true; -- probably only load this in lua files if possible
-	tabnine = {
-		sort = true;
-		priority = 0;
-	};
+	-- tabnine = {
+	-- 	sort = true;
+	-- 	priority = 0;
+	-- };
     luasnip = true;
   };
 }
