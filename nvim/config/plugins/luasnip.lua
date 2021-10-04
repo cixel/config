@@ -41,6 +41,12 @@ func main() {
 			]]
 		),
 		ls.parser.parse_snippet(
+			{trig="im", dscr="main file template"},
+			[[import (
+			${1}
+		)]]
+		),
+		ls.parser.parse_snippet(
 			{trig="fortest", dscr="table test template"},
 			[[var tests = map[string]struct{${2}}{}
 
