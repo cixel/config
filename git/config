@@ -50,3 +50,5 @@
 	rebase = true
 [url "git@github.com:Contrast-Security-Inc/"]
 	insteadOf = https://github.com/Contrast-Security-Inc/
+[init]
+	defaultBranch = main
