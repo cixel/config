@@ -20,11 +20,6 @@ local on_attach = function(client, bufnr)
   --Enable completion triggered by <c-x><c-o>
   -- buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-  -- format_sync on save; look into pulling the extension automatically from `client`
-  vim.api.nvim_command([[
-    autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync(nil, 1000)
-  ]])
-
   -- Mappings.
   local opts = { noremap=true, silent=true }
 
@@ -57,13 +52,17 @@ local on_attach = function(client, bufnr)
   -- getting these from ale
   -- buf_set_keymap('n', '<C-Q>', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
   -- buf_set_keymap('n', '<C-q>', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-
 end
 
 nvim_lsp.gopls.setup({
   -- cmd = {"gopls", "-remote=auto", "-vv", "-logfile", "/home/alnitak/gopls.log", "-rpc.trace"};
   cmd = {"gopls", "-remote=auto"};
-  on_attach = on_attach
+  on_attach = (function(client, bufnr)
+	  -- format_sync on save; look into pulling the extension automatically from `client`
+	  vim.api.nvim_command("autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync(nil, 1000)")
+
+	  on_attach(client, bufnr)
+  end);
 })
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
