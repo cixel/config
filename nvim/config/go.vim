@@ -50,6 +50,11 @@ let g:go_highlight_diagnostic_warnings = 0
 let g:go_gopls_enabled = 0
 let g:go_fold_enable = []
 
+" disable features redundant with nvim-lsp
+let g:go_code_completion_enabled = 0
+let g:go_fmt_autosave = 0
+let g:go_imports_autosave = 0
+
 " XXX can I get gopls to run these?
 " let g:ale_linters = {
 " \   'go': ['vet', 'golint'],
