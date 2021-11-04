@@ -7,13 +7,13 @@ require('lualine').setup({
 		disabled_filetypes = {}
 	},
 	sections = {
+		lualine_b = {'branch', 'diff'},
 		lualine_c = {
 			{
 				'filename',
 				file_status = true, -- displays file status (readonly status, modified status)
 				path = 1 -- 0 = just filename, 1 = relative path, 2 = absolute path
       		},
-			'diff',
 		},
 		lualine_x = {'encoding', 'bo:fileformat', 'filetype'},
   		lualine_z = {'location', {
@@ -26,5 +26,19 @@ require('lualine').setup({
 			color_info  = gruvbox_material.normal.a.fg,
 			color_hint  = gruvbox_material.normal.a.fg,
 		}}
+	},
+	inactive_sections = {
+        lualine_a = {},
+        lualine_b = {},
+		lualine_c = {
+			{
+				'filename',
+				file_status = true, -- displays file status (readonly status, modified status)
+				path = 1 -- 0 = just filename, 1 = relative path, 2 = absolute path
+      		},
+		},
+        lualine_x = {'location'},
+        lualine_y = {},
+        lualine_z = {}
 	},
 })
