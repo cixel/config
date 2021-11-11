@@ -2,7 +2,8 @@
 
 let
   # set channel channel to nixpkgs-unstable
-  pkgs = import <nixpkgs> {};
+  pkgs = import <nixpkgs> { };
+  contrast-detect-secrets = pkgs.python3Packages.callPackage ./detect-secrets.nix { };
   # https://github.com/nix-community/neovim-nightly-overlay
 in
 {
@@ -45,7 +46,6 @@ in
     fd
     graphviz
     jq
-    starship
     tokei
     hugo
     age
@@ -85,11 +85,16 @@ in
     # delve
     # protobuf
     # golangci-lint XXX fixme: maybe bring this guy back w/ lorri/direnv?
+
+    # detect-secrets
+    contrast-detect-secrets
+    pre-commit
   ];
 
-  programs.zsh = import ./zsh-conf.nix { pkgs = pkgs; };
-  programs.tmux = import ./tmux-conf.nix { pkgs = pkgs; };
-  programs.neovim = import ./nvim-conf.nix { pkgs = pkgs; };
+  programs.neovim   = import ./nvim-conf.nix { pkgs = pkgs; };
+  programs.starship = import ./starship-conf.nix { pkgs = pkgs; lib = lib; };
+  programs.tmux     = import ./tmux-conf.nix { pkgs = pkgs; };
+  programs.zsh      = import ./zsh-conf.nix { pkgs = pkgs; };
 
   programs.fzf = {
     enable = true;

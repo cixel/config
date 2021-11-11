@@ -49,10 +49,6 @@
     function svg {
           dot -Tsvg $1 -o $1.svg
     }
-
-    #sudo loginctl enable-linger "$USER" # https://github.com/Trundle/NixOS-WSL/issues/18
-    #eval "$(direnv hook zsh)"
-    eval "$(starship init zsh)"
   '';
   envExtra = ''
     if [ -f $HOME/go/bin/go ]; then alias godev="$HOME/go/bin/go"; fi
