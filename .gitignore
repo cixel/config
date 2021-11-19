@@ -12,4 +12,6 @@ configstore
 
 tmux/tmux.conf
 
+starship.toml
+
 karabiner/automatic_backups/
