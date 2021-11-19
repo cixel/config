@@ -4,12 +4,17 @@ local nvim_lsp = require('lspconfig')
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
-    underline = false,
-    virtual_text = false,
-    signs = true, -- this was true in the docs
+    underline = true,
+    -- virtual_text = false,
+    signs = true,
     update_in_insert = false,
   }
 )
+
+-- it'd be nice not to link these to Gruvbox groups. also not super sure why
+-- this needs to be an autocmd.
+vim.api.nvim_command("autocmd VimEnter * highlight! link LspDiagnosticsDefaultError GruvboxRed")
+vim.api.nvim_command("autocmd VimEnter * highlight! link LspDiagnosticsDefaultWarning GruvboxYellow")
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
@@ -49,54 +54,54 @@ local on_attach = function(client, bufnr)
 
   buf_set_keymap("n", "<leader>rs", "<cmd>lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>", opts)
 
-  -- getting these from ale
-  -- buf_set_keymap('n', '<C-Q>', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  -- buf_set_keymap('n', '<C-q>', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  -- no longer getting these from ale
+  buf_set_keymap('n', '<C-Q>', '<cmd>lua vim.lsp.diagnostic.goto_prev({ enable_popup = false })<CR>', opts)
+  buf_set_keymap('n', '<C-q>', '<cmd>lua vim.lsp.diagnostic.goto_next({ enable_popup = false })<CR>', opts)
 end
 
 -- https://github.com/golang/tools/blob/master/gopls/doc/vim.md#imports
-function goimports(timeout_ms)
-	local context = { only = { "source.organizeImports" } }
-	vim.validate { context = { context, "t", true } }
-
+function goimports(wait_ms)
 	local params = vim.lsp.util.make_range_params()
-	params.context = context
-
-	-- See the implementation of the textDocument/codeAction callback
-	-- (lua/vim/lsp/handler.lua) for how to do this properly.
-	local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, timeout_ms)
-	if not result or next(result) == nil then return end
-	local actions = result[1].result
-	if not actions then return end
-	local action = actions[1]
-
-	-- textDocument/codeAction can return either Command[] or CodeAction[]. If it
-	-- is a CodeAction, it can have either an edit, a command or both. Edits
-	-- should be executed first.
-	if action.edit or type(action.command) == "table" then
-		if action.edit then
-			vim.lsp.util.apply_workspace_edit(action.edit)
+	params.context = {only = {"source.organizeImports"}}
+	local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, wait_ms)
+	for _, res in pairs(result or {}) do
+		for _, r in pairs(res.result or {}) do
+			if r.edit then
+				vim.lsp.util.apply_workspace_edit(r.edit)
+			else
+				vim.lsp.buf.execute_command(r.command)
+			end
 		end
-		if type(action.command) == "table" then
-			vim.lsp.buf.execute_command(action.command)
-		end
-	else
-		vim.lsp.buf.execute_command(action)
 	end
 end
 
 nvim_lsp.gopls.setup({
-  -- cmd = {"gopls", "-remote=auto", "-vv", "-logfile", "/home/alnitak/gopls.log", "-rpc.trace"};
-  cmd = {"gopls", "-remote=auto"};
-  on_attach = (function(client, bufnr)
-	  vim.api.nvim_command("autocmd BufWritePre *.go lua goimports(1000)")
-	  on_attach(client, bufnr)
-  end);
+	-- cmd = {"gopls", "-remote=auto", "-vv", "-logfile", "/home/alnitak/gopls.log", "-rpc.trace"};
+	cmd = {"gopls", "-remote=auto"};
+	on_attach = (function(client, bufnr)
+		vim.api.nvim_command("autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync(nil, 1000)")
+		vim.api.nvim_command("autocmd BufWritePre *.go lua goimports(1000)")
+		on_attach(client, bufnr)
+	end);
 })
+
+if not nvim_lsp.golangcilsp then 
+	local configs = require('lspconfig/configs')
+	configs.golangcilsp = {
+		default_config = {
+			cmd = {'golangci-lint-langserver'},
+			root_dir = nvim_lsp.util.root_pattern("go.mod", ".git"),
+			file_types = { 'go '},
+			init_options = {
+				command = { "golangci-lint", "run", "--out-format", "json" };
+			},
+		};
+	}
+end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { "rnix", "rust_analyzer", "tsserver" }
+local servers = { "rnix", "rust_analyzer", "tsserver", "golangcilsp" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end

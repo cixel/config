@@ -80,30 +80,6 @@
     }
 
     {
-      plugin = ale;
-      config = ''
-        nmap <silent> <C-Q> <Plug>(ale_previous_wrap)
-        nmap <silent> <C-q> <Plug>(ale_next_wrap)
-        let g:ale_sign_error = 'E'
-        let g:ale_sign_warning = 'W'
-        let g:ale_sign_style_warning = 'WS'
-        let g:ale_sign_style_error = 'WS'
-        let g:ale_list_window_size = 7
-        let g:ale_echo_msg_format = '%s (%linter%%:code%)'
-        let g:ale_linters_explicit = 1
-
-        " weird because there's no guarantee these exist.
-        let g:ale_linters = {
-        \   'go': ['vet', 'golint'],
-        \}
-      '';
-    }
-    {
-      plugin = nvim-ale-diagnostic;
-      config = "lua require(\"nvim-ale-diagnostic\")";
-    }
-
-    {
       plugin = nvim-lspconfig;
       config = "lua << EOF\n"
       + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/lsp.lua"
