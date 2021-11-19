@@ -13,6 +13,7 @@
     rnix-lsp
     rust-analyzer
     nodePackages.typescript-language-server
+    # sumneko-lua-language-server
     git # treesitter README lists this as a requirement
   ];
 
@@ -101,6 +102,7 @@
       plugin = nvim-ale-diagnostic;
       config = "lua require(\"nvim-ale-diagnostic\")";
     }
+
     {
       plugin = nvim-lspconfig;
       config = "lua << EOF\n"
@@ -108,34 +110,29 @@
       + "\nEOF";
     }
     {
-      plugin = nvim-compe;
-      config = ''
-        "inoremap <silent><expr> <CR>      compe#confirm('<CR>')
-        inoremap <silent><expr> <C-Space> compe#complete()
-        "inoremap <silent><expr> <CR>      compe#confirm(lexima#expand('<LT>CR>', 'i'))
-        inoremap <silent><expr> <C-e>     compe#close('<C-e>')
-      ''
-      + "lua << EOF\n"
-      + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/nvim-compe.lua"
-      + "\nEOF";
-    }
-    {
       plugin = nvim-autopairs;
       config = ''
         lua << EOF
-        require('nvim-autopairs').setup()
-        require('nvim-autopairs.completion.compe').setup({
+        require('nvim-autopairs').setup({
           check_ts = true, -- check treesitter
-
-          map_cr = true, --  map <CR> on insert mode
-          map_complete = true -- it will auto insert `(` after select function or method item
+          disable_in_macro = true,
         })
         EOF
       '';
     }
 
-    # compe-tabnine
-
+    lspkind-nvim
+    cmp-buffer
+    cmp-nvim-lsp
+    cmp-nvim-lua
+    cmp-path
+    cmp_luasnip
+    {
+      plugin = nvim-cmp;
+      config = "lua << EOF\n"
+      + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/nvim-cmp.lua"
+      + "\nEOF";
+    }
 
     vim-nix
     {
