@@ -84,7 +84,7 @@ in
 
     # delve
     # protobuf
-    # golangci-lint XXX fixme: maybe bring this guy back w/ lorri/direnv?
+    golangci-lint # XXX fixme: maybe bring this guy back w/ lorri/direnv?
 
     # detect-secrets
     contrast-detect-secrets
