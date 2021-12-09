@@ -1,11 +1,15 @@
 local nvim_lsp = require('lspconfig')
 
 -- vim.lsp.set_log_level("debug")
+vim.diagnostic.config({
+	virtual_text = {},
+	float = {
+		source = "always",
+	},
+})
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
-    underline = true,
-    -- virtual_text = false,
     signs = true,
     update_in_insert = false,
   }
@@ -13,6 +17,7 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 
 -- it'd be nice not to link these to Gruvbox groups. also not super sure why
 -- this needs to be an autocmd.
+-- XXX check if these still do the same thing after 0.6
 vim.api.nvim_command("autocmd VimEnter * highlight! link LspDiagnosticsDefaultError GruvboxRed")
 vim.api.nvim_command("autocmd VimEnter * highlight! link LspDiagnosticsDefaultWarning GruvboxYellow")
 
@@ -85,24 +90,10 @@ nvim_lsp.gopls.setup({
 	end);
 })
 
-if not nvim_lsp.golangcilsp then 
-	local configs = require('lspconfig/configs')
-	configs.golangcilsp = {
-		default_config = {
-			cmd = {'golangci-lint-langserver'},
-			root_dir = nvim_lsp.util.root_pattern("go.mod", ".git"),
-			file_types = { 'go '},
-			init_options = {
-				command = { "golangci-lint", "run", "--out-format", "json" };
-			},
-		};
-	}
-end
-
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { "rnix", "rust_analyzer", "tsserver", "golangcilsp" }
+-- local servers = { "rnix", "rust_analyzer", "tsserver", "golangcilsp" }
+local servers = { "rnix", "rust_analyzer", "tsserver" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
-

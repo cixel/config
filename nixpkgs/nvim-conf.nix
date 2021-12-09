@@ -96,6 +96,12 @@
         EOF
       '';
     }
+    {
+      plugin = nvim-lint;
+      config = "lua << EOF\n"
+      + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/nvim-lint.lua"
+      + "\nEOF";
+    }
 
     lspkind-nvim
     cmp-buffer
