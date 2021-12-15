@@ -18,7 +18,7 @@ require('lualine').setup({
 		lualine_x = {'encoding', 'bo:fileformat', 'filetype'},
   		lualine_z = {'location', {
 			'diagnostics',
-			sources = {'nvim_lsp'}, -- don't do both this and nvim_lsp; lsp feeds into ale
+			sources = {'nvim_diagnostic'}, -- don't do both this and nvim_lsp; lsp feeds into ale
         	sections = {'error', 'warn', 'info', 'hint'},
         	symbols = {error = 'E:', warn = 'W:', info = 'I:', hint = 'H:'},
 			color_error = gruvbox_material.normal.a.fg,
