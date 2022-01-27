@@ -53,15 +53,15 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   buf_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  buf_set_keymap('n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+  buf_set_keymap('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+  buf_set_keymap('n', '<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
   buf_set_keymap("n", "<leader>ff", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 
   buf_set_keymap("n", "<leader>rs", "<cmd>lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>", opts)
 
   -- no longer getting these from ale
-  buf_set_keymap('n', '<C-Q>', '<cmd>lua vim.lsp.diagnostic.goto_prev({ enable_popup = false })<CR>', opts)
-  buf_set_keymap('n', '<C-q>', '<cmd>lua vim.lsp.diagnostic.goto_next({ enable_popup = false })<CR>', opts)
+  buf_set_keymap('n', '<C-Q>', '<cmd>lua vim.diagnostic.goto_prev({ enable_popup = false })<CR>', opts)
+  buf_set_keymap('n', '<C-q>', '<cmd>lua vim.diagnostic.goto_next({ enable_popup = false })<CR>', opts)
 end
 
 -- https://github.com/golang/tools/blob/master/gopls/doc/vim.md#imports
