@@ -48,7 +48,14 @@
     # endwise seems to interfere with nvim-autopairs at the moment, although
     # the readme does have information about making it work with endwise
     # vim-endwise
-    vim-commentary
+    {
+      plugin = comment-nvim;
+      config = ''
+        lua << EOF
+        require('Comment').setup()
+        EOF
+      '';
+    }
     tabular
     editorconfig-vim
     vim-toml
