@@ -1,0 +1,13 @@
+diff --git a/src/internal/poll/fd_fsync_darwin.go b/src/internal/poll/fd_fsync_darwin.go
+index 48e7596922..3dac187a91 100644
+--- a/src/internal/poll/fd_fsync_darwin.go
++++ b/src/internal/poll/fd_fsync_darwin.go
+@@ -15,7 +15,6 @@ func (fd *FD) Fsync() error {
+ 	}
+ 	defer fd.decref()
+ 	return ignoringEINTR(func() error {
+-		_, err := fcntl(fd.Sysfd, syscall.F_FULLFSYNC, 0)
+-		return err
++		return syscall.Fsync(fd.Sysfd)
+ 	})
+ }
