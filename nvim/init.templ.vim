@@ -23,7 +23,7 @@ set lazyredraw
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType rust setlocal expandtab
 autocmd FileType markdown setlocal textwidth=80 expandtab wrap spell
-autocmd FileType proto setlocal ts=4 expandtab
+autocmd FileType proto setlocal ts=2 expandtab
 
 " set so files are not folded when vim starts
 set foldlevelstart=99
