@@ -14,7 +14,10 @@
     rust-analyzer
     nodePackages.typescript-language-server
     # sumneko-lua-language-server
-    git # treesitter README lists this as a requirement
+
+    # treesitter README lists these as requirements
+    git
+    gcc # could be any C compiler
   ];
 
   plugins = with pkgs.vimPlugins; [
