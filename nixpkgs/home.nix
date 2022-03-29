@@ -23,16 +23,6 @@ in
   # changes in each release.
   home.stateVersion = "20.03";
 
-  # Allow installation of propietary of "unfree" packages. Needed for parts of
-  # mozilla overlay.
-  # nixpkgs.config.allowUnfree = true;
-  # nixpkgs.overlays = [ (import "${mozilla-overlays}") ];
-  # nixpkgs.overlays = [
-  #   (import (builtins.fetchTarball {
-  #     url = https://github.com/nix-community/neovim-nightly-overlay/archive/master.tar.gz;
-  #   }))
-  # ];
-
   # fsync on darwin is broken in that it's not a true fsync, so go's
   # syscall wrapper calls F_FULLFSYNC instead to make sure that writes are
   # actually flushed as expected. In general, with a laptop, there's probably
@@ -53,7 +43,6 @@ in
     })
   ];
 
-  # services.lorri.enable = true;
   home.packages = with pkgs; [
     direnv
     niv
@@ -75,15 +64,11 @@ in
     lldb_10
     libwebp
 
-    # pkgs.delve
-    # pkgs.protobuf
     modd
     automake
     autoconf
 
     direnv
-
-    # pkgs.coreutils-full
 
     python
     python3
@@ -102,13 +87,9 @@ in
     # nix language server
     # rnix-lsp
 
-    # delve
-    # protobuf
-    golangci-lint # XXX fixme: maybe bring this guy back w/ lorri/direnv?
+    golangci-lint 
 
-    # detect-secrets
     contrast-detect-secrets
-    pre-commit
   ];
 
   programs.neovim = import ./nvim-conf.nix { inherit pkgs; };
