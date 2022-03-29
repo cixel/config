@@ -105,8 +105,8 @@ cmp.setup({
 		{ name = 'path' },
 		{ name = 'buffer', keyword_length = 4 },
 	}),
-	experimental = {
-		native_menu = true,
+	view = {
+		entries = "native",
 	},
 })
 
