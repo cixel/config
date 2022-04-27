@@ -33,7 +33,6 @@
         let NERDTreeShowHidden=1
       '';
     }
-    nerdcommenter
 
     {
       plugin = lualine-nvim;
@@ -47,6 +46,7 @@
     fugitive
     vim-sensible
     vim-surround
+    vim-matchup
     vim-repeat
     # endwise seems to interfere with nvim-autopairs at the moment, although
     # the readme does have information about making it work with endwise
@@ -67,10 +67,37 @@
     vim-javascript
 
     {
-      plugin = nvim-treesitter;
+      # revert to nvim-treesitter once the fix for
+      # https://github.com/nvim-treesitter/nvim-treesitter/issues/2849 is
+      # released
+      plugin = pkgs.vimUtils.buildVimPluginFrom2Nix {
+        pname = "nvim-treesitter";
+        version = "2022-04-25";
+        src = pkgs.fetchFromGitHub {
+          owner = "nvim-treesitter";
+          repo = "nvim-treesitter";
+          rev = "b1e8b61a94955d747ba8ad02cd3c0dddb1bf883f";
+          sha256 = "047vzgqky7f5aas8ca9m5pif4cccjvxasf2zqiksz8j6nzj4sgf7";
+        };
+        meta.homepage = "https://github.com/vim-scripts/VisIncr";
+      };
       config = "lua << EOF\n"
       + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/treesitter.lua"
       + "\nEOF";
+    }
+    nvim-treesitter-textobjects
+    {
+      plugin = pkgs.vimUtils.buildVimPluginFrom2Nix {
+        pname = "nvim-treesitter-playground";
+        version = "2022-04-25";
+        src = pkgs.fetchFromGitHub {
+          owner = "nvim-treesitter";
+          repo = "playground";
+          rev = "13e2d2d63ce7bc5d875e8bdf89cb070bc8cc7a00";
+          sha256 = "1klkg3n3rymb6b9im7hq9yq26mqf2v79snsqbx72am649c6qc0ns";
+        };
+        meta.homepage = "https://github.com/nvim-treesitter/playground";
+      };
     }
 
     {
@@ -127,10 +154,6 @@
     }
 
     vim-nix
-    {
-      plugin = vim-go;
-      config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/go.vim";
-    }
 
     {
       plugin = fzf-vim;
