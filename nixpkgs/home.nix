@@ -2,7 +2,16 @@
 
 let
   # set channel channel to nixpkgs-unstable
-  pkgs = import <nixpkgs> { };
+  pkgs = import <nixpkgs> {
+    overlays = [
+      # https://github.com/NixOS/nixpkgs/issues/168984
+      (self: super: {
+        golangci-lint = super.golangci-lint.override {
+          buildGoModule = super.buildGoModule;
+        };
+      })
+    ];
+  };
   contrast-detect-secrets = pkgs.python3Packages.callPackage ./detect-secrets.nix { };
   # https://github.com/nix-community/neovim-nightly-overlay
 in
@@ -23,23 +32,31 @@ in
   # changes in each release.
   home.stateVersion = "20.03";
 
-  # fsync on darwin is broken in that it's not a true fsync, so go's
-  # syscall wrapper calls F_FULLFSYNC instead to make sure that writes are
-  # actually flushed as expected. In general, with a laptop, there's probably
-  # no issue, because the battery controler should handle flushing cache when
-  # there's a sudden power loss or something. Down the rabbit hole of tweets is
-  # more justification on this. This patch changes it to just call fsync. I
-  # never use darwin besides on a laptop, so it should be safe enough for me.
-  #
-  # https://github.com/golang/go/issues/28739
   nixpkgs.overlays = [
+    # (import (builtins.fetchTarball {
+    #   url = https://github.com/nix-community/neovim-nightly-overlay/archive/master.tar.gz;
+    # }))
     (self: super: {
-      go = super.go.overrideAttrs (old: {
+      # fsync on darwin is broken in that it's not a true fsync, so go's
+      # syscall wrapper calls F_FULLFSYNC instead to make sure that writes are
+      # actually flushed as expected. In general, with a laptop, there's probably
+      # no issue, because the battery controler should handle flushing cache when
+      # there's a sudden power loss or something. Down the rabbit hole of tweets is
+      # more justification on this. This patch changes it to just call fsync. I
+      # never use darwin besides on a laptop, so it should be safe enough for me.
+      #
+      # https://github.com/golang/go/issues/28739
+      go_1_18 = super.go_1_18.overrideAttrs (old: {
         patches = (old.patches or [ ]) ++ (
           if lib.stdenv.isDarwin then [ ./fd_fsync_darwin.patch ]
           else [ ]
         );
       });
+
+      # https://github.com/NixOS/nixpkgs/issues/168984
+      golangci-lint = super.golangci-lint.override {
+        buildGoModule = super.buildGoModule;
+      };
     })
   ];
 
@@ -56,7 +73,7 @@ in
     graphviz
     jq
     tokei
-    hugo
+    # hugo
     age
     silver-searcher
     zlib
@@ -87,7 +104,7 @@ in
     # nix language server
     # rnix-lsp
 
-    golangci-lint 
+    golangci-lint
 
     contrast-detect-secrets
   ];
@@ -110,7 +127,7 @@ in
 
   programs.go = {
     enable = true;
-    package = pkgs.go;
+    package = pkgs.go_1_18;
     goPath = "${builtins.getEnv "HOME"}/gopath";
     goBin = "${builtins.getEnv "HOME"}/gobin";
   };
