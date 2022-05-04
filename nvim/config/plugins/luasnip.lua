@@ -19,6 +19,12 @@ local dl = require("luasnip.extras").dynamic_lambda
 vim.keymap.set({"i", "s"}, "<C-q>", "<Plug>luasnip-expand-or-jump", {})
 
 ls.add_snippets("all", {})
+ls.add_snippets("javascript", {
+  ls.parser.parse_snippet(
+    {trig="cl", dscr="console.log"},
+    [[console.log(${1})]]
+  ),
+})
 ls.add_snippets("yaml", {
   s("config", {
 	t({
@@ -58,7 +64,6 @@ ls.add_snippets("go", {
   ls.parser.parse_snippet(
 	{trig="main", dscr="main file template"},
 	[[package main
-
 func main() {
 	${1}
 }
