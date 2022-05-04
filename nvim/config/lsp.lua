@@ -92,19 +92,31 @@ end
 
 nvim_lsp.gopls.setup({
   -- cmd = {"gopls", "-remote=auto", "-vv", "-logfile", "/home/alnitak/gopls.log", "-rpc.trace"};
-  cmd = {"gopls", "-remote=auto"};
+  cmd = {"gopls", "-remote=auto"},
+  settings = {
+	gopls = {
+	  -- these links aren't very useful - they're rendered in markdown and
+	  -- nothing is rendering the markdown or making the link particularly
+	  -- useable. maybe one day i can set something up to render the links more
+	  -- cleanly or make them shell out to `open` or something when interacted
+	  -- with.
+	  linksInHover = false,
+	  usePlaceholders = true,
+	},
+  },
   on_attach = (function(client, bufnr)
 	vim.api.nvim_create_autocmd("BufWritePre", {
 	  pattern = "*.go",
 	  callback = function()
-		vim.lsp.buf.formatting_sync(nil, 1000)
-		goimports(1000)
+		local timeout = 1000
+		vim.lsp.buf.formatting_sync(nil, timeout)
+		goimports(timeout)
 	  end,
 	  desc = "format Go buffer",
 	})
 
 	on_attach(client, bufnr)
-  end);
+  end),
 })
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
