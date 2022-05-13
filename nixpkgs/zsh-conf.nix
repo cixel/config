@@ -5,6 +5,7 @@
   shellAliases = {
     v = "nvim";
     vim = "nvim";
+    sudov = "sudo -E -s nvim";
 
     l = "exa -la";
     ls = "exa";
