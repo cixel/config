@@ -7,7 +7,8 @@
     vim = "nvim";
     sudov = "sudo -E -s nvim";
 
-    l = "exa -la";
+    l = "exa --long --all";
+    lt = "exa --long --all --sort newest";
     ls = "exa";
     tree = "exa --tree --long";
 
