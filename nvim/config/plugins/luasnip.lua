@@ -24,6 +24,25 @@ ls.add_snippets("javascript", {
     {trig="cl", dscr="console.log"},
     [[console.log(${1})]]
   ),
+  ls.parser.parse_snippet(
+	{trig="sample", dscr="sample app template"},
+	[['use strict';
+const express = require('express');
+const app = express();
+
+Error.stackTraceLimit = 100;
+
+app.get('/', (req, res) => {
+  res.send('!');
+});
+
+app.get('/test', (req, res) => {
+  const input = req.query.input;
+  res.send(input);
+});
+
+app.listen(3000, () => console.log('Example app listening on port 3000!'));]]
+  ),
 })
 ls.add_snippets("yaml", {
   s("config", {
@@ -60,6 +79,14 @@ ls.add_snippets("go", {
   ls.parser.parse_snippet(
 	{trig="cf", dscr="fmt.Printf"},
 	[[fmt.Printf(${1})]]
+  ),
+  ls.parser.parse_snippet(
+	{trig="fix", dscr="fixme"},
+	[[// FIXME(ehden)]]
+  ),
+  ls.parser.parse_snippet(
+	{trig="todo", dscr="todo"},
+	[[// TODO(1:ticket)]]
   ),
   ls.parser.parse_snippet(
 	{trig="main", dscr="main file template"},
