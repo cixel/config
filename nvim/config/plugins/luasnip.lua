@@ -91,6 +91,7 @@ ls.add_snippets("go", {
   ls.parser.parse_snippet(
 	{trig="main", dscr="main file template"},
 	[[package main
+
 func main() {
 	${1}
 }
