@@ -125,6 +125,7 @@
     cmp-nvim-lua
     cmp-path
     cmp_luasnip
+    cmp-nvim-lsp-signature-help
     {
       plugin = nvim-cmp;
       type = "lua";
