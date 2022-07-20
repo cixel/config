@@ -52,6 +52,8 @@
       plugin = comment-nvim;
       type = "lua";
       config = ''
+        -- i prefer .txt comments because of testscript txt files
+        require('Comment.ft').set('text', '# %s')
         require('Comment').setup()
       '';
     }
