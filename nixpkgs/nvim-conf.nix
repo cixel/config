@@ -36,11 +36,8 @@
 
     {
       plugin = lualine-nvim;
-      config = ''
-        lua << EOF
-        ${builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/lualine.lua"}
-        EOF
-      '';
+      type = "lua";
+      config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/lualine.lua";
     }
 
     fugitive
@@ -53,10 +50,9 @@
     # vim-endwise
     {
       plugin = comment-nvim;
+      type = "lua";
       config = ''
-        lua << EOF
         require('Comment').setup()
-        EOF
       '';
     }
     tabular
@@ -67,23 +63,9 @@
     vim-javascript
 
     {
-      # revert to nvim-treesitter once the fix for
-      # https://github.com/nvim-treesitter/nvim-treesitter/issues/2849 is
-      # released
-      plugin = pkgs.vimUtils.buildVimPluginFrom2Nix {
-        pname = "nvim-treesitter";
-        version = "2022-04-25";
-        src = pkgs.fetchFromGitHub {
-          owner = "nvim-treesitter";
-          repo = "nvim-treesitter";
-          rev = "b1e8b61a94955d747ba8ad02cd3c0dddb1bf883f";
-          sha256 = "047vzgqky7f5aas8ca9m5pif4cccjvxasf2zqiksz8j6nzj4sgf7";
-        };
-        meta.homepage = "https://github.com/vim-scripts/VisIncr";
-      };
-      config = "lua << EOF\n"
-      + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/treesitter.lua"
-      + "\nEOF";
+      plugin = nvim-treesitter;
+      type = "lua";
+      config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/treesitter.lua";
     }
     nvim-treesitter-textobjects
     {
@@ -118,26 +100,23 @@
 
     {
       plugin = nvim-lspconfig;
-      config = "lua << EOF\n"
-      + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/lsp.lua"
-      + "\nEOF";
+      type = "lua";
+      config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/lsp.lua";
     }
     {
       plugin = nvim-autopairs;
+      type = "lua";
       config = ''
-        lua << EOF
         require('nvim-autopairs').setup({
           check_ts = true, -- check treesitter
           disable_in_macro = true,
         })
-        EOF
       '';
     }
     {
       plugin = nvim-lint;
-      config = "lua << EOF\n"
-      + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/nvim-lint.lua"
-      + "\nEOF";
+      type = "lua";
+      config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/nvim-lint.lua";
     }
 
     lspkind-nvim
@@ -148,9 +127,8 @@
     cmp_luasnip
     {
       plugin = nvim-cmp;
-      config = "lua << EOF\n"
-      + builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/nvim-cmp.lua"
-      + "\nEOF";
+      type = "lua";
+      config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/nvim-cmp.lua";
     }
 
     vim-nix
@@ -170,13 +148,12 @@
 
     {
       plugin = luasnip;
+      type = "lua";
       config = ''
-        lua << EOF
         ${builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/luasnip.lua"}
         -- re-enable if i ever want to use the premade snippets from friendly-snippets
         -- for some reason, lazy_load isn't working
         -- require("luasnip/loaders/from_vscode").load({ paths = "${friendly-snippets}/share/vim-plugins/friendly-snippets/" })
-        EOF
       '';
     }
     #     let g:UltiSnipsExpandTrigger="<c-q>"
