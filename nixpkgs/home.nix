@@ -52,11 +52,6 @@ in
           else [ ]
         );
       });
-
-      # https://github.com/NixOS/nixpkgs/issues/168984
-      golangci-lint = super.golangci-lint.override {
-        buildGoModule = super.buildGoModule;
-      };
     })
   ];
 
@@ -64,7 +59,7 @@ in
     git
     bat # cat alternative
     exa # ls alternative
-    glances # top alternative
+    # glances # top alternative
     hyperfine # benchmarking
     fd
     graphviz
@@ -88,7 +83,6 @@ in
     # this won't be useable as a server because it's only available to a single
     # user.
     mosh
-
 
     golangci-lint
 
