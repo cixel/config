@@ -46,7 +46,7 @@ in
       # never use darwin besides on a laptop, so it should be safe enough for me.
       #
       # https://github.com/golang/go/issues/28739
-      go_1_18 = super.go_1_18.overrideAttrs (old: {
+      go = super.go.overrideAttrs (old: {
         patches = (old.patches or [ ]) ++ (
           if lib.stdenv.isDarwin then [ ./fd_fsync_darwin.patch ]
           else [ ]
@@ -107,7 +107,7 @@ in
 
   programs.go = {
     enable = true;
-    package = pkgs.go_1_18;
+    package = pkgs.go;
     goPath = "${builtins.getEnv "HOME"}/gopath";
     goBin = "${builtins.getEnv "HOME"}/gobin";
   };
