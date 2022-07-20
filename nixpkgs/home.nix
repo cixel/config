@@ -61,9 +61,6 @@ in
   ];
 
   home.packages = with pkgs; [
-    direnv
-    niv
-
     git
     bat # cat alternative
     exa # ls alternative
@@ -76,21 +73,10 @@ in
     # hugo
     age
     silver-searcher
-    zlib
-    llvm_10
-    lldb_10
-    libwebp
 
-    modd
-    automake
-    autoconf
-
-    direnv
-
-    python
     python3
 
-    lua5_3
+    luajit
 
     # rust. eventually, see about using
     # https://github.com/mozilla/pkgs-mozilla
@@ -98,11 +84,11 @@ in
     # should also manage rust-analyzer?
     rustup
     rust-analyzer
-    # pkgs.cargo
-    # pkgs.rustfmt
 
-    # nix language server
-    # rnix-lsp
+    # this won't be useable as a server because it's only available to a single
+    # user.
+    mosh
+
 
     golangci-lint
 
