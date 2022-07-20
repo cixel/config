@@ -59,8 +59,6 @@ ls.add_snippets("yaml", {
 	  "  logger:",
 	  "    stdout: true",
 	  "    level: info",
-	  "  service:",
-	  "    bypass: true",
 	  "",
 	  "assess:",
 	  "  enable: true",
