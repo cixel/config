@@ -56,6 +56,10 @@
     if [ -f $HOME/go/bin/go ]; then alias godev="$HOME/go/bin/go"; fi
     if [ -f $HOME/.sensitive ]; then . $HOME/.sensitive; fi
 
+    if [ -f /Applications/Tailscale.app/Contents/MacOS/Tailscale ]; then
+      alias tailscale=/Applications/Tailscale.app/Contents/MacOS/Tailscale
+    fi
+
     # may want to fiddle with these so ~/go is just my one source for all
     # things outside of the toolchain and ~/golang is for inside
     export GOBIN="$HOME/gobin"
