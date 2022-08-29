@@ -14,16 +14,21 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 }
 )
 
--- it'd be nice not to link these to Gruvbox groups. also not super sure why
--- this needs to be an autocmd.
--- XXX check if these still do the same thing after 0.6
 vim.api.nvim_create_autocmd("VimEnter", {
 	pattern = "*",
 	callback = function()
-		vim.api.nvim_set_hl(0, 'LspDiagnosticsDefaultError', { link = 'GruvboxRed' })
-		vim.api.nvim_set_hl(0, 'LspDiagnosticsDefaultWarning', { link = 'GruvboxYellow' })
+		vim.keymap.set(
+			'n', '<C-q>',
+			function() vim.diagnostic.goto_next({ enable_popup = false }) end,
+			{ silent = true }
+		)
+		vim.keymap.set(
+			'n', '<C-Q>',
+			function() vim.diagnostic.goto_prev({ enable_popup = false }) end,
+			{ silent = true }
+		)
 	end,
-	desc = "set lsp diagnostic highlights",
+	desc = "set diagnostic settings",
 })
 
 -- Use an on_attach function to only map the following keys
@@ -36,11 +41,10 @@ local on_attach = function(client, bufnr)
 		})
 	end
 
-	--  local buf_set_option = function(...)
+	-- local buf_set_option = function(...)
 	-- vim.api.nvim_buf_set_option(bufnr, ...)
-	--  end
-
-	--Enable completion triggered by <c-x><c-o>
+	-- end
+	-- Enable completion triggered by <c-x><c-o>
 	-- buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
 	-- See `:help vim.lsp.*` for documentation on any of the below functions
@@ -67,10 +71,6 @@ local on_attach = function(client, bufnr)
 	buf_set_keymap('n', '<leader>ff', vim.lsp.buf.formatting)
 
 	buf_set_keymap("n", "<leader>rs", function() vim.lsp.stop_client(vim.lsp.get_active_clients()) end)
-
-	-- no longer getting these from ale
-	buf_set_keymap('n', '<C-Q>', function() vim.diagnostic.goto_prev({ enable_popup = false }) end)
-	buf_set_keymap('n', '<C-q>', function() vim.diagnostic.goto_next({ enable_popup = false }) end)
 end
 
 -- https://github.com/golang/tools/blob/master/gopls/doc/vim.md#imports
