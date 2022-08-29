@@ -1,8 +1,8 @@
 vim.o.completeopt = "menuone,noselect,noinsert"
 
-local cmp = require'cmp'
+local cmp = require 'cmp'
 
-local symbol_map  = {
+local symbol_map = {
 	Text          = "",
 	Method        = "",
 	Function      = "",
@@ -33,22 +33,12 @@ local symbol_map  = {
 -- for ( after function completion
 -- TODO
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-cmp.event:on( 'confirm_done', cmp_autopairs.on_confirm_done({}))
+cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done({}))
 
 --- Use (s-)tab to:
 --- move to prev/next item in completion menuone
 --- jump to prev/next snippet's placeholder
---
--- this is taken from the luasnip readme and used in the mappings below
-local function prequire(...)
-	local status, lib = pcall(require, ...)
-	if (status) then return lib end
-	return nil
-end
-local t = function(str)
-	return vim.api.nvim_replace_termcodes(str, true, true, true)
-end
-local luasnip = prequire('luasnip')
+local luasnip = require('luasnip')
 
 local has_words_before = function()
 	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
