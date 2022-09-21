@@ -15,6 +15,7 @@
     rnix-lsp
     rust-analyzer
     nodePackages.typescript-language-server
+    nodePackages.yaml-language-server
     sumneko-lua-language-server
 
     # treesitter README lists these as requirements

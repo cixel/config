@@ -28,7 +28,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
 			{ silent = true }
 		)
 	end,
-	desc = "set diagnostic settings",
+	desc = "set lsp diagnostic highlights and mappings",
 })
 
 -- Use an on_attach function to only map the following keys
@@ -117,6 +117,27 @@ nvim_lsp.gopls.setup({
 		on_attach(client, bufnr)
 	end),
 })
+
+-- nvim_lsp.yamlls.setup({
+--   on_attach = on_attach,
+--   settings = {
+-- 	-- trace = {
+-- 	--   server = verbose,
+-- 	-- },
+-- 	redhat = {
+-- 	  telemetry = {
+-- 		enabled = false,
+-- 	  },
+-- 	},
+-- 	yaml = {
+-- 	  hover = true,
+-- 	  completion = true,
+-- 	  format = {
+-- 		enable = true,
+-- 	  },
+-- 	},
+--   },
+-- })
 
 nvim_lsp.sumneko_lua.setup {
 	on_attach = on_attach,
