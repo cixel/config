@@ -28,13 +28,11 @@
       plugin = gruvbox;
       config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/looks.vim";
     }
+
     {
-      plugin = nerdtree;
-      config = ''
-        map <silent> \e :NERDTreeToggle<CR>
-        map <silent> \E :NERDTreeFind<CR>
-        let NERDTreeShowHidden=1
-      '';
+      plugin = nvim-tree-lua;
+      type = "lua";
+      config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/nvim-tree.lua";
     }
 
     {
