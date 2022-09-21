@@ -9,7 +9,9 @@
   withRuby = false;
 
   extraPackages = with pkgs; [
+    ripgrep # used by telescope/fzf
     fd # used by fzf
+
     rnix-lsp
     rust-analyzer
     nodePackages.typescript-language-server
@@ -138,14 +140,14 @@
 
     {
       plugin = fzf-vim;
+      type = "lua";
       config = ''
-        " FZF.vim
-        " let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore-dir={dist,target,node_modules,docs,rulepack/xml,experiments,code-coverage-report} --ignore .git -g ""'
-        " set rtp+=/usr/local/opt/fzf " for fzf to load on start from the brew install
-        " set rtp+= " for fzf to load on start from the brew install
-        " let $FZF_DEFAULT_COMMAND = "fd --type f --hidden -E '.git' -E 'target/**'"
-        let $FZF_DEFAULT_COMMAND = "fd --type f --hidden -E '.git'"
-        nmap ; :FZF<CR>
+        vim.env.FZF_DEFAULT_COMMAND = "fd --type f --hidden -E '.git'"
+
+        vim.keymap.set('n', ';',         '<cmd>FZF<CR>', { silent = true })
+        vim.keymap.set('n', '<leader>g', '<cmd>Rg<CR>', { silent = true })
+        vim.keymap.set('n', '<leader>c', '<cmd>Commits<CR>', { silent = true })
+        vim.keymap.set('n', '<leader>x', '<cmd>BCommits<CR>', { silent = true })
       '';
     }
 
