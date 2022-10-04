@@ -66,7 +66,8 @@
     vim-javascript
 
     {
-      plugin = nvim-treesitter;
+      # https://nixos.org/manual/nixpkgs/unstable/#vim
+      plugin = nvim-treesitter.withPlugins(parsers: pkgs.tree-sitter.allGrammars);
       type = "lua";
       config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/treesitter.lua";
     }

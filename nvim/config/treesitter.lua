@@ -1,7 +1,4 @@
 require 'nvim-treesitter.configs'.setup {
-	-- ensure_installed = "all", -- "all", or a list of languages
-	ensure_installed = {}, -- https://github.com/NixOS/nixpkgs/issues/189838#issuecomment-1239101579
-	-- ignore_install = { "go" }, -- List of parsers to ignore installing
 	highlight = {
 		enable = true, -- false will disable the whole extension
 		additional_vim_regex_highlighting = false,
