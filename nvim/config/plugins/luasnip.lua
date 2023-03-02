@@ -102,6 +102,11 @@ for name, test := range tests {
 }]]
 	),
 	ls.parser.parse_snippet(
+		{ trig = "tr", dscr = "test.Run template" },
+		[[t.Run(${1}, func(t *testing.T) {
+})]]
+	),
+	ls.parser.parse_snippet(
 		{ trig = "json", dscr = "sample app template" },
 		[[
 {
