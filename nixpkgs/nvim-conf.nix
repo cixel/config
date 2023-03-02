@@ -44,7 +44,25 @@
     fugitive
     vim-sensible
     vim-surround
-    vim-matchup
+
+    # vim-matchup
+    # this got super slow on this update:
+    # https://github.com/NixOS/nixpkgs/commit/685117273d1e1a41e27c73df0805ca08f38c0fbd
+    # so, hardcode the previous version for a bit
+    {
+      plugin = pkgs.vimUtils.buildVimPluginFrom2Nix {
+        pname = "vim-matchup";
+        version = "2021-02-20";
+        src = pkgs.fetchFromGitHub {
+          owner = "andymass";
+          repo = "vim-matchup";
+          rev = "945e01e39fc137bd74bb3aa8c4f40e6ffb5be2dd";
+          sha256 = "04lzlz7y72nw5in3r46xc8xb1f4avdcjbwl1sic9v0gbr4w3g2hb";
+        };
+        meta.homepage = "https://github.com/christianrondeau/vim-base64";
+      };
+    }
+
     vim-repeat
     # endwise seems to interfere with nvim-autopairs at the moment, although
     # the readme does have information about making it work with endwise
@@ -67,7 +85,25 @@
 
     {
       # https://nixos.org/manual/nixpkgs/unstable/#vim
-      plugin = nvim-treesitter.withPlugins(parsers: pkgs.tree-sitter.allGrammars);
+      plugin = nvim-treesitter.withAllGrammars;
+      # plugin =
+      #   (nvim-treesitter.withPlugins (
+      #     plugins: with plugins; [
+      #       tree-sitter-nix
+      #       tree-sitter-go
+      #       tree-sitter-python
+      #       tree-sitter-rust
+      #       tree-sitter-yaml
+      #       tree-sitter-lua
+      #       tree-sitter-bash
+      #       tree-sitter-dockerfile
+      #       tree-sitter-toml
+      #       tree-sitter-regex
+      #       tree-sitter-json
+      #       tree-sitter-zig
+      #       tree-sitter-java
+      #     ]
+      #   ));
       type = "lua";
       config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/treesitter.lua";
     }
