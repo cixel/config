@@ -70,7 +70,7 @@ map Y yy
 :set nohlsearch
 
 " swap back and forth between 2 files
-nmap <C-e> :e#<CR>
+nmap <silent> <C-e> :e#<CR>
 
 " next/previous buffer
 nmap <C-n> :bnext<CR>
