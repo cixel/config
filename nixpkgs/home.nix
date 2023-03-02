@@ -86,7 +86,10 @@ in
 
     golangci-lint
 
+    # i use these for work and prefer having them already loaded to avoid
+    # needing to enter a nix shell for random build dependencies
     contrast-detect-secrets
+    xz
   ];
 
   programs.neovim = import ./nvim-conf.nix { inherit pkgs; };

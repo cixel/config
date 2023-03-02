@@ -20,7 +20,7 @@
 
     # treesitter README lists these as requirements
     git
-    gcc # could be any C compiler
+    zig
   ];
 
   plugins = with pkgs.vimPlugins; [

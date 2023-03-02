@@ -23,7 +23,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
 			{ silent = true }
 		)
 		vim.keymap.set(
-			'n', '<C-Q>',
+			'n', '<C-S-Q>',
 			function() vim.diagnostic.goto_prev({ enable_popup = false }) end,
 			{ silent = true }
 		)
