@@ -1,5 +1,14 @@
 local nvim_tree = require('nvim-tree')
 nvim_tree.setup({
+	diagnostics = {
+		enable = true, -- default is false
+		icons = {
+			hint = "H",
+			info = "I",
+			warning = "W",
+			error = "E",
+		},
+	},
 	remove_keymaps = { "m" },
 	git = {
 		ignore = false,
