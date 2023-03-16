@@ -27,6 +27,7 @@
     {
       plugin = gruvbox;
       config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/looks.vim";
+      # config = builtins.readFile "./nvim/config/looks.vim";
     }
 
     {

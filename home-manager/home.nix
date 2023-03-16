@@ -2,17 +2,20 @@
 
 let
   # set channel channel to nixpkgs-unstable
-  pkgs = import <nixpkgs> {
-    overlays = [
-      # https://github.com/NixOS/nixpkgs/issues/168984
-      (self: super: {
-        golangci-lint = super.golangci-lint.override {
-          buildGoModule = super.buildGoModule;
-        };
-      })
-    ];
-  };
+  # pkgs = import <nixpkgs> {
+  #   overlays = [
+  #     # https://github.com/NixOS/nixpkgs/issues/168984
+  #     (self: super: {
+  #       golangci-lint = super.golangci-lint.override {
+  #         buildGoModule = super.buildGoModule;
+  #       };
+  #     })
+  #   ];
+  # };
+
   contrast-detect-secrets = pkgs.python3Packages.callPackage ./detect-secrets.nix { };
+
+  inherit (pkgs.stdenv) isLinux isDarwin;
   # https://github.com/nix-community/neovim-nightly-overlay
 in
 {
@@ -22,6 +25,14 @@ in
   # home.username = "$USER";
   # home.homeDirectory = builtins.toPath "$HOME";
 
+  # home.username = "ehdens";
+  # home.homeDirectory =
+  #   if isDarwin then
+  #     "/Users/ehdens"
+  #   else if isLinux then
+  #     "/home/ehdens"
+  #   else "";
+
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
   # when a new Home Manager release introduces backwards
@@ -30,6 +41,7 @@ in
   # You can update Home Manager without changing this value. See
   # the Home Manager release notes for a list of state version
   # changes in each release.
+  # home.stateVersion = "20.09";
   home.stateVersion = "20.03";
 
   nixpkgs.overlays = [
@@ -68,6 +80,7 @@ in
     # hugo
     age
     silver-searcher
+    # curl
 
     python3
 
