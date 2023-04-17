@@ -9,11 +9,14 @@ vim.diagnostic.config({
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 	vim.lsp.diagnostic.on_publish_diagnostics, {
-	signs = true,
-	update_in_insert = false,
-}
+		signs = true,
+		update_in_insert = false,
+	}
 )
 
+-- it'd be nice not to link these to Gruvbox groups. also not super sure why
+-- this needs to be an autocmd.
+-- XXX check if these still do the same thing for highlights after 0.6
 vim.api.nvim_create_autocmd("VimEnter", {
 	pattern = "*",
 	callback = function()
@@ -33,7 +36,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
-local on_attach = function(client, bufnr)
+local function on_attach(_, bufnr)
 	local buf_set_keymap = function(mode, lhs, callback)
 		vim.keymap.set(mode, lhs, callback, {
 			silent = true,
@@ -68,7 +71,8 @@ local on_attach = function(client, bufnr)
 	buf_set_keymap('n', 'gr', vim.lsp.buf.references)
 	buf_set_keymap('n', '<leader>e', vim.diagnostic.open_float)
 	buf_set_keymap('n', '<leader>q', vim.diagnostic.setloclist)
-	buf_set_keymap('n', '<leader>ff', vim.lsp.buf.formatting)
+	-- buf_set_keymap('n', '<leader>ff', vim.lsp.buf.formatting)
+	buf_set_keymap('n', '<leader>ff', function() vim.lsp.buf.format({ async = true }) end)
 
 	buf_set_keymap("n", "<leader>rs", function() vim.lsp.stop_client(vim.lsp.get_active_clients()) end)
 end
@@ -108,7 +112,11 @@ nvim_lsp.gopls.setup({
 			pattern = "*.go",
 			callback = function()
 				local timeout = 1000
-				vim.lsp.buf.formatting_sync(nil, timeout)
+				vim.lsp.buf.format({
+					options = {
+						timeout_ms = timeout,
+					}
+				})
 				goimports(timeout)
 			end,
 			desc = "format Go buffer",
@@ -144,7 +152,8 @@ nvim_lsp.lua_ls.setup {
 	settings = {
 		Lua = {
 			runtime = {
-				-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+				-- Tell the language server which version of Lua you're using
+				-- (most likely LuaJIT in the case of Neovim)
 				version = 'LuaJIT',
 			},
 			diagnostics = {
