@@ -22,16 +22,8 @@ in
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  # home.username = "$USER";
-  # home.homeDirectory = builtins.toPath "$HOME";
-
-  # home.username = "ehdens";
-  # home.homeDirectory =
-  #   if isDarwin then
-  #     "/Users/ehdens"
-  #   else if isLinux then
-  #     "/home/ehdens"
-  #   else "";
+  home.username = builtins.getEnv "USER";
+  home.homeDirectory = builtins.toPath (builtins.getEnv "HOME");
 
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
@@ -41,8 +33,7 @@ in
   # You can update Home Manager without changing this value. See
   # the Home Manager release notes for a list of state version
   # changes in each release.
-  # home.stateVersion = "20.09";
-  home.stateVersion = "20.03";
+  home.stateVersion = "23.05";
 
   nixpkgs.overlays = [
     # (import (builtins.fetchTarball {
