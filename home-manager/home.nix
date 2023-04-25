@@ -60,6 +60,8 @@ in
 
   home.packages = with pkgs; [
     git
+    curl
+    ripgrep
     bat # cat alternative
     exa # ls alternative
     # glances # top alternative
@@ -71,18 +73,14 @@ in
     # hugo
     age
     silver-searcher
-    # curl
-
+    zig
     python3
-
     luajit
-
     # rust. eventually, see about using
     # https://github.com/mozilla/pkgs-mozilla
     # rustup manages rustc, cargo, etc. perhaps it
     # should also manage rust-analyzer?
     rustup
-    rust-analyzer
 
     # this won't be useable as a server because it's only available to a single
     # user.
