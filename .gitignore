@@ -1,6 +1,9 @@
 nvim/plugged
 nvim/init.vim
+nvim/init.lua
 nvim/lua/init-home-manager.lua
+
+atuin/
 
 node_modules/
 

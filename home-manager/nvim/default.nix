@@ -26,20 +26,19 @@
   plugins = with pkgs.vimPlugins; [
     {
       plugin = gruvbox;
-      config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/looks.vim";
-      # config = builtins.readFile "./nvim/config/looks.vim";
+      config = builtins.readFile ./config/looks.vim;
     }
 
     {
       plugin = nvim-tree-lua;
       type = "lua";
-      config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/nvim-tree.lua";
+      config = builtins.readFile ./config/plugins/nvim-tree.lua;
     }
 
     {
       plugin = lualine-nvim;
       type = "lua";
-      config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/lualine.lua";
+      config = builtins.readFile ./config/plugins/lualine.lua;
     }
 
     fugitive
@@ -88,7 +87,7 @@
       # https://nixos.org/manual/nixpkgs/unstable/#vim
       plugin = nvim-treesitter.withAllGrammars;
       type = "lua";
-      config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/treesitter.lua";
+      config = builtins.readFile ./config/treesitter.lua;
     }
     nvim-treesitter-textobjects
     {
@@ -124,7 +123,7 @@
     {
       plugin = nvim-lspconfig;
       type = "lua";
-      config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/lsp.lua";
+      config = builtins.readFile ./config/lsp.lua;
     }
     {
       plugin = nvim-autopairs;
@@ -139,7 +138,7 @@
     {
       plugin = nvim-lint;
       type = "lua";
-      config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/nvim-lint.lua";
+      config = builtins.readFile ./config/plugins/nvim-lint.lua;
     }
 
     lspkind-nvim
@@ -153,7 +152,7 @@
     {
       plugin = nvim-cmp;
       type = "lua";
-      config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/nvim-cmp.lua";
+      config = builtins.readFile ./config/plugins/nvim-cmp.lua;
     }
 
     vim-nix
@@ -175,7 +174,7 @@
       plugin = luasnip;
       type = "lua";
       config = ''
-        ${builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/plugins/luasnip.lua"}
+        ${builtins.readFile ./config/plugins/luasnip.lua}
         -- re-enable if i ever want to use the premade snippets from friendly-snippets
         -- for some reason, lazy_load isn't working
         -- require("luasnip/loaders/from_vscode").load({ paths = "${friendly-snippets}/share/vim-plugins/friendly-snippets/" })
@@ -246,5 +245,5 @@
     }
   ];
 
-  extraConfig = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/init.templ.vim";
+  extraConfig = builtins.readFile ./config/init.vim;
 }

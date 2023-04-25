@@ -1,4 +1,4 @@
-source ~/.config/nvim/config/quickload.vim
+" source ~/.config/nvim/config/quickload.vim
 
 augroup highlight_yank
 	autocmd!

@@ -94,10 +94,10 @@ in
     xz
   ];
 
-  programs.neovim = import ./nvim-conf.nix { inherit pkgs; };
-  programs.starship = import ./starship-conf.nix { inherit pkgs lib; };
-  programs.tmux = import ./tmux-conf.nix { inherit pkgs; };
-  programs.zsh = import ./zsh-conf.nix { inherit pkgs; };
+  programs.neovim = import ./nvim { inherit pkgs; };
+  programs.starship = import ./starship.nix { inherit pkgs lib; };
+  programs.tmux = import ./tmux.nix { inherit pkgs; };
+  programs.zsh = import ./zsh.nix { inherit pkgs; };
 
   programs.atuin = {
     enable = true;
