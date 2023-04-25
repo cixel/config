@@ -46,23 +46,23 @@
     vim-sensible
     vim-surround
 
-    vim-matchup
+    # vim-matchup
     # this got super slow on this update:
     # https://github.com/NixOS/nixpkgs/commit/685117273d1e1a41e27c73df0805ca08f38c0fbd
     # so, hardcode the previous version for a bit
-    # {
-    #   plugin = pkgs.vimUtils.buildVimPluginFrom2Nix {
-    #     pname = "vim-matchup";
-    #     version = "2021-02-20";
-    #     src = pkgs.fetchFromGitHub {
-    #       owner = "andymass";
-    #       repo = "vim-matchup";
-    #       rev = "945e01e39fc137bd74bb3aa8c4f40e6ffb5be2dd";
-    #       sha256 = "04lzlz7y72nw5in3r46xc8xb1f4avdcjbwl1sic9v0gbr4w3g2hb";
-    #     };
-    #     meta.homepage = "https://github.com/christianrondeau/vim-base64";
-    #   };
-    # }
+    {
+      plugin = pkgs.vimUtils.buildVimPluginFrom2Nix {
+        pname = "vim-matchup";
+        version = "2021-02-20";
+        src = pkgs.fetchFromGitHub {
+          owner = "andymass";
+          repo = "vim-matchup";
+          rev = "1364b2ba551c82fdb342b646da666a477490c063";
+          sha256 = "sha256-Ktm8b2HMmYw7xaINWu0gjYD2DY4B7LYl4wj2V1K4Frs=";
+        };
+        meta.homepage = "https://github.com/christianrondeau/vim-base64";
+      };
+    }
 
     vim-repeat
     # endwise seems to interfere with nvim-autopairs at the moment, although
@@ -86,32 +86,7 @@
 
     {
       # https://nixos.org/manual/nixpkgs/unstable/#vim
-      # plugin = nvim-treesitter.withAllGrammars;
-      plugin =
-        (nvim-treesitter.withPlugins (
-          plugins: with plugins; [
-            tree-sitter-bash
-            tree-sitter-dockerfile
-            tree-sitter-go
-            tree-sitter-java
-            tree-sitter-jq
-            tree-sitter-json
-            tree-sitter-lua
-            tree-sitter-make
-            tree-sitter-nix
-            tree-sitter-python
-            tree-sitter-regex
-            tree-sitter-rust
-            tree-sitter-toml
-            tree-sitter-yaml
-            tree-sitter-zig
-            tree-sitter-javascript
-            tree-sitter-ruby
-            tree-sitter-typescript
-            tree-sitter-vim
-            tree-sitter-vimdoc
-          ]
-        ));
+      plugin = nvim-treesitter.withAllGrammars;
       type = "lua";
       config = builtins.readFile "${builtins.getEnv "HOME"}/.config/nvim/config/treesitter.lua";
     }
