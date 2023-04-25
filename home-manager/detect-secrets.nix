@@ -1,13 +1,6 @@
-{ lib
-, buildPythonPackage
-, fetchFromGitHub
-, isPy27
-, pyyaml
-, requests
-}:
+{ lib, buildPythonPackage, fetchFromGitHub, isPy27, pyyaml, requests }:
 
-buildPythonPackage
-rec {
+buildPythonPackage rec {
   pname = "detect-secrets";
   version = "1.1.2";
   disabled = isPy27;
@@ -25,7 +18,7 @@ rec {
   ];
 
   meta = with lib; {
-    description = "An enterprise friendly way of detecting and preventing secrets in code";
+    description = "An enterprise friendly way of detecting and preventing secrets in code.";
     homepage = "https://github.com/Contrast-Labs/detect-secrets";
     license = licenses.asl20;
   };
