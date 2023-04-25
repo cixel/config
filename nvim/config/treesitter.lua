@@ -149,3 +149,6 @@ vim.keymap.set('v', ']q', function() move.goto_next_start('@call.outer') end, op
 vim.keymap.set('v', ']k', function() move.goto_next_start('@class.outer') end, opt)
 vim.keymap.set('v', ']a', function() move.goto_next_start('@parameter.outer') end, opt)
 vim.keymap.set('v', ']c', function() move.goto_next_start('@comment.outer') end, opt)
+
+local ts = require 'nvim-treesitter'
+vim.keymap.set('n', '<leader>l', function() print(ts.statusline()) end, opt)
