@@ -99,9 +99,23 @@ in
   programs.tmux = import ./tmux-conf.nix { inherit pkgs; };
   programs.zsh = import ./zsh-conf.nix { inherit pkgs; };
 
-  programs.fzf = {
+  programs.atuin = {
     enable = true;
     enableZshIntegration = true;
+    enableBashIntegration = false;
+    enableFishIntegration = false;
+    flags = [ "--disable-up-arrow" ];
+    settings = {
+      update_check = false;
+      auto_sync = false;
+      style = "compact";
+      inline_height = 20;
+      filter_mode_shell_up_key_binding = "session";
+    };
+  };
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = false;
     enableBashIntegration = false;
     enableFishIntegration = false;
 
