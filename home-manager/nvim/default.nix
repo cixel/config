@@ -22,6 +22,24 @@
 
   plugins = with pkgs.vimPlugins; [
     {
+      plugin = impatient-nvim;
+      type = "lua";
+      config = ''
+        require('impatient')
+        -- enable LuaCacheProfile to see profiling
+        -- require('impatient').enable_profile()
+      '';
+    }
+
+    {
+      plugin = undotree;
+      type = "lua";
+      config = ''
+        vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)
+      '';
+    }
+
+    {
       plugin = gruvbox;
       type = "lua";
       config = builtins.readFile ./config/looks.lua;
