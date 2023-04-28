@@ -62,36 +62,31 @@ in
     git
     curl
     ripgrep
-    bat # cat alternative
-    exa # ls alternative
+    bat
+    exa
     # glances # top alternative
     hyperfine # benchmarking
     fd
     graphviz
     jq
     tokei
-    # hugo
     age
     silver-searcher
     zig
     python3
     luajit
-    # rust. eventually, see about using
-    # https://github.com/mozilla/pkgs-mozilla
-    # rustup manages rustc, cargo, etc. perhaps it
-    # should also manage rust-analyzer?
     rustup
 
     # this won't be useable as a server because it's only available to a single
     # user.
     mosh
 
-    golangci-lint
-
     # i use these for work and prefer having them already loaded to avoid
     # needing to enter a nix shell for random build dependencies
     contrast-detect-secrets
+    golangci-lint
     xz
+    gnumake
   ];
 
   programs.neovim = import ./nvim { inherit pkgs; };
