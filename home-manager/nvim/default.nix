@@ -42,7 +42,10 @@
     {
       plugin = gruvbox;
       type = "lua";
-      config = builtins.readFile ./config/looks.lua;
+      config = ''
+        vim.g['gruvbox_contrast_dark'] = 'hard'
+        vim.cmd [[colorscheme gruvbox]]
+      '';
     }
 
     {
