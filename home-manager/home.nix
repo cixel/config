@@ -1,27 +1,10 @@
-{ config, pkgs, lib, ... }:
+{  pkgs, lib, ... }:
 
 let
-  # set channel channel to nixpkgs-unstable
-  # pkgs = import <nixpkgs> {
-  #   overlays = [
-  #     # https://github.com/NixOS/nixpkgs/issues/168984
-  #     (self: super: {
-  #       golangci-lint = super.golangci-lint.override {
-  #         buildGoModule = super.buildGoModule;
-  #       };
-  #     })
-  #   ];
-  # };
-
   contrast-detect-secrets = pkgs.python3Packages.callPackage ./detect-secrets.nix { };
-
-  inherit (pkgs.stdenv) isLinux isDarwin;
-  # https://github.com/nix-community/neovim-nightly-overlay
 in
 {
-  # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
-
   home.username = builtins.getEnv "USER";
   home.homeDirectory = builtins.toPath (builtins.getEnv "HOME");
 
@@ -108,6 +91,7 @@ in
       filter_mode_shell_up_key_binding = "session";
     };
   };
+
   programs.fzf = {
     enable = true;
     enableZshIntegration = false;
