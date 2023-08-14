@@ -12,6 +12,7 @@
     ripgrep # used by fzf
     fd # fzf
     git # fugitive, nvim-tree, lualine, fzf, etc
+    nodejs # copilot
 
     rnix-lsp
     rust-analyzer
@@ -28,6 +29,43 @@
         require('impatient')
         -- enable LuaCacheProfile to see profiling
         -- require('impatient').enable_profile()
+      '';
+    }
+
+    # note for upgrading these: for some reason, I get an SSL error (netskope
+    # related) when I completely replace the hash with AAA[...]. I don't get
+    # the same issue if I only replace a single character with `0` to
+    # invalidate the hash.
+    {
+      plugin = pkgs.vimUtils.buildVimPluginFrom2Nix {
+        pname = "copilot.lua";
+        version = "rev";
+        src = pkgs.fetchFromGitHub {
+          owner = "zbirenbaum";
+          repo = "copilot.lua";
+          rev = "50ca36fd766db4d444094de81f5e131b6628f48f";
+          sha256 = "sha256-9AU2x0Yvw66FbLmI4QDTnx9nQFZpXlT4EUxq+3b6ucI=";
+        };
+        meta.homepage = "https://github.com/zbirenbaum/copilot.lua";
+      };
+      type = "lua";
+      config = builtins.readFile ./config/plugins/copilot.lua;
+    }
+    {
+      plugin = pkgs.vimUtils.buildVimPluginFrom2Nix {
+        pname = "copilot-cmp";
+        version = "rev";
+        src = pkgs.fetchFromGitHub {
+          owner = "zbirenbaum";
+          repo = "copilot-cmp";
+          rev = "d631b3afbf26bb17d6cf2b3cd8f3d79e7d5eeca1";
+          sha256 = "sha256-OUWcwJqKA4r34S3biY7zd66uCLkeuGAGC6KRm6JLWqQ=";
+        };
+        meta.homepage = "https://github.com/zbirenbaum/copilot.lua";
+      };
+      type = "lua";
+      config = ''
+        require("copilot_cmp").setup()
       '';
     }
 
@@ -136,6 +174,7 @@
     cmp_luasnip
     cmp-nvim-lsp-signature-help
     cmp-nvim-lsp-document-symbol
+
     {
       plugin = nvim-cmp;
       type = "lua";

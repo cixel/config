@@ -19,3 +19,5 @@ tmux/tmux.conf
 starship.toml
 
 karabiner/automatic_backups/
+
+github-copilot/

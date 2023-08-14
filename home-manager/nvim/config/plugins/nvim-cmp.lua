@@ -27,7 +27,8 @@ local symbol_map = {
 	Struct        = "",
 	Event         = "",
 	Operator      = "",
-	TypeParameter = ""
+	TypeParameter = "",
+	Copilot       = "",
 }
 
 -- for ( after function completion
@@ -55,6 +56,7 @@ cmp.setup({
 				nvim_lua = "[lua]",
 				path = "[path]",
 				latex_symbols = "[Latex]",
+				copilot = "[Copilot]",
 			}),
 			symbol_map = symbol_map,
 		}),
@@ -95,7 +97,8 @@ cmp.setup({
 		{ name = 'nvim_lsp_signature_help' },
 		{ name = 'nvim_lsp_document_symbol' },
 		{ name = 'path' },
-		{ name = 'buffer', keyword_length = 4 },
+		{ name = 'buffer',                  keyword_length = 4 },
+		{ name = 'copilot' },
 	}),
 	view = {
 		entries = "native",
