@@ -14,11 +14,12 @@
     git # fugitive, nvim-tree, lualine, fzf, etc
     nodejs # copilot
 
-    rnix-lsp
+    nil
     rust-analyzer
     nodePackages.typescript-language-server
     nodePackages.yaml-language-server
     lua-language-server
+    vscode-langservers-extracted
   ];
 
   plugins = with pkgs.vimPlugins; [
