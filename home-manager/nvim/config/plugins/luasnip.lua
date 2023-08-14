@@ -1,5 +1,4 @@
 local ls = require("luasnip")
--- some shorthands...
 local s = ls.snippet
 local t = ls.text_node
 
@@ -68,6 +67,10 @@ ls.add_snippets("go", {
 		[[fmt.Printf(${1})]]
 	),
 	ls.parser.parse_snippet(
+		{ trig = "tf", dscr = "t.Fatal" },
+		[[t.Fatal(${1})]]
+	),
+	ls.parser.parse_snippet(
 		{ trig = "fix", dscr = "fixme" },
 		[[// FIXME(ehden)]]
 	),
@@ -85,7 +88,7 @@ func main() {
 	]]
 	),
 	ls.parser.parse_snippet(
-		{ trig = "im", dscr = "main file template" },
+		{ trig = "im", dscr = "import statement" },
 		[[import (
 			${1}
 	)]]
