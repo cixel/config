@@ -18,23 +18,27 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 local relative_line_nums = vim.api.nvim_create_augroup('relative_line_nums', { clear = true })
 vim.api.nvim_create_autocmd(
-	{ 'InsertEnter', 'FocusLost', 'BufLeave' },
+	{ 'InsertEnter', 'FocusLost', 'WinLeave' },
 	{
 		desc = 'disable relative line numbers in insert mode or when switching focus',
 		pattern = '*',
 		callback = function()
-			vim.opt.relativenumber = false
+			if vim.wo.number then
+				vim.opt.relativenumber = false
+			end
 		end,
 		group = relative_line_nums,
 	}
 )
 vim.api.nvim_create_autocmd(
-	{ 'InsertLeave', 'FocusGained', 'BufEnter' },
+	{ 'InsertLeave', 'FocusGained', 'WinEnter' },
 	{
 		desc = 'enable relative line numbers for normal mode on focused buffers',
 		pattern = '*',
 		callback = function()
-			vim.opt.relativenumber = true
+			if vim.wo.number then
+				vim.opt.relativenumber = true
+			end
 		end,
 		group = relative_line_nums,
 	}
