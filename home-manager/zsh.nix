@@ -20,9 +20,6 @@
     gitlines = "git ls-files | xargs wc -l";
     ack = "ag --ignore-dir=node_modules --ignore-dir=labs --ignore-dir=docs --ignore-dir=dist --ignore-dir=code-coverage-report";
   };
-  profileExtra = ''
-    if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
-  '';
   sessionVariables = {
     KEYTIMEOUT = 1;
     EDITOR = "nvim";
