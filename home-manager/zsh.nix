@@ -7,10 +7,11 @@
     vim = "nvim";
     sudov = "sudo -E -s nvim";
 
-    l = "exa --long --all";
-    lt = "exa --long --all --sort newest";
-    ls = "exa";
-    tree = "exa --tree --long";
+    l = "eza --long --all";
+    lt = "eza --long --all --sort newest";
+    ls = "eza";
+    tree = "eza --tree --long";
+    exa = "eza";
 
     gd = "go doc";
     gdu = "go doc -u";

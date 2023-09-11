@@ -46,7 +46,7 @@ in
     curl
     ripgrep
     bat
-    exa
+    eza
     # glances # top alternative
     hyperfine # benchmarking
     fd
