@@ -136,19 +136,6 @@
       config = builtins.readFile ./config/treesitter.lua;
     }
     nvim-treesitter-textobjects
-    {
-      plugin = pkgs.vimUtils.buildVimPluginFrom2Nix {
-        pname = "nvim-treesitter-playground";
-        version = "2022-04-25";
-        src = pkgs.fetchFromGitHub {
-          owner = "nvim-treesitter";
-          repo = "playground";
-          rev = "13e2d2d63ce7bc5d875e8bdf89cb070bc8cc7a00";
-          sha256 = "1klkg3n3rymb6b9im7hq9yq26mqf2v79snsqbx72am649c6qc0ns";
-        };
-        meta.homepage = "https://github.com/nvim-treesitter/playground";
-      };
-    }
 
     {
       plugin = vim-tmux-navigator;
