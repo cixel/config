@@ -38,7 +38,7 @@
     '';
   };
 
-  users.users."${user}" = {
+  users.users.${user} = {
     home = "/Users/${user}";
     createHome = false;
     shell = pkgs.zsh;

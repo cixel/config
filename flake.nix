@@ -9,9 +9,13 @@
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    home-manager = {
+      url = "github:nix-community/home-manager/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = inputs@{ self, darwin, nixpkgs }:
+  outputs = inputs@{ self, nixpkgs, darwin, home-manager, ... }:
     let
       mkSystem = name:
         { system
@@ -20,8 +24,14 @@
         ,
         }:
         let
-          systemFunc = if darwin then inputs.darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
-          home-manager = if darwin then inputs.home-manager.darwinModules else inputs.home-manager.nixosModules;
+          systemFunc =
+            if darwin
+            then inputs.darwin.lib.darwinSystem
+            else nixpkgs.lib.nixosSystem;
+          home-manager =
+            if darwin
+            then inputs.home-manager.darwinModules
+            else inputs.home-manager.nixosModules;
 
           machineConfig = ./nix/machines/${name}.nix;
 
@@ -56,6 +66,12 @@
             baseConfig
             machineConfig
             (if darwin then import ./nix/darwin.nix { inherit user; } else { })
+            home-manager.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.${user} = import ./home-manager/home.nix;
+            }
           ];
         };
     in
