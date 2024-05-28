@@ -24,6 +24,9 @@
         ,
         }:
         let
+          pkgs = import nixpkgs {
+            inherit system overlays;
+          };
           systemFunc =
             if darwin
             then inputs.darwin.lib.darwinSystem
@@ -33,7 +36,29 @@
             then inputs.home-manager.darwinModules
             else inputs.home-manager.nixosModules;
 
+          overlays = [
+            (self: super: {
+              go = super.go.overrideAttrs (old: rec {
+                version = "1.22.2";
+                src = pkgs.fetchurl {
+                  url = "https://go.dev/dl/go${version}.src.tar.gz";
+                  hash = "sha256-N06oKyiexzjpaCZ8rFnH1f8YD5SSJQJUeEsgROkN9ak=";
+                };
+                patches = [ ] ++ (
+                  if darwin then [ ./home-manager/fd_fsync_darwin.patch ]
+                  else [ ]
+                );
+                GOROOT_BOOTSTRAP = "${super.go_1_21}/share/go";
+              });
+            })
+          ];
+
           machineConfig = ./nix/machines/${name}.nix;
+          homeConfig = {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.${user} = import ./home-manager/home.nix;
+          };
 
           baseConfig = { pkgs, ... }: {
             # Auto upgrade nix package and the daemon service.
@@ -63,15 +88,12 @@
         systemFunc {
           inherit system;
           modules = [
+            { nixpkgs.overlays = overlays; }
             baseConfig
             machineConfig
             (if darwin then import ./nix/darwin.nix { inherit user; } else { })
             home-manager.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.${user} = import ./home-manager/home.nix;
-            }
+            homeConfig
           ];
         };
     in

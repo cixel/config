@@ -1,12 +1,20 @@
 diff --git a/src/internal/poll/fd_fsync_darwin.go b/src/internal/poll/fd_fsync_darwin.go
-index 48e7596922..3dac187a91 100644
+index 731b7fd5bd..d702a51e76 100644
 --- a/src/internal/poll/fd_fsync_darwin.go
 +++ b/src/internal/poll/fd_fsync_darwin.go
-@@ -15,7 +15,6 @@ func (fd *FD) Fsync() error {
+@@ -5,7 +5,6 @@
+ package poll
+ 
+ import (
+-	"internal/syscall/unix"
+ 	"syscall"
+ )
+ 
+@@ -18,7 +17,6 @@ func (fd *FD) Fsync() error {
  	}
  	defer fd.decref()
  	return ignoringEINTR(func() error {
--		_, err := fcntl(fd.Sysfd, syscall.F_FULLFSYNC, 0)
+-		_, err := unix.Fcntl(fd.Sysfd, syscall.F_FULLFSYNC, 0)
 -		return err
 +		return syscall.Fsync(fd.Sysfd)
  	})

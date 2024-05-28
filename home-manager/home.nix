@@ -16,8 +16,6 @@ let
 in
 {
   programs.home-manager.enable = true;
-  home.username = builtins.getEnv "USER";
-  home.homeDirectory = builtins.toPath (builtins.getEnv "HOME");
 
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
@@ -30,24 +28,18 @@ in
   home.stateVersion = "23.05";
 
   nixpkgs.overlays = [
-    # (import (builtins.fetchTarball {
-    #   url = https://github.com/nix-community/neovim-nightly-overlay/archive/master.tar.gz;
-    # }))
     (self: super: {
-      # fsync on darwin is broken in that it's not a true fsync, so go's
-      # syscall wrapper calls F_FULLFSYNC instead to make sure that writes are
-      # actually flushed as expected. In general, with a laptop, there's probably
-      # no issue, because the battery controler should handle flushing cache when
-      # there's a sudden power loss or something. Down the rabbit hole of tweets is
-      # more justification on this. This patch changes it to just call fsync. I
-      # never use darwin besides on a laptop, so it should be safe enough for me.
-      #
-      # https://github.com/golang/go/issues/28739
-      go = super.go_1_20.overrideAttrs (old: {
-        patches = (old.patches or [ ]) ++ (
-          if lib.stdenv.isDarwin then [ ./fd_fsync_darwin.patch ]
+      go = super.go.overrideAttrs (old: rec {
+        version = "1.22.2";
+        src = pkgs.fetchurl {
+          url = "https://go.dev/dl/go${version}.src.tar.gz";
+          hash = "sha256-N06oKyiexzjpaCZ8rFnH1f8YD5SSJQJUeEsgROkN9ak=";
+        };
+        patches = [ ] ++ (
+          if pkgs.stdenv.isDarwin then [ ./fd_fsync_darwin.patch ]
           else [ ]
         );
+        GOROOT_BOOTSTRAP = "${super.go_1_21}/share/go";
       });
     })
   ];
@@ -120,7 +112,7 @@ in
 
   programs.go = {
     enable = true;
-    package = pkgs.go_1_20;
+    package = pkgs.go;
     goPath = "${builtins.getEnv "HOME"}/gopath";
     goBin = "${builtins.getEnv "HOME"}/gobin";
   };
