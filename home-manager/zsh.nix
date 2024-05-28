@@ -23,7 +23,6 @@
   };
   sessionVariables = {
     KEYTIMEOUT = 1;
-    EDITOR = "nvim";
     #XDG_RUNTIME_DIR="/run/user/$(id -u)"; # https://github.com/Trundle/NixOS-WSL/issues/18
   };
   initExtraBeforeCompInit = ''

@@ -3,6 +3,9 @@
   enable = true;
   package = pkgs.neovim-unwrapped;
 
+  # set EDITOR
+  defaultEditor = true;
+
   vimdiffAlias = true;
   withNodeJs = false;
   withPython3 = false;
