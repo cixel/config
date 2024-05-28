@@ -10,6 +10,7 @@
   sensibleOnTop = true;
   terminal = "tmux-256color"; # wanna mess with this to see if it changes anything about the weird prompt spacing issue
   # terminal = "alacritty"; # wanna mess with this to see if it changes anything about the weird prompt spacing issue
+  historyLimit = 4000;
   plugins = with pkgs; [
     {
       plugin = tmuxPlugins.cpu;
