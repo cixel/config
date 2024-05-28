@@ -51,7 +51,7 @@ local function on_attach(_, bufnr)
 	-- buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
 	-- See `:help vim.lsp.*` for documentation on any of the below functions
-	buf_set_keymap('n', 'gD', vim.lsp.buf.declaration)
+	buf_set_keymap('n', 'gD', vim.lsp.buf.type_definition)
 	buf_set_keymap('n', 'gd', vim.lsp.buf.definition)
 
 	buf_set_keymap('n', 'K', vim.lsp.buf.hover)
@@ -63,6 +63,7 @@ local function on_attach(_, bufnr)
 	-- buf_set_keymap('n', '<C-k>', vim.lsp.buf.signature_help)
 	buf_set_keymap('n', '<C-s>', vim.lsp.buf.signature_help)
 
+	buf_set_keymap('n', '<leader>r', vim.lsp.buf.references)
 	buf_set_keymap('n', '<leader>wa', vim.lsp.buf.add_workspace_folder)
 	buf_set_keymap('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder)
 	buf_set_keymap('n', '<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end)
@@ -93,8 +94,11 @@ local goimports = function(wait_ms)
 	end
 end
 
+local capablities = require('cmp_nvim_lsp').default_capabilities()
+
 nvim_lsp.gopls.setup({
 	-- cmd = {"gopls", "-vv", "-logfile", "gopls.log", "-rpc.trace"};
+	capablities = capablities,
 	cmd = { "gopls", "-remote=auto" },
 	settings = {
 		gopls = {
@@ -105,7 +109,14 @@ nvim_lsp.gopls.setup({
 			-- with.
 			linksInHover = false,
 			usePlaceholders = true,
+			experimentalPostfixCompletions = true,
 		},
+	},
+	-- FIXME: yoinked from
+	-- https://github.com/hrsh7th/nvim-cmp/wiki/Language-Server-Specific-Samples#golang-gopls
+	-- i'm not sure if it's redundant with the usePlaceholders setting above?
+	init_options = {
+		usePlaceholders = true,
 	},
 	on_attach = (function(client, bufnr)
 		vim.api.nvim_create_autocmd("BufWritePre", {
@@ -149,6 +160,7 @@ nvim_lsp.gopls.setup({
 
 nvim_lsp.lua_ls.setup {
 	on_attach = on_attach,
+	capablities = capablities,
 	settings = {
 		Lua = {
 			runtime = {
@@ -172,8 +184,26 @@ nvim_lsp.lua_ls.setup {
 	},
 }
 
+-- https://github.com/oxalica/nil/blob/2f3ed6348bbf1440fcd1ab0411271497a0fbbfa4/dev/nvim-lsp.nix#L83
+nvim_lsp.nil_ls.setup {
+	on_attach = on_attach,
+	capablities = capablities,
+	settings = {
+		['nil'] = {
+			formatting = {
+				command = { "nixpkgs-fmt" },
+			};
+		};
+	},
+}
+
 -- local servers = { "rnix", "rust_analyzer", "tsserver", "golangcilsp" }
-local servers = { "nil_ls", "rust_analyzer", "eslint", "tsserver", "yamlls" }
+local servers = {
+	"rust_analyzer",
+	"eslint", "tsserver",
+	"yamlls",
+	"bashls",
+}
 for _, lsp in ipairs(servers) do
-	nvim_lsp[lsp].setup { on_attach = on_attach }
+	nvim_lsp[lsp].setup { on_attach = on_attach, capabilities = capablities }
 end

@@ -15,15 +15,22 @@
     nodejs # copilot
 
     nil
+    nixpkgs-fmt
+
     rust-analyzer
     nodePackages.typescript-language-server
     nodePackages.yaml-language-server
+    nodePackages.bash-language-server
     lua-language-server
     vscode-langservers-extracted
   ];
 
   plugins = with pkgs.vimPlugins; [
+
     {
+      # this should be the first plugin in my init.lua. as a side effect of how
+      # home-manager builds init.lua, it'll come after extraLuaConfig, but I
+      # don't/shouldn't really be doing much in there.
       plugin = impatient-nvim;
       type = "lua";
       config = ''
