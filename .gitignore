@@ -1,7 +1,6 @@
 nvim/plugged
 nvim/init.vim
-nvim/init.lua
-nvim/lua/init-home-manager.lua
+nvim/init.lua nvim/lua/init-home-manager.lua
 
 atuin/
 
@@ -21,3 +20,5 @@ starship.toml
 karabiner/automatic_backups/
 
 github-copilot/
+
+result
