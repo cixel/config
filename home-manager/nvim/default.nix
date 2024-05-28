@@ -40,37 +40,13 @@
       '';
     }
 
-    # note for upgrading these: for some reason, I get an SSL error (netskope
-    # related) when I completely replace the hash with AAA[...]. I don't get
-    # the same issue if I only replace a single character with `0` to
-    # invalidate the hash.
     {
-      plugin = pkgs.vimUtils.buildVimPluginFrom2Nix {
-        pname = "copilot.lua";
-        version = "rev";
-        src = pkgs.fetchFromGitHub {
-          owner = "zbirenbaum";
-          repo = "copilot.lua";
-          rev = "50ca36fd766db4d444094de81f5e131b6628f48f";
-          sha256 = "sha256-9AU2x0Yvw66FbLmI4QDTnx9nQFZpXlT4EUxq+3b6ucI=";
-        };
-        meta.homepage = "https://github.com/zbirenbaum/copilot.lua";
-      };
+      plugin = copilot-lua;
       type = "lua";
       config = builtins.readFile ./config/plugins/copilot.lua;
     }
     {
-      plugin = pkgs.vimUtils.buildVimPluginFrom2Nix {
-        pname = "copilot-cmp";
-        version = "rev";
-        src = pkgs.fetchFromGitHub {
-          owner = "zbirenbaum";
-          repo = "copilot-cmp";
-          rev = "d631b3afbf26bb17d6cf2b3cd8f3d79e7d5eeca1";
-          sha256 = "sha256-OUWcwJqKA4r34S3biY7zd66uCLkeuGAGC6KRm6JLWqQ=";
-        };
-        meta.homepage = "https://github.com/zbirenbaum/copilot.lua";
-      };
+      plugin = copilot-cmp;
       type = "lua";
       config = ''
         require("copilot_cmp").setup()
@@ -86,10 +62,35 @@
     }
 
     {
-      plugin = gruvbox;
+      plugin = gruvbox-nvim;
       type = "lua";
       config = ''
-        vim.g['gruvbox_contrast_dark'] = 'hard'
+        -- setup must be called before loading the colorscheme
+        -- Default options:
+        require("gruvbox").setup({
+          undercurl = false,
+          underline = true,
+          bold = true,
+          italic = {
+            strings = false,
+            comments = false,
+            operators = false,
+            folds = true,
+          },
+          strikethrough = false,
+          invert_selection = false,
+          invert_signs = false,
+          invert_tabline = false,
+          invert_intend_guides = false,
+          inverse = true, -- invert background for search, diffs, statuslines and errors
+          contrast = "hard", -- can be "hard", "soft" or empty string
+          palette_overrides = {},
+          overrides = {},
+          dim_inactive = false,
+          transparent_mode = false,
+        })
+
+        -- setup must be called before loading
         vim.cmd [[colorscheme gruvbox]]
       '';
     }
@@ -233,26 +234,17 @@
     {
       plugin = fzf-vim;
       type = "lua";
-      config = ''
-        vim.env.FZF_DEFAULT_COMMAND = "fd --type f --hidden -E '.git'"
-
-        vim.keymap.set('n', ';',         '<cmd>FZF<CR>', { silent = true })
-        vim.keymap.set('n', '<leader>g', '<cmd>Rg<CR>', { silent = true })
-        vim.keymap.set('n', '<leader>c', '<cmd>Commits<CR>', { silent = true })
-        vim.keymap.set('n', '<leader>x', '<cmd>BCommits<CR>', { silent = true })
-      '';
+      config = builtins.readFile ./config/plugins/fzf.lua;
     }
 
     {
       plugin = luasnip;
       type = "lua";
-      config = ''
-        ${builtins.readFile ./config/plugins/luasnip.lua}
-      '';
+      config = builtins.readFile ./config/plugins/luasnip.lua;
     }
 
     {
-      plugin = pkgs.vimUtils.buildVimPluginFrom2Nix {
+      plugin = pkgs.vimUtils.buildVimPlugin {
         pname = "visincr";
         version = "2011-08-18";
         src = pkgs.fetchFromGitHub {
