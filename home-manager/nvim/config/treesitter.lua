@@ -20,6 +20,8 @@ require 'nvim-treesitter.configs'.setup {
 	-- andymass/vim-matchup/
 	matchup = {
 		enable = true,
+		-- TODO: binary search all grammars to see which are causing slowness
+		-- disable = { "comment" },
 	},
 	textobjects = {
 		move = {
