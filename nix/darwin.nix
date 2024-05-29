@@ -10,18 +10,22 @@
     useDaemon = true;
   };
 
+  # Used for backwards compatibility, please read the changelog before changing.
+  # $ darwin-rebuild changelog
+  system.stateVersion = 4;
+
   # settings required for local builder
   nix.linux-builder = {
     enable = true;
     ephemeral = true;
-    maxJobs = 4;
+    maxJobs = 6;
     config = {
       virtualisation = {
         darwin-builder = {
-          diskSize = 8 * 1024;
-          memorySize = 40 * 1024;
+          diskSize = 32 * 1024;
+          memorySize = 8 * 1024;
         };
-        cores = 4;
+        cores = 6;
       };
     };
   };

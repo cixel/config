@@ -1,3 +1,4 @@
+{ darwin }:
 { pkgs,  lib, ... }:
 
 let
@@ -76,7 +77,11 @@ in
 
     podman
     podman-compose
-    vfkit
+    # some dummy package if not linux - i'm sure there's a cleaner way to do
+    # this, but oh well
+    (if darwin then vfkit else hello)
+
+    rectangle
   ];
 
   programs.neovim = import ./nvim { inherit pkgs; };

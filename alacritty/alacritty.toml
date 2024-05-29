@@ -102,7 +102,7 @@ history = 0
 
 [shell]
 args = ["--login"]
-program = "/Users/ehdens/.nix-profile/bin/zsh"
+program = "/etc/profiles/per-user/ehdens/bin/zsh"
 
 [window]
 decorations = "full"
