@@ -3,20 +3,6 @@
   enable = true;
   defaultKeymap = "viins";
   shellAliases = {
-    v = "nvim";
-    vim = "nvim";
-    sudov = "sudo -E -s nvim";
-
-    l = "eza --long --all";
-    lt = "eza --long --all --sort newest";
-    ls = "eza";
-    tree = "eza --tree --long";
-    exa = "eza";
-
-    gd = "go doc";
-    gdu = "go doc -u";
-
-    hm = "home-manager";
     tmux = "tmux -2";
     gitlines = "git ls-files | xargs wc -l";
     ack = "ag --ignore-dir=node_modules --ignore-dir=labs --ignore-dir=docs --ignore-dir=dist --ignore-dir=code-coverage-report";
@@ -59,8 +45,6 @@
 
     # may want to fiddle with these so ~/go is just my one source for all
     # things outside of the toolchain and ~/golang is for inside
-    export GOBIN="$HOME/gobin"
-    export GOPATH="$HOME/gopath"
     export PATH="$GOBIN:$PATH"
     export PATH="$GOPATH/bin:$PATH"
     export PATH="$HOME/.cargo/bin:$PATH"

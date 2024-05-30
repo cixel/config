@@ -44,6 +44,7 @@ let
   homeConfig = {
     home-manager.useGlobalPkgs = true;
     home-manager.useUserPackages = true;
+    home-manager.verbose = true;
     home-manager.users.${user} = import ../home-manager/home.nix {
       inherit darwin;
     };

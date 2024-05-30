@@ -46,5 +46,8 @@
     home = "/Users/${user}";
     createHome = false;
     shell = pkgs.zsh;
+    packages = with pkgs; [
+      rectangle
+    ];
   };
 }

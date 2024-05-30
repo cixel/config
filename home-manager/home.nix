@@ -80,9 +80,23 @@ in
     # some dummy package if not linux - i'm sure there's a cleaner way to do
     # this, but oh well
     (if darwin then vfkit else hello)
-
-    rectangle
   ];
+
+  home.shellAliases = {
+    hms = "nix run nix-darwin -- switch --flake path:$HOME/.config";
+
+    v = "nvim";
+    vim = "nvim";
+    sudov = "sudo -E -s nvim";
+
+    l = "eza --long --all";
+    lt = "eza --long --all --sort newest";
+    ls = "eza";
+    tree = "eza --tree --long";
+
+    gd = "go doc";
+    gdu = "go doc -u";
+  };
 
   programs.neovim = import ./nvim { inherit pkgs; };
   programs.starship = import ./starship.nix { inherit pkgs lib; };
@@ -122,7 +136,13 @@ in
   programs.go = {
     enable = true;
     package = pkgs.go;
-    goPath = "${builtins.getEnv "HOME"}/gopath";
-    goBin = "${builtins.getEnv "HOME"}/gobin";
+    # these are interpreted relative to $HOME
+    goPath = "gopath";
+    goBin = "gobin";
+    # TODO: it'd be nice if this is only set on work machines but that'd take a
+    # refactor
+    goPrivate = [
+      "github.com/Contrast-Security-Inc/*"
+    ];
   };
 }
