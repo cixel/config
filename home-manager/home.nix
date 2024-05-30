@@ -1,5 +1,5 @@
 { darwin }:
-{ pkgs,  lib, ... }:
+{ pkgs, lib, ... }:
 
 let
   contrast-detect-secrets = pkgs.python3Packages.callPackage ./detect-secrets.nix { };
@@ -88,6 +88,10 @@ in
   programs.starship = import ./starship.nix { inherit pkgs lib; };
   programs.tmux = import ./tmux.nix { inherit pkgs; };
   programs.zsh = import ./zsh.nix { inherit pkgs; };
+  programs.alacritty = import ./alacritty.nix {
+    inherit pkgs;
+    shell = "${pkgs.zsh}/bin/zsh";
+  };
 
   programs.atuin = {
     enable = true;
