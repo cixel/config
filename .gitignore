@@ -1,6 +1,10 @@
 nvim/plugged
 nvim/init.vim
+nvim/init.lua
 nvim/init.lua nvim/lua/init-home-manager.lua
+
+fontconfig/
+environment.d/
 
 alacritty/alacritty.toml
 

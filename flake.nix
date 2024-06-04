@@ -13,12 +13,16 @@
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    wsl = {
+      url = "github:nix-community/NixOS-WSL/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = inputs@{ self, nixpkgs, darwin, home-manager, ... }:
+  outputs = { self, nixpkgs, ... }:
     let
       mkSystem = import ./nix/mkSystem.nix {
-        inherit self nixpkgs inputs;
+        inherit self nixpkgs;
       };
     in
     {
@@ -43,6 +47,12 @@
         system = "x86_64-darwin";
         user = "ehden";
         darwin = true;
+      };
+
+      nixosConfigurations."alnitak-wsl" = mkSystem "alnitak-wsl" {
+        system = "x86_64-linux";
+        user = "alnitak";
+        wsl = true;
       };
     };
 }

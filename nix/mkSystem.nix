@@ -1,22 +1,22 @@
 # creates a NixOS system configuration
-{ self, nixpkgs, inputs }:
+{ self, nixpkgs }:
 
 name:
 { system
 , user
 , darwin ? false
-,
+, wsl ? false
 }:
 
 let
   systemFunc =
     if darwin
-    then inputs.darwin.lib.darwinSystem
+    then self.inputs.darwin.lib.darwinSystem
     else nixpkgs.lib.nixosSystem;
   home-manager =
     if darwin
-    then inputs.home-manager.darwinModules
-    else inputs.home-manager.nixosModules;
+    then self.inputs.home-manager.darwinModules
+    else self.inputs.home-manager.nixosModules;
 
   pkgs = import nixpkgs {
     inherit system overlays;
@@ -45,8 +45,9 @@ let
     home-manager.useGlobalPkgs = true;
     home-manager.useUserPackages = true;
     home-manager.verbose = true;
+    home-manager.backupFileExtension = "bak";
     home-manager.users.${user} = import ../home-manager/home.nix {
-      inherit darwin;
+      inherit darwin wsl;
     };
   };
 
@@ -68,7 +69,7 @@ let
     '';
 
     fonts = {
-      fonts = [
+      packages = [
         pkgs.hack-font
       ];
     };
@@ -82,6 +83,8 @@ systemFunc {
 
   modules = [
     { nixpkgs.overlays = overlays; }
+
+    (if wsl then self.inputs.wsl.nixosModules.wsl else {})
 
     baseConfig
     (if darwin then darwinConfig else nixosConfig)

@@ -1,4 +1,4 @@
-{ darwin }:
+{ darwin, wsl }:
 { pkgs, lib, ... }:
 
 let
@@ -88,7 +88,7 @@ in
       if darwin then
         "nix run nix-darwin -v -L -- switch --flake path:$HOME/.config"
       else
-        "nixos-rebuild switch -v --flake path:$HOME/.config";
+        "sudo nixos-rebuild switch -v --flake path:$HOME/.config";
 
     v = "nvim";
     vim = "nvim";
@@ -108,7 +108,7 @@ in
   programs.tmux = import ./tmux.nix { inherit pkgs; };
   programs.zsh = import ./zsh.nix { inherit pkgs; };
   programs.alacritty = import ./alacritty.nix {
-    inherit pkgs;
+    inherit pkgs wsl;
     shell = "${pkgs.zsh}/bin/zsh";
   };
 

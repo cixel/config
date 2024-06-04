@@ -1,6 +1,7 @@
-{ pkgs, shell }:
+{ pkgs, shell, wsl }:
 {
   enable = true;
+  package = (if !wsl then pkgs.alacritty else pkgs.hello);
   settings = {
     live_config_reload = true;
 
@@ -111,8 +112,9 @@
     };
 
     shell = {
-      args = [ "--login" ];
-      program = shell;
+      args = (if !wsl then [ "--login" ] else [ ]);
+      # cp alacritty/alacritty.toml /mnt/c/Users/ehden/AppData/Roaming/alacritty
+      program = (if !wsl then shell else "C:\\\\Windows\\\\System32\\\\wsl.exe");
     };
 
     window = {

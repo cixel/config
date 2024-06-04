@@ -50,6 +50,7 @@
     git_status = {
       # re-enabling for now to see how it behaves with potential performance improvements
       # disabled = true;
+      deleted = "X";
     };
 
     hostname = {

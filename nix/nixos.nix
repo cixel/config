@@ -10,5 +10,6 @@
     home = "/home/${user}";
     createHome = true;
     shell = pkgs.zsh;
+    extraGroups = [ "wheel" ];
   };
 }

@@ -46,12 +46,16 @@
   };
 
   fonts.fontDir.enable = true;
+
+  environment.systemPackages = with pkgs; [
+    # FIXME: https://github.com/LnL7/nix-darwin/issues/139
+    rectangle
+  ];
+
   users.users.${user} = {
     home = "/Users/${user}";
     createHome = false;
     shell = pkgs.zsh;
-    packages = with pkgs; [
-      rectangle
-    ];
+    # packages = with pkgs; [ ];
   };
 }
