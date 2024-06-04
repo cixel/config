@@ -4,6 +4,6 @@
   ];
 
   environment.variables = {
-    "TERM=screen",
+    TERM = "screen";
   };
 }

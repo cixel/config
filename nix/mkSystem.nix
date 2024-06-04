@@ -24,10 +24,10 @@ let
   overlays = [
     (self: super: {
       go = super.go.overrideAttrs (old: rec {
-        version = "1.22.2";
+        version = "1.22.3";
         src = pkgs.fetchurl {
           url = "https://go.dev/dl/go${version}.src.tar.gz";
-          hash = "sha256-N06oKyiexzjpaCZ8rFnH1f8YD5SSJQJUeEsgROkN9ak=";
+          hash = "sha256-gGSO80+QMZPXKlnA3/AZ9fmK4MmqE63gsOy/+ZGnb2g=";
         };
         patches = [ ] ++ (
           if darwin then [ ../home-manager/fd_fsync_darwin.patch ]
@@ -66,6 +66,12 @@ let
     nix.settings.experimental-features = ''
       nix-command flakes
     '';
+
+    fonts = {
+      fonts = [
+        pkgs.hack-font
+      ];
+    };
 
     # The platform the configuration will be used on.
     nixpkgs.hostPlatform = system;

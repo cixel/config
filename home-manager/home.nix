@@ -77,13 +77,18 @@ in
 
     podman
     podman-compose
-    # some dummy package if not linux - i'm sure there's a cleaner way to do
-    # this, but oh well
-    (if darwin then vfkit else hello)
-  ];
+  ] ++ (
+    if darwin then
+      [ vfkit ]
+    else [ ]
+  );
 
   home.shellAliases = {
-    hms = "nix run nix-darwin -- switch --flake path:$HOME/.config";
+    hms =
+      if darwin then
+        "nix run nix-darwin -v -L -- switch --flake path:$HOME/.config"
+      else
+        "nixos-rebuild switch -v --flake path:$HOME/.config";
 
     v = "nvim";
     vim = "nvim";

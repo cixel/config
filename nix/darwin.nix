@@ -9,6 +9,9 @@
     # to manage it for us. This tells nix-darwin to just use whatever is running.
     useDaemon = true;
   };
+  nixpkgs.config = {
+    allowUnfree = true;
+  };
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
@@ -42,6 +45,7 @@
     '';
   };
 
+  fonts.fontDir.enable = true;
   users.users.${user} = {
     home = "/Users/${user}";
     createHome = false;
