@@ -28,23 +28,6 @@ in
   # changes in each release.
   home.stateVersion = "23.05";
 
-  nixpkgs.overlays = [
-    (self: super: {
-      go = super.go.overrideAttrs (old: rec {
-        version = "1.22.2";
-        src = pkgs.fetchurl {
-          url = "https://go.dev/dl/go${version}.src.tar.gz";
-          hash = "sha256-N06oKyiexzjpaCZ8rFnH1f8YD5SSJQJUeEsgROkN9ak=";
-        };
-        patches = [ ] ++ (
-          if pkgs.stdenv.isDarwin then [ ./fd_fsync_darwin.patch ]
-          else [ ]
-        );
-        GOROOT_BOOTSTRAP = "${super.go_1_21}/share/go";
-      });
-    })
-  ];
-
   home.packages = with pkgs; [
     git
     curl
@@ -59,7 +42,7 @@ in
     tokei
     age
     silver-searcher
-    zig
+    # zig
     python3
     luajit
     rustup
