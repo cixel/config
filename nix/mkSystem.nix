@@ -51,7 +51,6 @@ let
     };
   };
 
-
   baseConfig = { pkgs, ... }:
     let
       fonts = [ pkgs.hack-font ];

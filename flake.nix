@@ -32,7 +32,7 @@
         darwin = true;
       };
 
-      darwinConfigurations."SADMINISTRATOR-C02X91VSJGH6" = mkSystem "SADMINISTRATOR-C02X91VSJGH6" {
+      darwinConfigurations."ESINAI-C02X91VSJGH6" = mkSystem "ESINAI-C02X91VSJGH6" {
         system = "x86_64-darwin";
         user = "ehdens";
         darwin = true;

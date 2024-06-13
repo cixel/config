@@ -2,7 +2,7 @@
   # Auto upgrade nix package and the daemon service.
   # TODO: is it wrong/incorrect to let nix-darwin manage this given that it was
   # installed by the detsys nix installer?
-  services.nix-daemon.enable = false;
+  services.nix-daemon.enable = true;
 
   nix = {
     # We install Nix using a separate installer so we don't want nix-darwin
@@ -37,11 +37,6 @@
   programs.zsh = {
     enable = true;
     shellInit = ''
-      # Nix
-      if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
-        . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
-      fi
-      # End Nix
     '';
   };
 
