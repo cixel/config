@@ -40,8 +40,6 @@
     '';
   };
 
-  fonts.fontDir.enable = true;
-
   environment.systemPackages = with pkgs; [
     # FIXME: https://github.com/LnL7/nix-darwin/issues/139
     rectangle

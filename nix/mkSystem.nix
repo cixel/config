@@ -52,9 +52,6 @@ let
   };
 
   baseConfig = { pkgs, ... }:
-    let
-      fonts = [ pkgs.hack-font ];
-    in
     {
       # Auto upgrade nix package and the daemon service.
       # services.nix-daemon.enable = true;
@@ -72,12 +69,7 @@ let
         nix-command flakes
       '';
 
-      fonts =
-        if darwin then {
-          fonts = fonts;
-        } else {
-          packages = fonts;
-        };
+      fonts.packages = [ pkgs.hack-font ];
 
       # The platform the configuration will be used on.
       nixpkgs.hostPlatform = system;
