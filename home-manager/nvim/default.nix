@@ -1,7 +1,6 @@
 { pkgs }:
 {
   enable = true;
-  package = pkgs.neovim-unwrapped;
 
   # set EDITOR
   defaultEditor = true;
@@ -22,8 +21,8 @@
 
     rust-analyzer
     nodePackages.typescript-language-server
-    nodePackages.yaml-language-server
-    nodePackages.bash-language-server
+    yaml-language-server
+    bash-language-server
     lua-language-server
     vscode-langservers-extracted
   ];
