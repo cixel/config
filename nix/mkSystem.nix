@@ -6,6 +6,8 @@ name:
 , user
 , darwin ? false
 , wsl ? false
+  # optional hardware module
+, hardware ? { }
 }:
 
 let
@@ -81,7 +83,9 @@ systemFunc {
   modules = [
     { nixpkgs.overlays = overlays; }
 
-    (if wsl then self.inputs.wsl.nixosModules.wsl else { })
+    hardware
+    # (if wsl then self.inputs.wsl.nixosModules.wsl else { })
+    # (if builtins.isNull then self.inputs.wsl.nixosModules.wsl else { })
 
     baseConfig
     (if darwin then darwinConfig else nixosConfig)

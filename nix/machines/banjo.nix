@@ -1,15 +1,9 @@
 # https://wiki.nixos.org/wiki/NixOS_on_ARM/Raspberry_Pi_4
-{ self, config, pkgs, lib, ... }:
+{ pkgs, ... }:
 {
-  imports =
-    [
-      self.inputs.hardware.nixosModules.raspberry-pi-4
-      # <nixos-hardware/raspberry-pi/4>
-      # ./hardware-configuration.nix
-    ];
+  imports = [ ];
 
   time.timeZone = "America/New_York";
-
 
   hardware = {
     raspberry-pi."4".apply-overlays-dtmerge.enable = true;
@@ -25,12 +19,11 @@
   ];
 
   services.openssh.enable = true;
+  services.openssh.settings.PasswordAuthentication = false;
   programs.mosh.enable = true;
   services.tailscale.enable = true;
-  services.resolved.enable = true;
 
   networking = {
-    hostname = "banjo";
-    resolvconf.enable = true;
+    hostName = "banjo";
   };
 }

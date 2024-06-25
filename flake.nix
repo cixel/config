@@ -17,9 +17,12 @@
       url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    hardware = {
+      url = "github:NixOS/nixos-hardware/master";
+    };
   };
 
-  outputs = { self, nixpkgs, ... }:
+  outputs = { self, nixpkgs, wsl, hardware, ... }:
     let
       mkSystem = import ./nix/mkSystem.nix {
         inherit self nixpkgs;
@@ -53,6 +56,13 @@
         system = "x86_64-linux";
         user = "alnitak";
         wsl = true;
+        hardware = wsl.nixosModules.wsl;
+      };
+
+      nixosConfigurations."banjo" = mkSystem "banjo" {
+        system = "aarch64-linux";
+        user = "banjo";
+        hardware = hardware.nixosModules.raspberry-pi-4;
       };
     };
 }
