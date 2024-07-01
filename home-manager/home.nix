@@ -50,6 +50,7 @@ in
     # this won't be useable as a server because it's only available to a single
     # user.
     mosh
+    openssh
 
     # i use these for work and prefer having them already loaded to avoid
     # needing to enter a nix shell for random build dependencies
@@ -69,7 +70,7 @@ in
   home.shellAliases = {
     hms =
       if darwin then
-        "nix run nix-darwin -v -L -- switch --flake path:$HOME/.config"
+        "nix run nix-darwin -- -v -L switch --flake path:$HOME/.config"
       else
         "sudo nixos-rebuild switch -v --flake path:$HOME/.config";
 
