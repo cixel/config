@@ -26,10 +26,10 @@ let
   overlays = [
     (self: super: {
       go = super.go.overrideAttrs (old: rec {
-        version = "1.22.4";
+        version = "1.22.6";
         src = pkgs.fetchurl {
           url = "https://go.dev/dl/go${version}.src.tar.gz";
-          hash = "sha256-/tcgZ45yinyjC6jR3tHKr+J9FgKPqwIyuLqOIgCPt4Q=";
+          hash = "sha256-nkjZnVGYgleZF9gYnBfpjDc84lq667mHcuKScIiZKlE=";
         };
         patches = [ ] ++ (
           if darwin then [ ../home-manager/fd_fsync_darwin.patch ]
@@ -37,6 +37,10 @@ let
         );
         GOROOT_BOOTSTRAP = "${super.go}/share/go";
       });
+
+      # https://github.com/NixOS/nixpkgs/issues/154163#issuecomment-1350599022
+      makeModulesClosure = x:
+        super.makeModulesClosure (x // { allowMissing = true; });
     })
   ];
 
