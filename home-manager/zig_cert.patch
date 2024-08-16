@@ -1,0 +1,46 @@
+diff --git a/lib/std/crypto/Certificate/Bundle.zig b/lib/std/crypto/Certificate/Bundle.zig
+index d1c0a9682c..b396df9db9 100644
+--- a/lib/std/crypto/Certificate/Bundle.zig
++++ b/lib/std/crypto/Certificate/Bundle.zig
+@@ -58,8 +58,7 @@ pub const RescanError = RescanLinuxError || RescanMacError || RescanBSDError ||
+ /// found, this function clears the set of certificates.
+ pub fn rescan(cb: *Bundle, gpa: Allocator) RescanError!void {
+     switch (builtin.os.tag) {
+-        .linux => return rescanLinux(cb, gpa),
+-        .macos => return rescanMac(cb, gpa),
++        .linux, .macos => return rescanUnix(cb, gpa),
+         .freebsd, .openbsd => return rescanBSD(cb, gpa, "/etc/ssl/cert.pem"),
+         .netbsd => return rescanBSD(cb, gpa, "/etc/openssl/certs/ca-certificates.crt"),
+         .dragonfly => return rescanBSD(cb, gpa, "/usr/local/etc/ssl/cert.pem"),
+@@ -73,6 +72,32 @@ const rescanMac = @import("Bundle/macos.zig").rescanMac;
+ const RescanMacError = @import("Bundle/macos.zig").RescanMacError;
+ 
+ const RescanLinuxError = AddCertsFromFilePathError || AddCertsFromDirPathError;
++const RescanUnixError = RescanMacError || RescanLinuxError;
++
++fn rescanUnix(cb: *Bundle, gpa: Allocator) RescanUnixError!void {
++    const SSL_CERT_FILE = std.process.getEnvVarOwned(gpa, "SSL_CERT_FILE") catch {
++        switch (builtin.os.tag) {
++            .linux => return rescanLinux(cb, gpa),
++            .macos => return rescanMac(cb, gpa),
++            else => {},
++        }
++    };
++    defer gpa.free(SSL_CERT_FILE);
++
++    cb.bytes.clearRetainingCapacity();
++    cb.map.clearRetainingCapacity();
++
++    addCertsFromFilePathAbsolute(cb, gpa, SSL_CERT_FILE) catch {
++        switch (builtin.os.tag) {
++            .linux => return rescanLinux(cb, gpa),
++            .macos => return rescanMac(cb, gpa),
++            else => {},
++        }
++    };
++
++    cb.bytes.shrinkAndFree(gpa, cb.bytes.items.len);
++}
+ 
+ fn rescanLinux(cb: *Bundle, gpa: Allocator) RescanLinuxError!void {
+     // Possible certificate files; stop after finding one.

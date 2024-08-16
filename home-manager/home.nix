@@ -42,10 +42,10 @@ in
     tokei
     age
     silver-searcher
-    # zig
     python3
     luajit
     rustup
+    zig
 
     # this won't be useable as a server because it's only available to a single
     # user.
