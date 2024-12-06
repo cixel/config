@@ -1,3 +1,6 @@
+-- https://github.com/neovim/neovim/commit/2257ade3dc2daab5ee12d27807c0b3bcf103cd29
+vim.loader.enable()
+
 vim.g.mapleader = ','
 
 -- don't try to load perl provider

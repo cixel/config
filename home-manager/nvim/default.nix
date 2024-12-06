@@ -10,6 +10,8 @@
   withPython3 = false;
   withRuby = false;
 
+  extraLuaConfig = builtins.readFile ./config/init.lua;
+
   extraPackages = with pkgs; [
     ripgrep # used by fzf
     fd # fzf
@@ -28,20 +30,6 @@
   ];
 
   plugins = with pkgs.vimPlugins; [
-
-    {
-      # this should be the first plugin in my init.lua. as a side effect of how
-      # home-manager builds init.lua, it'll come after extraLuaConfig, but I
-      # don't/shouldn't really be doing much in there.
-      plugin = impatient-nvim;
-      type = "lua";
-      config = ''
-        require('impatient')
-        -- enable LuaCacheProfile to see profiling
-        -- require('impatient').enable_profile()
-      '';
-    }
-
     {
       plugin = copilot-lua;
       type = "lua";
@@ -259,6 +247,4 @@
       };
     }
   ];
-
-  extraLuaConfig = builtins.readFile ./config/init.lua;
 }
