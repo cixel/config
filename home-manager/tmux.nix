@@ -1,13 +1,12 @@
 { pkgs }:
 {
   enable = true;
-  package = pkgs.tmux;
   shortcut = "a";
   keyMode = "vi";
   escapeTime = 0;
   clock24 = true;
   # baseIndex = 1;
-  sensibleOnTop = true;
+  shell = "${pkgs.zsh}/bin/zsh";
   terminal = "tmux-256color"; # wanna mess with this to see if it changes anything about the weird prompt spacing issue
   # terminal = "alacritty"; # wanna mess with this to see if it changes anything about the weird prompt spacing issue
   historyLimit = 4000;
