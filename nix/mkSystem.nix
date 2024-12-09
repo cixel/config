@@ -26,16 +26,29 @@ let
   overlays = [
     (self: super: {
       go = super.go.overrideAttrs (old: rec {
-        version = "1.22.6";
+        version = "1.23.4";
         src = pkgs.fetchurl {
           url = "https://go.dev/dl/go${version}.src.tar.gz";
-          hash = "sha256-nkjZnVGYgleZF9gYnBfpjDc84lq667mHcuKScIiZKlE=";
+          hash = "sha256-rTRaxCHpCBQpOpaZzKGd1SOCUcP2h5gLvK4oSVsmNTE=";
         };
         patches = [ ] ++ (
           if darwin then [ ../home-manager/fd_fsync_darwin.patch ]
           else [ ]
         );
         GOROOT_BOOTSTRAP = "${super.go}/share/go";
+      });
+
+      zig = super.zig.overrideAttrs (old: {
+        # src = pkgs.fetchFromGitHub {
+        #   owner = "ziglang";
+        #   repo = "zig";
+        #   rev = "11176d22f82861b4b6967b77f753414f214bc632";
+        #   hash = "sha256-pZIUvhcEqkIi+xSMBIRcS9GW9V/zvs8Y1/KbLYfSb1c=";
+        # };
+        patches = [ ] ++ (
+          if darwin then [  ../home-manager/zig_cert.patch  ]
+          else [ ]
+        );
       });
 
       # https://github.com/NixOS/nixpkgs/issues/154163#issuecomment-1350599022

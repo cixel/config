@@ -1,20 +1,28 @@
 diff --git a/src/internal/poll/fd_fsync_darwin.go b/src/internal/poll/fd_fsync_darwin.go
-index 731b7fd5bd..d702a51e76 100644
+index e55b490d41..d702a51e76 100644
 --- a/src/internal/poll/fd_fsync_darwin.go
 +++ b/src/internal/poll/fd_fsync_darwin.go
-@@ -5,7 +5,6 @@
+@@ -5,8 +5,6 @@
  package poll
  
  import (
+-	"errors"
 -	"internal/syscall/unix"
  	"syscall"
  )
  
-@@ -18,7 +17,6 @@ func (fd *FD) Fsync() error {
+@@ -19,14 +17,6 @@ func (fd *FD) Fsync() error {
  	}
  	defer fd.decref()
  	return ignoringEINTR(func() error {
 -		_, err := unix.Fcntl(fd.Sysfd, syscall.F_FULLFSYNC, 0)
+-
+-		// There are scenarios such as SMB mounts where fcntl will fail
+-		// with ENOTSUP. In those cases fallback to fsync.
+-		// See #64215
+-		if err != nil && errors.Is(err, syscall.ENOTSUP) {
+-			err = syscall.Fsync(fd.Sysfd)
+-		}
 -		return err
 +		return syscall.Fsync(fd.Sysfd)
  	})

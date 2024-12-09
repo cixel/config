@@ -1,5 +1,5 @@
 diff --git a/lib/std/crypto/Certificate/Bundle.zig b/lib/std/crypto/Certificate/Bundle.zig
-index d1c0a9682c..b396df9db9 100644
+index d1c0a9682c..7c7c373a37 100644
 --- a/lib/std/crypto/Certificate/Bundle.zig
 +++ b/lib/std/crypto/Certificate/Bundle.zig
 @@ -58,8 +58,7 @@ pub const RescanError = RescanLinuxError || RescanMacError || RescanBSDError ||
@@ -12,7 +12,7 @@ index d1c0a9682c..b396df9db9 100644
          .freebsd, .openbsd => return rescanBSD(cb, gpa, "/etc/ssl/cert.pem"),
          .netbsd => return rescanBSD(cb, gpa, "/etc/openssl/certs/ca-certificates.crt"),
          .dragonfly => return rescanBSD(cb, gpa, "/usr/local/etc/ssl/cert.pem"),
-@@ -73,6 +72,32 @@ const rescanMac = @import("Bundle/macos.zig").rescanMac;
+@@ -73,6 +72,31 @@ const rescanMac = @import("Bundle/macos.zig").rescanMac;
  const RescanMacError = @import("Bundle/macos.zig").RescanMacError;
  
  const RescanLinuxError = AddCertsFromFilePathError || AddCertsFromDirPathError;
