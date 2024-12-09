@@ -64,5 +64,11 @@
         user = "banjo";
         hardware = hardware.nixosModules.raspberry-pi-4;
       };
+
+      nixosConfigurations."pi0" = mkSystem "pi0" {
+        system = "aarch64-linux";
+        user = "adblock";
+        hardware = hardware.nixosModules.raspberry-pi-4;
+      };
     };
 }
