@@ -124,3 +124,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 	end,
 	group = hl_yank,
 })
+
+vim.api.nvim_create_user_command('MakeGo', function()
+	os.execute('./make.bash')
+	vim.api.nvim_cmd({ cmd = 'LspRestart' }, { output = true })
+end, {})

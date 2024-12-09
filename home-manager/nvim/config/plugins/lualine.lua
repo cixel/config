@@ -15,7 +15,7 @@ require('lualine').setup({
 				path = 1 -- 0 = just filename, 1 = relative path, 2 = absolute path
 			},
 		},
-		lualine_x = { 'encoding', 'bo:fileformat', 'filetype' },
+		lualine_x = { 'encoding', 'bo:fileformat', { 'filetype', icons_enabled = false } },
 		lualine_z = { 'location', {
 			'diagnostics',
 			sources     = { 'nvim_diagnostic' }, -- don't do both this and nvim_lsp; lsp feeds into ale

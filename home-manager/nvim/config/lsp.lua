@@ -3,7 +3,7 @@ local nvim_lsp = require('lspconfig')
 vim.diagnostic.config({
 	virtual_text = {},
 	float = {
-		source = "always",
+		source = true,
 	},
 })
 
@@ -75,7 +75,7 @@ local function on_attach(_, bufnr)
 	-- buf_set_keymap('n', '<leader>ff', vim.lsp.buf.formatting)
 	buf_set_keymap('n', '<leader>ff', function() vim.lsp.buf.format({ async = true }) end)
 
-	buf_set_keymap("n", "<leader>rs", function() vim.lsp.stop_client(vim.lsp.get_active_clients()) end)
+	buf_set_keymap("n", "<leader>rs", function() vim.lsp.stop_client(vim.lsp.get_clients()) end)
 end
 
 -- https://github.com/golang/tools/blob/master/gopls/doc/vim.md#imports
@@ -199,10 +199,11 @@ nvim_lsp.nil_ls.setup {
 
 -- local servers = { "rnix", "rust_analyzer", "tsserver", "golangcilsp" }
 local servers = {
-	"rust_analyzer",
-	"eslint", "tsserver",
-	"yamlls",
 	"bashls",
+	"eslint", "ts_ls",
+	"rust_analyzer",
+	"yamlls",
+	"zls",
 }
 for _, lsp in ipairs(servers) do
 	nvim_lsp[lsp].setup { on_attach = on_attach, capabilities = capablities }

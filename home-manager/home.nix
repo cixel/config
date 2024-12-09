@@ -75,7 +75,6 @@ in
         "sudo nixos-rebuild switch -v --flake path:$HOME/.config";
 
     v = "nvim";
-    vim = "nvim";
     sudov = "sudo -E -s nvim";
 
     l = "eza --long --all";

@@ -6,6 +6,8 @@
   defaultEditor = true;
 
   vimdiffAlias = true;
+  vimAlias = true;
+
   withNodeJs = false;
   withPython3 = false;
   withRuby = false;
@@ -18,15 +20,16 @@
     git # fugitive, nvim-tree, lualine, fzf, etc
     nodejs # copilot
 
-    nil
-    nixpkgs-fmt
 
-    rust-analyzer
-    nodePackages.typescript-language-server
-    yaml-language-server
     bash-language-server
     lua-language-server
+    nil
+    nixpkgs-fmt
+    nodePackages.typescript-language-server
+    rust-analyzer
     vscode-langservers-extracted
+    yaml-language-server
+    zls
   ];
 
   plugins = with pkgs.vimPlugins; [
@@ -51,6 +54,7 @@
       '';
     }
 
+    nvim-web-devicons
     {
       plugin = gruvbox-nvim;
       type = "lua";
@@ -89,13 +93,13 @@
       plugin = oil-nvim;
       type = "lua";
       config = ''
-      require("oil").setup {
-        view_options = {
-          show_hidden = true,
-        };
-      }
+        require("oil").setup {
+          view_options = {
+            show_hidden = true,
+          };
+        }
 
-      vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+        vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
       '';
     }
     {
@@ -133,7 +137,6 @@
         require('Comment').setup()
       '';
     }
-    tabular
     editorconfig-vim
     vim-toml
     vim-markdown

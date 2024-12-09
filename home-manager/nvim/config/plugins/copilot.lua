@@ -4,8 +4,6 @@ require('copilot').setup({
 	},
 	suggestion = {
 		enabled = false,
-		-- enable for copilot to start suggesting as soon as you enter insert mode
-		auto_trigger = false,
 	},
 	filetypes = {
 		yaml = false,

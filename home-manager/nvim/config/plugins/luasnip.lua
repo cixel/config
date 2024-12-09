@@ -57,6 +57,12 @@ ls.add_snippets("yaml", {
 		})
 	})
 })
+ls.add_snippets("zig", {
+	ls.parser.parse_snippet(
+		{ trig = "cl", dscr = "std.debug.print" },
+		[[std.debug.print(${1})]]
+	),
+})
 ls.add_snippets("go", {
 	ls.parser.parse_snippet(
 		{ trig = "cl", dscr = "fmt.Println" },
