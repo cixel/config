@@ -40,6 +40,7 @@
         user = "ehdens";
         darwin = true;
       };
+      darwinConfigurations."SADMINISTRATOR-C02X91VSJGH6" = self.darwinConfigurations."ESINAI-C02X91VSJGH6";
 
       nixosConfigurations."vm-aarch64" = mkSystem "vm-aarch64" {
         system = "aarch64-linux";
