@@ -26,12 +26,14 @@
       dontBuild = true;
       installPhase = ''
         mkdir -p $out/bin
-        cp $src/bin/tailscaled $out/bin/docker
-        ln -s $out/bin/docker $out/bin/tailscaled
-        ln -s $out/bin/docker $out/bin/tailscale
+        cp $src/bin/tailscaled $out/bin/gvproxy
+        ln -s $out/bin/gvproxy $out/bin/tailscaled
+        ln -s $out/bin/gvproxy $out/bin/tailscale
       '';
     };
   };
+
+  nix.settings.http2 = false;
 
   # https://github.com/LnL7/nix-darwin/blob/master/modules/services/tailscale.nix#L66C2-L72C7
   environment.etc."resolver/c.headscale.ehden.net".text = "nameserver 100.100.100.100";
