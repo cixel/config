@@ -3,17 +3,6 @@
 
 let
   contrast-detect-secrets = pkgs.python3Packages.callPackage ./detect-secrets.nix { };
-  # used by podman:
-  # https://github.com/NixOS/nixpkgs/issues/305868
-  #
-  # TODO: delete when this is merged
-  # https://github.com/NixOS/nixpkgs/issues/306179
-  vfkit = import ./vfkit {
-    inherit lib;
-    fetchurl = pkgs.fetchurl;
-    stdenvNoCC = pkgs.stdenvNoCC;
-    testers = pkgs.testers;
-  };
 in
 {
   programs.home-manager.enable = true;
@@ -61,11 +50,7 @@ in
 
     podman
     podman-compose
-  ] ++ (
-    if darwin then
-      [ vfkit ]
-    else [ ]
-  );
+  ];
 
   home.shellAliases = {
     hms =
