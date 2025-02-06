@@ -1,8 +1,8 @@
-{}:
+{ lib }:
 {
   enable = true;
-  userName = "cixel";
-  userEmail = "ehdens@gmail.com";
+  userName = lib.mkDefault "Ehden Sinai";
+  userEmail = lib.mkDefault "ehdens@gmail.com";
 
   aliases = {
     lg = "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'";
@@ -41,11 +41,13 @@
       rebase = true;
     };
 
-    difftool."vimdiff".cmd = "nvim -d $LOCAL $BASE";
+    # this is redundant with work.nix but doesn't hurt anything
+    url = lib.mkDefault {
+      "git@github.com:Contrast-Security-Inc/".insteadOf = "https://github.com/Contrast-Security-Inc/";
+      "git@bitbucket.org:".insteadOf = "https://bitbucket.org/";
+    };
 
-    # TODO: move these to work.nix
-    url."git@github.com:Contrast-Security-Inc/".insteadOf = "https://github.com/Contrast-Security-Inc/";
-    url."git@bitbucket.org:".insteadOf = "https://bitbucket.org/";
+    difftool."vimdiff".cmd = "nvim -d $LOCAL $BASE";
   };
   ignores = [
     ".classpath"

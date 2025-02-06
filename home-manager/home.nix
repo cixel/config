@@ -81,8 +81,8 @@ in
   programs.ghostty = import ./ghostty.nix {
     inherit pkgs;
   };
-  programs.git = import ./git.nix { };
-  programs.jujutsu = import ./jujutsu.nix { };
+  programs.git = import ./git.nix { inherit lib; };
+  programs.jujutsu = import ./jujutsu.nix { inherit lib; };
 
   programs.atuin = {
     enable = true;

@@ -5,11 +5,11 @@
 # NixOS-WSL specific options are documented on the NixOS-WSL repository:
 # https://github.com/nix-community/NixOS-WSL
 
-{ pkgs, ... }:
+{ user }: { pkgs, ... }:
 
 {
   wsl.enable = true;
-  wsl.defaultUser = "alnitak";
+  wsl.defaultUser = user;
   # don't want this stepping on tailscale's toes
   wsl.wslConf.network.generateResolvConf = false;
   wsl.useWindowsDriver = true;

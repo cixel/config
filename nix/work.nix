@@ -1,5 +1,5 @@
 # work-machine specific stuff - like env vars needed for netskope
-{ pkgs, ... }:
+{ user }: { pkgs, ... }:
 {
   nixpkgs.overlays = [
     (self: super: {
@@ -57,4 +57,20 @@
   environment.etc."resolver/c.headscale.ehden.net".knownSha256Hashes = [
     "2c28f4fe3b4a958cd86b120e7eb799eee6976daa35b228c885f0630c55ef626c"
   ];
+
+  home-manager.users.${user} = {
+    programs.git = {
+      userEmail = "ehden@contrastsecurity.com";
+
+      extraConfig.url."git@github.com:Contrast-Security-Inc/".insteadOf = "https://github.com/Contrast-Security-Inc/";
+      extraConfig.url."git@bitbucket.org:".insteadOf = "https://bitbucket.org/";
+    };
+
+    programs.jujutsu.settings = {
+      user = {
+        name = "Ehden Sinai";
+        email = "ehden@contrastsecurity.com";
+      };
+    };
+  };
 }

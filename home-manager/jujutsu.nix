@@ -1,10 +1,10 @@
-{}:
+{ lib }:
 {
   enable = true;
   settings = {
     user = {
-      name = "Ehden Sinai";
-      email = "ehdens@gmail.com";
+      name = lib.mkDefault "Ehden Sinai";
+      email = lib.mkDefault "ehdens@gmail.com";
     };
 
     ui = {

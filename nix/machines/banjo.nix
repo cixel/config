@@ -1,5 +1,5 @@
 # https://wiki.nixos.org/wiki/NixOS_on_ARM/Raspberry_Pi_4
-{ pkgs, ... }:
+{ ... }: { pkgs, ... }:
 {
   imports = [ ];
 
