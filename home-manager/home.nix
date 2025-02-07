@@ -81,6 +81,7 @@ in
     inherit pkgs wsl;
     shell = "${pkgs.zsh}/bin/zsh";
   };
+  programs.git = import ./git.nix { };
 
   programs.atuin = {
     enable = true;
