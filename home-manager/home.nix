@@ -50,6 +50,8 @@ in
 
     podman
     podman-compose
+
+    jujutsu
   ];
 
   home.shellAliases = {
