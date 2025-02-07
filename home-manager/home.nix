@@ -31,7 +31,6 @@ in
     tokei
     age
     silver-searcher
-    python3
     luajit
     rustup
     zig
