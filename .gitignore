@@ -31,3 +31,13 @@ result
 
 git/ignore
 git/config
+
+*.mdb
+
+# random crud shoved into my config dir
+lnav/
+containers/
+neofetch/
+.luarc.json
+wireshark/
+htop/
