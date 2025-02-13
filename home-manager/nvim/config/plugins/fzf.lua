@@ -1,6 +1,11 @@
 vim.env.FZF_DEFAULT_COMMAND = "fd --type f --hidden -E '.git'"
 
-vim.keymap.set('n', '<leader>g', '<cmd>Rg<CR>', { silent = true })
+-- noticed an issue where certain search terms in the agent's repo
+-- would cause an error like "Error running <fzf command>".
+-- this isn't happening with RG. The difference is that Rg runs rg once:
+--     rg --column --line-number --no-heading --color=always --smart-case -- ''
+-- and pipes the output into fzf. conversely, RG runs Rg  after each keystroke.
+vim.keymap.set('n', '<leader>g', '<cmd>RG<CR>', { silent = true })
 vim.keymap.set('n', '<leader>G', '<cmd>RG<CR>', { silent = true })
 vim.keymap.set('n', '<leader>c', '<cmd>Commits<CR>', { silent = true })
 vim.keymap.set('n', '<leader>x', '<cmd>BCommits<CR>', { silent = true })
