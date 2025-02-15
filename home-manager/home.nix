@@ -80,6 +80,9 @@ in
     inherit pkgs wsl;
     shell = "${pkgs.zsh}/bin/zsh";
   };
+  programs.ghostty = import ./ghostty.nix {
+    inherit pkgs;
+  };
   programs.git = import ./git.nix { };
 
   programs.atuin = {
