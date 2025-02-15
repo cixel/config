@@ -38,19 +38,6 @@ let
         GOROOT_BOOTSTRAP = "${super.go}/share/go";
       });
 
-      zig = super.zig.overrideAttrs (old: {
-        # src = pkgs.fetchFromGitHub {
-        #   owner = "ziglang";
-        #   repo = "zig";
-        #   rev = "11176d22f82861b4b6967b77f753414f214bc632";
-        #   hash = "sha256-pZIUvhcEqkIi+xSMBIRcS9GW9V/zvs8Y1/KbLYfSb1c=";
-        # };
-        patches = [ ] ++ (
-          if darwin then [  ../home-manager/zig_cert.patch  ]
-          else [ ]
-        );
-      });
-
       # https://github.com/NixOS/nixpkgs/issues/154163#issuecomment-1350599022
       makeModulesClosure = x:
         super.makeModulesClosure (x // { allowMissing = true; });
