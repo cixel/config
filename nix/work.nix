@@ -1,6 +1,23 @@
 # work-machine specific stuff - like env vars needed for netskope
 { pkgs, ... }:
 {
+  nixpkgs.overlays = [
+    (self: super: {
+      zig = super.zig.overrideAttrs (old: {
+        # src = pkgs.fetchFromGitHub {
+        #   owner = "ziglang";
+        #   repo = "zig";
+        #   rev = "11176d22f82861b4b6967b77f753414f214bc632";
+        #   hash = "sha256-pZIUvhcEqkIi+xSMBIRcS9GW9V/zvs8Y1/KbLYfSb1c=";
+        # };
+        patches = (
+          if pkgs.stdenv.isDarwin then [ ../home-manager/zig_cert.patch ]
+          else [ ]
+        );
+      });
+    })
+  ];
+
   environment.variables =
     let
       # this is all public keys, but IT doesn't want us throwing the bundle in
