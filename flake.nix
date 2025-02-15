@@ -49,7 +49,7 @@
 
       darwinConfigurations."alnilam" = mkSystem "alnilam" {
         system = "x86_64-darwin";
-        user = "ehden";
+        user = "alnilam";
         darwin = true;
       };
 
