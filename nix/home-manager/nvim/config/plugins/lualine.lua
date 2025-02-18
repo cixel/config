@@ -1,4 +1,34 @@
 local gruvbox_material = require('lualine.themes.gruvbox-material')
+
+local function isJJRepo()
+	local obj = vim.system({
+		"jj", "root",
+		"--ignore-working-copy",
+	}):wait()
+	return obj.code == 0
+end
+
+vim.api.nvim_create_autocmd(
+	{ 'BufEnter' },
+	{
+		desc = 'get jj st for lualine',
+		pattern = '*',
+		callback = function()
+			vim.system({
+				"jj", "log", "-r@",
+				"-n1", "--color", "never",
+				"--ignore-working-copy",
+				"--no-graph",
+				"-T", "change_id.shortest()"
+			}, {}, vim.schedule_wrap(function(obj)
+				vim.g.jj_changeid = obj.stdout
+				-- can also force lualine's refresh by calling refresh function
+				-- like require('lualine').refresh(). not sure if it's worth doing.
+			end))
+		end,
+	}
+)
+
 require('lualine').setup({
 	options = {
 		theme = 'gruvbox-material',
@@ -7,7 +37,7 @@ require('lualine').setup({
 		disabled_filetypes = {}
 	},
 	sections = {
-		lualine_b = { 'branch', 'diff' },
+		lualine_b = isJJRepo() and { 'g:jj_changeid', 'diff' } or { 'branch', 'diff' },
 		lualine_c = {
 			{
 				'filename',
@@ -18,7 +48,7 @@ require('lualine').setup({
 		lualine_x = { 'encoding', 'bo:fileformat', { 'filetype', icons_enabled = false } },
 		lualine_z = { 'location', {
 			'diagnostics',
-			sources     = { 'nvim_diagnostic' }, -- don't do both this and nvim_lsp; lsp feeds into ale
+			sources     = { 'nvim_diagnostic' },
 			sections    = { 'error', 'warn', 'info', 'hint' },
 			symbols     = { error = 'E:', warn = 'W:', info = 'I:', hint = 'H:' },
 			color_error = gruvbox_material.normal.a.fg,

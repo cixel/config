@@ -44,7 +44,7 @@ let
     })
   ];
 
-  machineConfig = import ./machines/${name}.nix { inherit user pkgs; };
+  machineConfig = import ./machines/${name}.nix { inherit pkgs user; };
   darwinConfig = import ./darwin.nix { inherit user; };
   nixosConfig = import ./nixos.nix { inherit user; };
   homeConfig = {
