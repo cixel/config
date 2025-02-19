@@ -30,7 +30,6 @@ in
     jq
     tokei
     age
-    silver-searcher
     luajit
     rustup
     zig

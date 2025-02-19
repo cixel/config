@@ -225,7 +225,7 @@
     vim-nix
 
     {
-      plugin = fzf-vim;
+      plugin = fzf-lua;
       type = "lua";
       config = builtins.readFile ./config/plugins/fzf.lua;
     }

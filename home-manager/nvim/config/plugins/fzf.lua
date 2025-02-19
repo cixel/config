@@ -1,26 +1,25 @@
-vim.env.FZF_DEFAULT_COMMAND = "fd --type f --hidden -E '.git'"
+local fzf_lua = require('fzf-lua')
+-- https://github.com/ibhagwan/fzf-lua/blob/main/lua/fzf-lua/profiles/max-perf.lua
+fzf_lua.setup({
+	'max-perf',
+	keymap = {
+		fzf = {
+			true, -- inherit default bindings
+			["tab"] = "down",
+			["shift-tab"] = "up",
+			["right"] = "toggle+down",
+			["left"] = "toggle+up",
+			["ctrl-space"] = "toggle",
+		},
+	},
+})
 
--- noticed an issue where certain search terms in the agent's repo
--- would cause an error like "Error running <fzf command>".
--- this isn't happening with RG. The difference is that Rg runs rg once:
---     rg --column --line-number --no-heading --color=always --smart-case -- ''
--- and pipes the output into fzf. conversely, RG runs Rg  after each keystroke.
-vim.keymap.set('n', '<leader>g', '<cmd>RG<CR>', { silent = true })
-vim.keymap.set('n', '<leader>G', '<cmd>RG<CR>', { silent = true })
-vim.keymap.set('n', '<leader>c', '<cmd>Commits<CR>', { silent = true })
-vim.keymap.set('n', '<leader>x', '<cmd>BCommits<CR>', { silent = true })
-
--- local function fzfAtLSPRoot()
--- 	local client0 = vim.lsp.get_active_clients()[1]
---
--- 	local root = '.'
--- 	if client0 ~= nil then
--- 		root = client0.config.root_dir
--- 	end
---
--- 	print('FZF ' .. root)
--- 	vim.cmd('FZF ' .. root)
--- end
--- vim.keymap.set('n', ';', fzfAtLSPRoot, { silent = true })
-
-vim.keymap.set('n', ';', '<cmd>FZF<CR>', { silent = true })
+-- pass search="" to avoid the prompt we'd normally get
+vim.keymap.set('n', '<leader>g', function() fzf_lua.grep({ search = "" }) end, { silent = true })
+vim.keymap.set('n', '<leader>f', fzf_lua.grep_cword, { silent = true })
+vim.keymap.set('n', '<leader>G', fzf_lua.live_grep, { silent = true })
+vim.keymap.set('n', ';', fzf_lua.files, { silent = true })
+vim.keymap.set('n', '<leader>t', fzf_lua.treesitter, { silent = true })
+vim.keymap.set('n', '<leader>c', fzf_lua.git_commits, { silent = true })
+vim.keymap.set('n', '<leader>b', fzf_lua.git_bcommits, { silent = true })
+vim.keymap.set('n', '<leader>s', fzf_lua.lsp_live_workspace_symbols, { silent = true })
