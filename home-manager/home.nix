@@ -49,6 +49,8 @@ in
 
     podman
     podman-compose
+
+    watchman # for jj
   ];
 
   home.shellAliases = {
