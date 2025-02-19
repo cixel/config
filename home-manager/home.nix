@@ -76,10 +76,6 @@ in
   programs.starship = import ./starship.nix { inherit pkgs lib; };
   programs.tmux = import ./tmux.nix { inherit pkgs; };
   programs.zsh = import ./zsh.nix { inherit pkgs; };
-  programs.alacritty = import ./alacritty.nix {
-    inherit pkgs wsl;
-    shell = "${pkgs.zsh}/bin/zsh";
-  };
   programs.ghostty = import ./ghostty.nix {
     inherit pkgs;
   };
