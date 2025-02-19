@@ -10,10 +10,15 @@
     command = "${pkgs.zsh}/bin/zsh";
 
     keybind = [
+      "clear"
       "super+alt+i=inspector:toggle"
-      "super+plus=increase_font_size:1"
       "super+minus=decrease_font_size:1"
-      "super+comma=unbind"
+      "super+equal=increase_font_size:1"
+      "super+zero=reset_font_size"
+      "super+c=copy_to_clipboard"
+      "super+v=paste_from_clipboard"
+      "super+n=new_window"
+      "super+w=close_surface"
     ];
 
     font-family = "Hack";
@@ -22,7 +27,7 @@
     adjust-cell-width = -1;
 
     window-padding-color = "background";
-    window-padding-x = 2;
+    window-padding-x = 3;
     window-padding-y = 2;
 
     theme = "GruvboxDarkHard";
