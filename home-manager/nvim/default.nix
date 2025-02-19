@@ -17,9 +17,9 @@
   extraPackages = with pkgs; [
     ripgrep # used by fzf
     fd # fzf
+    bat # fzf
     git # fugitive, nvim-tree, lualine, fzf, etc
     nodejs # copilot
-
 
     bash-language-server
     lua-language-server
