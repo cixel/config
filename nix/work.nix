@@ -15,6 +15,20 @@
           else [ ]
         );
       });
+
+      tailscale = super.tailscale.overrideAttrs (old: {
+        # undo the wrapping done by:
+        # https://github.com/NixOS/nixpkgs/commit/4b2abf40c55821bada2664aff7474a77812a9bce
+        # I don't need it and it messes up some stuff.
+        #
+        # another potential way to do this is to rename .tailscaled-wrapped and
+        # edit the wrapper script
+        postInstall = old.postInstall + ''
+          cp $out/bin/.tailscaled-wrapped $out/bin/tailscaled
+          rm $out/bin/tailscale
+          ln -s $out/bin/tailscaled $out/bin/tailscale
+        '';
+      });
     })
   ];
 
