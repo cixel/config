@@ -49,8 +49,6 @@ in
 
     podman
     podman-compose
-
-    jujutsu
   ];
 
   home.shellAliases = {
@@ -84,6 +82,7 @@ in
     inherit pkgs;
   };
   programs.git = import ./git.nix { };
+  programs.jujutsu = import ./jujutsu.nix { };
 
   programs.atuin = {
     enable = true;
