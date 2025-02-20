@@ -77,6 +77,10 @@ ls.add_snippets("go", {
 		[[t.Fatal(${1})]]
 	),
 	ls.parser.parse_snippet(
+		{ trig = "tl", dscr = "t.Fatal" },
+		[[t.Log(${1})]]
+	),
+	ls.parser.parse_snippet(
 		{ trig = "fix", dscr = "fixme" },
 		[[// FIXME(ehden)]]
 	),
