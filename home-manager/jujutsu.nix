@@ -17,7 +17,7 @@
     };
 
     aliases = {
-      l = [ "log" "-r" "(trunk()..z@):: | (trunk()..@)-" "--no-pager" ];
+      l = [ "log" "-r" "(trunk()..@):: | (trunk()..@)-" "--no-pager" ];
       _l = [ "log" "-r" "(trunk()..@):: | (trunk()..@)-" "-T" "builtin_log_detailed" "--no-pager" ];
       lg = [ "log" "-r" "trunk()..@ | ::trunk()" ];
       _lg = [ "log" "-r" "trunk()..@ | ::trunk()" "-T" "builtin_log_detailed" ];
