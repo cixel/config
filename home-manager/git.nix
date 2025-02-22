@@ -53,11 +53,13 @@
     ".classpath"
     ".project"
     ".settings/"
+    ",*"
 
     "TODO"
     "NOTES"
 
     "gunk/"
     "nocommit/"
+    "result/"
   ];
 }
