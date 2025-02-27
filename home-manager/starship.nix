@@ -91,22 +91,22 @@
     custom.jj = {
       when = true;
       command = ''
-       ! jj root >/dev/null 2>&1 || jj log -r@ -n1 --color always --ignore-working-copy --no-graph -T 'change_id.shortest(6)'
+       ! jj root --ignore-working-copy >/dev/null 2>&1 || jj log -r@ -n1 --color always --ignore-working-copy --no-graph -T 'change_id.shortest(6)'
       '';
     };
     custom.git_branch = {
       when = true;
-      command = "jj root >/dev/null 2>&1 || starship module git_branch";
+      command = "jj root --ignore-working-copy >/dev/null 2>&1 || starship module git_branch";
       description = "only show if we're not in a jj repo";
     };
     custom.git_state = {
       when = true;
-      command = "jj root >/dev/null 2>&1 || starship module git_state";
+      command = "jj root --ignore-working-copy >/dev/null 2>&1 || starship module git_state";
       description = "only show if we're not in a jj repo";
     };
     custom.git_status = {
       when = true;
-      command = "jj root >/dev/null 2>&1 || starship module git_status";
+      command = "jj root --ignore-working-copy >/dev/null 2>&1 || starship module git_status";
       description = "only show if we're not in a jj repo";
     };
   };
