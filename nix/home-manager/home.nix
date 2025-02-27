@@ -20,7 +20,6 @@ in
   home.packages = with pkgs; [
     git
     curl
-    ripgrep
     bat
     eza
     # glances # top alternative
@@ -105,6 +104,18 @@ in
     defaultCommand = "fd";
     fileWidgetCommand = "fd --hidden --exclude '.git'";
     changeDirWidgetCommand = "fd --type d --hidden --exclude '.git' --follow";
+  };
+
+  programs.ripgrep = {
+    enable = true;
+    arguments = [
+      "--glob"
+      "!.git/*"
+      "!.jj/*"
+      "!node_modules/*"
+
+      "--hidden"
+    ];
   };
 
   programs.go = {
