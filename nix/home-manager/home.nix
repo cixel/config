@@ -1,10 +1,5 @@
 { darwin, wsl }:
-{ pkgs, lib, ... }:
-
-let
-  contrast-detect-secrets = pkgs.python3Packages.callPackage ./detect-secrets.nix { };
-in
-{
+{ pkgs, lib, ... }: {
   programs.home-manager.enable = true;
 
   # This value determines the Home Manager release that your
@@ -40,7 +35,6 @@ in
 
     # i use these for work and prefer having them already loaded to avoid
     # needing to enter a nix shell for random build dependencies
-    contrast-detect-secrets
     golangci-lint
     xz
     gnumake

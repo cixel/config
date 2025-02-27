@@ -73,6 +73,8 @@
   ];
 
   home-manager.users.${user} = {
+    home.packages = [ (pkgs.python3Packages.callPackage ./home-manager/detect-secrets.nix { }) ];
+
     programs.git = {
       userEmail = "ehden@contrastsecurity.com";
 
