@@ -11,7 +11,7 @@
         #   hash = "sha256-pZIUvhcEqkIi+xSMBIRcS9GW9V/zvs8Y1/KbLYfSb1c=";
         # };
         patches = (
-          if pkgs.stdenv.isDarwin then [ ../home-manager/zig_cert.patch ]
+          if pkgs.stdenv.isDarwin then [ ./home-manager/zig_cert.patch ]
           else [ ]
         );
       });

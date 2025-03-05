@@ -32,7 +32,7 @@ let
           hash = "sha256-0UEgYUrLKdEryrcr1onyV+tL6eC2+IqPt+Qaxl+FVuU=";
         };
         patches = [ ] ++ (
-          if darwin then [ ../home-manager/fd_fsync_darwin.patch ]
+          if darwin then [ ./home-manager/fd_fsync_darwin.patch ]
           else [ ]
         );
         GOROOT_BOOTSTRAP = "${super.go}/share/go";
@@ -52,7 +52,7 @@ let
     home-manager.useUserPackages = true;
     home-manager.verbose = true;
     home-manager.backupFileExtension = "bak";
-    home-manager.users.${user} = import ../home-manager/home.nix {
+    home-manager.users.${user} = import ./home-manager/home.nix {
       inherit darwin wsl;
     };
   };
