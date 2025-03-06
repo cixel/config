@@ -110,6 +110,7 @@ nvim_lsp.gopls.setup({
 			linksInHover = false,
 			usePlaceholders = true,
 			experimentalPostfixCompletions = true,
+			staticcheck = true,
 		},
 	},
 	-- FIXME: yoinked from
