@@ -87,15 +87,7 @@
     {
       plugin = oil-nvim;
       type = "lua";
-      config = ''
-        require("oil").setup {
-          view_options = {
-            show_hidden = true,
-          };
-        }
-
-        vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-      '';
+      config = builtins.readFile ./config/plugins/oil.lua;
     }
     {
       plugin = nvim-tree-lua;
