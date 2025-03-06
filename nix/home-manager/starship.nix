@@ -91,7 +91,7 @@
     custom.jj = {
       when = true;
       command = ''
-       ! jj root --ignore-working-copy >/dev/null 2>&1 || jj log -r@ -n1 --color always --ignore-working-copy --no-graph -T 'change_id.shortest(6)'
+       ! jj root --ignore-working-copy >/dev/null 2>&1 || jj log -r@ -n1 --color always --ignore-working-copy --no-graph -T 'change_id.shortest()'
       '';
     };
     custom.git_branch = {
