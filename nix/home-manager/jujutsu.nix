@@ -24,7 +24,7 @@
 
       # NOTE: this is kinda unsafe because it can pull e.g main or next up if
       # i'm already caught up
-      ub = [ "bookmark" "move" "--from" "heads(::@- & bookmarks())" ];
+      ub = [ "bookmark" "move" "--from" "heads(::@- & bookmarks())" "--to=@" ];
 
       rb = [ "rebase" "-d" "trunk()" ];
       s = [ "status" "--no-pager" ];
