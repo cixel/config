@@ -22,6 +22,7 @@
     nodejs # copilot
 
     bash-language-server
+    copilot-language-server
     lua-language-server
     nil
     nixpkgs-fmt
