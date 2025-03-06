@@ -53,6 +53,7 @@
     ".classpath"
     ".project"
     ".settings/"
+    ".jj" # usually ignored anyway, but nobody told eza
     ",*"
 
     "TODO"

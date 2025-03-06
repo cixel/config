@@ -79,6 +79,7 @@ vim.keymap.set('n', 'Y', 'yy')
 
 -- remap next/previous buffer
 vim.keymap.set('n', '<C-n>', ':bnext<CR>', { silent = true })
+vim.keymap.set('n', '<C-p>', ':bprev<CR>', { silent = true })
 vim.keymap.set('n', '<C-m>', ':bprev<CR>', { silent = true })
 vim.keymap.set('n', '<C-e>', ':e#<CR>', { silent = true })
 
