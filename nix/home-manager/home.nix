@@ -105,9 +105,10 @@
     arguments = [
       "--glob"
       "!.git/*"
+      "--glob"
       "!.jj/*"
+      "--glob"
       "!node_modules/*"
-
       "--hidden"
     ];
   };
