@@ -136,6 +136,7 @@
     editorconfig-vim
     vim-toml
     vim-markdown
+    vim-nix
     rust-vim
     vim-javascript
 
@@ -209,8 +210,6 @@
         })
       '';
     }
-
-    vim-nix
 
     {
       plugin = fzf-lua;

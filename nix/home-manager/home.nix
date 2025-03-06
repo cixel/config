@@ -56,6 +56,7 @@
     sudov = "sudo -E -s nvim";
 
     l = "eza --long --all";
+    lg = "eza --long --all --git-ignore";
     lt = "eza --long --all --sort newest";
     ls = "eza";
     tree = "eza --tree --long";

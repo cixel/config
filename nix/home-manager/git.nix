@@ -53,7 +53,9 @@
     ".classpath"
     ".project"
     ".settings/"
+    ".jj" # usually ignored anyway, but nobody told eza
     ",*"
+    "*.qcow2" # qemu disk
 
     "TODO"
     "NOTES"
