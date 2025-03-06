@@ -109,7 +109,16 @@
     }
 
     {
-      plugin = lualine-nvim;
+      plugin = pkgs.vimUtils.buildVimPlugin {
+        pname = "lualine-nvim";
+        version = "fix-colors";
+        src = pkgs.fetchFromGitHub {
+          owner = "nvim-lualine";
+          repo = "lualine.nvim";
+          rev = "1517caa8fff05e4b4999857319d3b0609a7f57fa";
+          sha256 = "sha256-DAYRf8JIty6W78JXBSyfnyCryUUYX+QrsHSAlcOk7Fc=";
+        };
+      };
       type = "lua";
       config = builtins.readFile ./config/plugins/lualine.lua;
     }
