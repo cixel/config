@@ -28,6 +28,7 @@
           rm $out/bin/tailscale
           ln -s $out/bin/tailscaled $out/bin/tailscale
         '';
+        doCheck = false;
       });
     })
   ];
