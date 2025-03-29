@@ -94,7 +94,7 @@ local goimports = function(wait_ms)
 	end
 end
 
-local capablities = require('cmp_nvim_lsp').default_capabilities()
+local capablities = require('blink.cmp').get_lsp_capabilities()
 
 nvim_lsp.gopls.setup({
 	-- cmd = {"gopls", "-vv", "-logfile", "gopls.log", "-rpc.trace"};

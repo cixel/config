@@ -39,13 +39,7 @@
       type = "lua";
       config = builtins.readFile ./config/plugins/copilot.lua;
     }
-    {
-      plugin = copilot-cmp;
-      type = "lua";
-      config = ''
-        require("copilot_cmp").setup()
-      '';
-    }
+    blink-copilot
 
     {
       plugin = undotree;
@@ -204,23 +198,15 @@
       config = builtins.readFile ./config/plugins/nvim-lint.lua;
     }
 
-    lspkind-nvim
-    cmp-buffer
-    cmp-nvim-lsp
-    cmp-nvim-lua
-    cmp-path
-    cmp_luasnip
-    cmp-nvim-lsp-signature-help
-    cmp-nvim-lsp-document-symbol
-
     {
-      plugin = nvim-cmp;
+      plugin = blink-cmp;
       type = "lua";
-      config = builtins.readFile ./config/plugins/nvim-cmp.lua;
+      config = builtins.readFile ./config/plugins/blink-cmp.lua;
     }
-    # nvim-cmp config currently depends on nvim-autopairs existing and will
-    # give lua errors if it doesn't. I should probably fix that. Also depends
-    # on luasnip.
+    # compatibility layer for nvim-cmp sources; used for nvim_lua
+    blink-compat
+    cmp-nvim-lua
+
     {
       plugin = nvim-autopairs;
       type = "lua";
