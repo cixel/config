@@ -7,12 +7,13 @@ vim.diagnostic.config({
 	},
 })
 
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-	vim.lsp.diagnostic.on_publish_diagnostics, {
-		signs = true,
-		update_in_insert = false,
-	}
-)
+-- I'm not sure what this actually does anymore; might not be necessary
+-- vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+-- 	vim.lsp.diagnostic.on_publish_diagnostics, {
+-- 		signs = true,
+-- 		update_in_insert = false,
+-- 	}
+-- )
 
 -- it'd be nice not to link these to Gruvbox groups. also not super sure why
 -- this needs to be an autocmd.
@@ -22,12 +23,12 @@ vim.api.nvim_create_autocmd("VimEnter", {
 	callback = function()
 		vim.keymap.set(
 			'n', '<C-q>',
-			function() vim.diagnostic.goto_next({ enable_popup = false }) end,
+			function() vim.diagnostic.jump({ count = 1, float = true }) end,
 			{ silent = true }
 		)
 		vim.keymap.set(
 			'n', '<C-S-Q>',
-			function() vim.diagnostic.goto_prev({ enable_popup = false }) end,
+			function() vim.diagnostic.jump({ count = -1, float = true }) end,
 			{ silent = true }
 		)
 	end,
@@ -79,16 +80,25 @@ local function on_attach(_, bufnr)
 end
 
 -- https://github.com/golang/tools/blob/master/gopls/doc/vim.md#imports
-local goimports = function(wait_ms)
-	local params = vim.lsp.util.make_range_params()
-	params.context = { only = { "source.organizeImports" } }
-	local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, wait_ms)
-	for _, res in pairs(result or {}) do
-		for _, r in pairs(res.result or {}) do
+-- https://github.com/golang/tools/blob/master/gopls/doc/features/transformation.md#source.organizeImports
+local goimports = function(client, wait_ms)
+	local params = vim.lsp.util.make_range_params(0, client.offset_encoding)
+	local results = client:request_sync(
+		vim.lsp.protocol.Methods.textDocument_codeAction,
+		{
+			textDocument = params.textDocument,
+			range = params.range,
+			context = {
+				only = { vim.lsp.protocol.CodeActionKind.SourceOrganizeImports },
+			},
+		},
+		wait_ms
+	)
+
+	for _, result in pairs(results or {}) do
+		for _, r in pairs(result or {}) do
 			if r.edit then
-				vim.lsp.util.apply_workspace_edit(r.edit, 'utf-8')
-			else
-				vim.lsp.buf.execute_command(r.command)
+				vim.lsp.util.apply_workspace_edit(r.edit, client.offset_encoding)
 			end
 		end
 	end
@@ -102,12 +112,8 @@ nvim_lsp.gopls.setup({
 	cmd = { "gopls", "-remote=auto" },
 	settings = {
 		gopls = {
-			-- these links aren't very useful - they're rendered in markdown and
-			-- nothing is rendering the markdown or making the link particularly
-			-- useable. maybe one day i can set something up to render the links more
-			-- cleanly or make them shell out to `open` or something when interacted
-			-- with.
-			linksInHover = false,
+			linksInHover = true,
+			completeFunctionCalls = true,
 			usePlaceholders = true,
 			experimentalPostfixCompletions = true,
 			staticcheck = true,
@@ -129,7 +135,7 @@ nvim_lsp.gopls.setup({
 						timeout_ms = timeout,
 					}
 				})
-				goimports(timeout)
+				goimports(client, timeout)
 			end,
 			desc = "format Go buffer",
 		})
@@ -193,8 +199,8 @@ nvim_lsp.nil_ls.setup {
 		['nil'] = {
 			formatting = {
 				command = { "nixpkgs-fmt" },
-			};
-		};
+			},
+		},
 	},
 }
 
