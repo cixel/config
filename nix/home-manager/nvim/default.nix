@@ -142,33 +142,34 @@
 
     {
       # https://nixos.org/manual/nixpkgs/unstable/#vim
-      # plugin = nvim-treesitter.withAllGrammars;
-      plugin = (nvim-treesitter.withPlugins (
-        plugins: with plugins; [
-          tree-sitter-bash
-          tree-sitter-dockerfile
-          tree-sitter-go
-          tree-sitter-java
-          tree-sitter-jq
-          tree-sitter-json
-          tree-sitter-lua
-          tree-sitter-make
-          tree-sitter-nix
-          tree-sitter-python
-          tree-sitter-regex
-          tree-sitter-rust
-          tree-sitter-toml
-          tree-sitter-yaml
-          tree-sitter-zig
-          tree-sitter-javascript
-          tree-sitter-ruby
-          tree-sitter-typescript
-          tree-sitter-vim
-          tree-sitter-vimdoc
-          tree-sitter-comment
-          tree-sitter-c
-        ]
-      ));
+      plugin = nvim-treesitter.withAllGrammars;
+      # plugin = (nvim-treesitter.withPlugins (
+      #   plugins: with plugins; [
+      #     tree-sitter-bash
+      #     tree-sitter-c
+      #     tree-sitter-comment
+      #     tree-sitter-dockerfile
+      #     tree-sitter-go
+      #     tree-sitter-java
+      #     tree-sitter-javascript
+      #     tree-sitter-jq
+      #     tree-sitter-json
+      #     tree-sitter-lua
+      #     tree-sitter-make
+      #     tree-sitter-markdown
+      #     tree-sitter-nix
+      #     tree-sitter-python
+      #     tree-sitter-regex
+      #     tree-sitter-ruby
+      #     tree-sitter-rust
+      #     tree-sitter-toml
+      #     tree-sitter-typescript
+      #     tree-sitter-vim
+      #     tree-sitter-vimdoc
+      #     tree-sitter-yaml
+      #     tree-sitter-zig
+      #   ]
+      # ));
       type = "lua";
       config = builtins.readFile ./config/treesitter.lua;
     }
