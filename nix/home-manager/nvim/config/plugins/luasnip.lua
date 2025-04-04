@@ -2,8 +2,6 @@ local ls = require("luasnip")
 local s = ls.snippet
 local t = ls.text_node
 
--- see about rewriting these in nvim-compe with compe#confirm for better
--- functionality with completion menus
 vim.keymap.set({ "i", "s" }, "<C-q>", "<Plug>luasnip-expand-or-jump", {})
 
 ls.add_snippets("all", {})
