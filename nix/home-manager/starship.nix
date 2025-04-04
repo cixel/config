@@ -10,9 +10,6 @@
       "$time"
       "$username$hostname"
       "$nix_shell"
-      # "$git_branch"
-      # "$git_state"
-      # "$git_status"
 
       "\${custom.git_branch}"
       "\${custom.git_state}"
@@ -89,24 +86,22 @@
     };
 
     custom.jj = {
-      when = true;
-      command = ''
-       ! jj root --ignore-working-copy >/dev/null 2>&1 || jj log -r@ -n1 --color always --ignore-working-copy --no-graph -T 'change_id.shortest()'
-      '';
+      detect_folders = [ ".jj" ];
+      command = "jj log -r@ -n1 --color always --ignore-working-copy --no-graph -T 'change_id.shortest()'";
     };
     custom.git_branch = {
-      when = true;
-      command = "jj root --ignore-working-copy >/dev/null 2>&1 || starship module git_branch";
+      detect_folders = [ "!.jj" ".git" ];
+      command = "starship module git_branch";
       description = "only show if we're not in a jj repo";
     };
     custom.git_state = {
-      when = true;
-      command = "jj root --ignore-working-copy >/dev/null 2>&1 || starship module git_state";
+      detect_folders = [ "!.jj" ".git" ];
+      command = "starship module git_state";
       description = "only show if we're not in a jj repo";
     };
     custom.git_status = {
-      when = true;
-      command = "jj root --ignore-working-copy >/dev/null 2>&1 || starship module git_status";
+      detect_folders = [ "!.jj" ".git" ];
+      command = "starship module git_status";
       description = "only show if we're not in a jj repo";
     };
   };
