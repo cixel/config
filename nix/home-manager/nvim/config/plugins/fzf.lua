@@ -6,10 +6,13 @@ fzf_lua.setup({
 		fzf = {
 			true, -- inherit default bindings
 			["tab"] = "down",
+			["ctrl-j"] = "down",
 			["shift-tab"] = "up",
+			["ctrl-k"] = "up",
 			["right"] = "toggle+down",
 			["left"] = "toggle+up",
 			["ctrl-space"] = "toggle",
+			["ctrl-y"] = "accept",
 		},
 	},
 })
