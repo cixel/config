@@ -65,8 +65,6 @@
     };
   };
 
-  nix.settings.http2 = false;
-
   # https://github.com/LnL7/nix-darwin/blob/master/modules/services/tailscale.nix#L66C2-L72C7
   environment.etc."resolver/c.headscale.ehden.net".text = "nameserver 100.100.100.100";
   environment.etc."resolver/c.headscale.ehden.net".knownSha256Hashes = [
