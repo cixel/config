@@ -129,10 +129,6 @@
       '';
     }
     editorconfig-vim
-    vim-toml
-    vim-markdown
-    rust-vim
-    vim-javascript
 
     {
       # https://nixos.org/manual/nixpkgs/unstable/#vim
