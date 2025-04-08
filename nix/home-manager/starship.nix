@@ -88,25 +88,29 @@
     custom.jj = {
       detect_folders = [ ".jj" ];
       command = "jj log -r@ -n1 --color always --ignore-working-copy --no-graph -T 'change_id.shortest()'";
-      shell = ["${pkgs.bash}/bin/sh" "--norc" "--noprofile"];
+      shell = ["${pkgs.dash}/bin/dash" "-f" "-c" "-"];
+      use_stdin = false;
     };
     custom.git_branch = {
       detect_folders = [ "!.jj" ".git" ];
       command = "starship module git_branch";
       description = "only show if we're not in a jj repo";
-      shell = ["${pkgs.bash}/bin/sh" "--norc" "--noprofile"];
+      shell = ["${pkgs.dash}/bin/dash" "-f" "-c" "-"];
+      use_stdin = false;
     };
     custom.git_state = {
       detect_folders = [ "!.jj" ".git" ];
       command = "starship module git_state";
       description = "only show if we're not in a jj repo";
-      shell = ["${pkgs.bash}/bin/sh" "--norc" "--noprofile"];
+      shell = ["${pkgs.dash}/bin/dash" "-f" "-c" "-"];
+      use_stdin = false;
     };
     custom.git_status = {
       detect_folders = [ "!.jj" ".git" ];
       command = "starship module git_status";
       description = "only show if we're not in a jj repo";
-      shell = ["${pkgs.bash}/bin/sh" "--norc" "--noprofile"];
+      shell = ["${pkgs.dash}/bin/dash" "-f" "-c" "-"];
+      use_stdin = false;
     };
   };
 }
