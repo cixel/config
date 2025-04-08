@@ -65,6 +65,8 @@
     gd = "go doc";
     gdu = "go doc -u";
 
+    docker = "podman";
+
     gitlines = "git ls-files | xargs wc -l";
   };
 
