@@ -216,6 +216,7 @@ local servers = {
 	"rust_analyzer",
 	"yamlls",
 	"zls",
+	"nixd",
 }
 for _, s in ipairs(servers) do
 	vim.lsp.config(s, { on_attach = on_attach, capabilities = capablities })

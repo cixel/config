@@ -24,9 +24,9 @@
     bash-language-server
     copilot-language-server
     lua-language-server
-    nil
-    nixpkgs-fmt
-    nodePackages.typescript-language-server
+    nixd
+    nixfmt-rfc-style
+    typescript-language-server
     rust-analyzer
     vscode-langservers-extracted
     yaml-language-server
