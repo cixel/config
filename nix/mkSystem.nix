@@ -28,10 +28,10 @@ let
   overlays = [
     (self: super: {
       go = super.go.overrideAttrs (old: rec {
-        version = "1.24.2";
+        version = "1.24.3";
         src = pkgs.fetchurl {
           url = "https://go.dev/dl/go${version}.src.tar.gz";
-          hash = "sha256-ncd/+twW2DehvzLZnGJMtN8GR87nsRnt2eexvMBfLgA=";
+          hash = "sha256-IpwItgCxRGeYEJ+uH1aSKBAshHPKuoEEtkGMtbwDKHg=";
         };
         patches = [ ] ++ (
           if darwin then [ ./home-manager/fd_fsync_darwin.patch ]
