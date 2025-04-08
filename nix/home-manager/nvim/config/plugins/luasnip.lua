@@ -2,7 +2,9 @@ local ls = require("luasnip")
 local s = ls.snippet
 local t = ls.text_node
 
-vim.keymap.set({ "i", "s" }, "<C-q>", "<Plug>luasnip-expand-or-jump", {})
+vim.keymap.set({ "i", "s" }, "<C-q>", ls.expand, { silent = true })
+vim.keymap.set({ "i", "s" }, "<Tab", function() ls.jump(1) end, { silent = true })
+vim.keymap.set({ "i", "s" }, "<S-Tab", function() ls.jump(-1) end, { silent = true })
 
 ls.add_snippets("all", {})
 ls.add_snippets("javascript", {
