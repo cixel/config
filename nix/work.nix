@@ -1,8 +1,24 @@
 # work-machine specific stuff - like env vars needed for netskope
-{ user }: { pkgs, ... }:
+{
+  user,
+  system,
+}:
+{ pkgs, ... }:
 {
   nixpkgs.overlays = [
     (self: super: {
+      go =
+        let
+          darwin = pkgs.lib.strings.hasSuffix "darwin" system;
+        in
+        super.go.overrideAttrs (old: {
+          patches = old.patches ++ (if darwin then [ ./home-manager/fd_fsync_darwin.patch ] else [ ]);
+          GOROOT_BOOTSTRAP = "${super.go}/share/go";
+        });
+
+      # https://github.com/NixOS/nixpkgs/issues/154163#issuecomment-1350599022
+      makeModulesClosure = x: super.makeModulesClosure (x // { allowMissing = true; });
+
       zig = super.zig.overrideAttrs (old: {
         # src = pkgs.fetchFromGitHub {
         #   owner = "ziglang";
@@ -10,10 +26,7 @@
         #   rev = "11176d22f82861b4b6967b77f753414f214bc632";
         #   hash = "sha256-pZIUvhcEqkIi+xSMBIRcS9GW9V/zvs8Y1/KbLYfSb1c=";
         # };
-        patches = (
-          if pkgs.stdenv.isDarwin then [ ./home-manager/zig_cert.patch ]
-          else [ ]
-        );
+        patches = (if pkgs.stdenv.isDarwin then [ ./home-manager/zig_cert.patch ] else [ ]);
       });
 
       tailscale = super.tailscale.overrideAttrs (old: {

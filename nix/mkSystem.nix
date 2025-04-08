@@ -28,25 +28,17 @@ let
   overlays = [
     (self: super: {
       go = super.go.overrideAttrs (old: rec {
-        version = "1.24.3";
+        version = "1.24.4";
         src = pkgs.fetchurl {
           url = "https://go.dev/dl/go${version}.src.tar.gz";
           hash = "sha256-IpwItgCxRGeYEJ+uH1aSKBAshHPKuoEEtkGMtbwDKHg=";
+          hash = "sha256-WoaoOjH5+oFJC4xUIKw4T9PZWj5x+6Zlx7P5XR3+8rQ=";
         };
-        patches = [ ] ++ (
-          if darwin then [ ./home-manager/fd_fsync_darwin.patch ]
-          else [ ]
-        );
-        GOROOT_BOOTSTRAP = "${super.go}/share/go";
       });
-
-      # https://github.com/NixOS/nixpkgs/issues/154163#issuecomment-1350599022
-      makeModulesClosure = x:
-        super.makeModulesClosure (x // { allowMissing = true; });
     })
   ];
 
-  machineConfig = import ./machines/${name}.nix { inherit pkgs user; };
+  machineConfig = import ./machines/${name}.nix { inherit pkgs system user; };
   darwinConfig = import ./darwin.nix { inherit user; };
   nixosConfig = import ./nixos.nix { inherit user; };
   homeConfig = {

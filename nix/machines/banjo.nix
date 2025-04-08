@@ -3,6 +3,13 @@
 {
   imports = [ ];
 
+  overlays = [
+    (self: super: {
+      # https://github.com/NixOS/nixpkgs/issues/154163#issuecomment-1350599022
+      makeModulesClosure = x: super.makeModulesClosure (x // { allowMissing = true; });
+    })
+  ];
+
   time.timeZone = "America/New_York";
 
   hardware = {
