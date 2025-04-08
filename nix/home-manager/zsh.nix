@@ -2,10 +2,6 @@
 {
   enable = true;
   defaultKeymap = "viins";
-  shellAliases = {
-    gitlines = "git ls-files | xargs wc -l";
-    ack = "ag --ignore-dir=node_modules --ignore-dir=labs --ignore-dir=docs --ignore-dir=dist --ignore-dir=code-coverage-report";
-  };
   sessionVariables = {
     KEYTIMEOUT = 1;
     #XDG_RUNTIME_DIR="/run/user/$(id -u)"; # https://github.com/Trundle/NixOS-WSL/issues/18

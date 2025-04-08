@@ -64,6 +64,8 @@
 
     gd = "go doc";
     gdu = "go doc -u";
+
+    gitlines = "git ls-files | xargs wc -l";
   };
 
   programs.neovim = import ./nvim { inherit pkgs; };
