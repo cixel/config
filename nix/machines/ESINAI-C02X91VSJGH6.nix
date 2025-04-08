@@ -1,5 +1,5 @@
-{ user, ... }: { ... }: {
+{ system, user, ... }: { ... }: {
   imports = [
-    (import ../work.nix { inherit user; })
+    (import ../work.nix { inherit system user; })
   ];
 }
