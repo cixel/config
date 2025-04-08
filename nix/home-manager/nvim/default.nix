@@ -129,6 +129,7 @@
       '';
     }
     editorconfig-vim
+    vim-nix
 
     {
       # https://nixos.org/manual/nixpkgs/unstable/#vim
