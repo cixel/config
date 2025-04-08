@@ -176,11 +176,6 @@
       type = "lua";
       config = builtins.readFile ./config/lsp.lua;
     }
-    {
-      plugin = nvim-lint;
-      type = "lua";
-      config = builtins.readFile ./config/plugins/nvim-lint.lua;
-    }
 
     {
       plugin = blink-cmp;
