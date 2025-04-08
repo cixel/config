@@ -82,6 +82,8 @@ in
   ];
 
   home-manager.users.${user} = {
+    home.packages = [ pkgs.github-copilot-cli ];
+
     programs.neovim = {
       extraPackages = [ pkgs.copilot-language-server ];
       plugins = with pkgs.vimPlugins; [
