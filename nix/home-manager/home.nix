@@ -1,5 +1,6 @@
-{ darwin, wsl }:
-{ pkgs, lib, ... }: {
+{ darwin }:
+{ pkgs, lib, ... }:
+{
   programs.home-manager.enable = true;
 
   # This value determines the Home Manager release that your

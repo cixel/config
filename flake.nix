@@ -60,7 +60,6 @@
       nixosConfigurations."alnitak-wsl" = mkSystem "alnitak-wsl" {
         system = "x86_64-linux";
         user = "alnitak";
-        wsl = true;
         hardware = wsl.nixosModules.wsl;
       };
 
