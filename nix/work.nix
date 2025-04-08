@@ -101,6 +101,12 @@ in
       url."git@bitbucket.org:".insteadOf = "https://bitbucket.org/";
     };
 
+    programs.gh = {
+      settings = {
+        aliases = { };
+      };
+    };
+
     programs.jujutsu.settings = {
       user = {
         name = "Ehden Sinai";
