@@ -131,7 +131,6 @@
     editorconfig-vim
     vim-toml
     vim-markdown
-    vim-nix
     rust-vim
     vim-javascript
 

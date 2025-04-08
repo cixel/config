@@ -130,3 +130,23 @@ vim.api.nvim_create_user_command('MakeGo', function()
 	os.execute('./make.bash')
 	vim.api.nvim_cmd({ cmd = 'LspRestart' }, { output = true })
 end, {})
+
+-- ':NixEdit neovim' navigates to the location of the neovim dir when editing
+-- in the nixpkgs repo. yoinked from vim-nix plugin:
+-- https://github.com/LnL7/vim-nix/commit/9b2e5c5d389e4a7f2b587ae1fdf7a46143993f21
+vim.api.nvim_create_user_command('NixEdit', function(opts)
+	local obj = vim.system(
+		{ 'nix-instantiate', '--eval', './.', '-A', opts.fargs[1] .. '.meta.position' },
+		{ text = true }
+	):wait()
+
+	if obj.code ~= 0 then
+		return
+	end
+
+	-- expect "/path/to/file:123"\n - chop off the leading " and trailing "\n
+	local loc = obj.stdout:sub(2, -3)
+	local split = vim.split(loc, ':', { plain = true })
+	vim.cmd.edit(split[1])
+	vim.cmd(split[2])
+end, { nargs = 1 })
