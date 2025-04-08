@@ -94,6 +94,32 @@ in
       ];
     };
 
+
+    programs.claude-code = {
+      enable = true;
+      package = pkgs.claude-code;
+      # @RTK is a claude-specific directive; prepend it to the shared
+      # context. Other agents get the shared file as-is.
+      context = ''
+        @RTK
+
+        ${builtins.readFile ./home-manager/agents/context.md}
+      '';
+      skills = ./home-manager/agents/skills;
+      commandsDir = ./home-manager/agents/commands;
+      mcpServers = {
+        atlassian = {
+          type = "http";
+          url = "https://mcp.atlassian.com/v1/mcp";
+        };
+        gopls-lsp = {
+          type = "stdio";
+          command = "gopls";
+          args = [ "mcp" ];
+        };
+      };
+    };
+
     programs.git.settings = {
       user.email = "ehden@contrastsecurity.com";
 
