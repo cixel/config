@@ -1,4 +1,3 @@
-local nvim_lsp = require('lspconfig')
 -- vim.lsp.set_log_level("debug")
 vim.diagnostic.config({
 	virtual_text = {},
@@ -109,7 +108,7 @@ end
 
 local capablities = require('blink.cmp').get_lsp_capabilities()
 
-nvim_lsp.gopls.setup({
+vim.lsp.config('gopls', {
 	-- cmd = {"gopls", "-vv", "-logfile", "gopls.log", "-rpc.trace"};
 	capablities = capablities,
 	cmd = { "gopls", "-remote=auto" },
@@ -146,8 +145,9 @@ nvim_lsp.gopls.setup({
 		on_attach(client, bufnr)
 	end),
 })
+vim.lsp.enable('gopls')
 
--- nvim_lsp.yamlls.setup({
+-- vim.lsp.config('yamlls', {
 --   on_attach = on_attach,
 --   settings = {
 -- 	-- trace = {
@@ -167,8 +167,9 @@ nvim_lsp.gopls.setup({
 -- 	},
 --   },
 -- })
+-- vim.lsp.enable('yamlls')
 
-nvim_lsp.lua_ls.setup {
+vim.lsp.config('lua_ls', {
 	on_attach = on_attach,
 	capablities = capablities,
 	settings = {
@@ -192,7 +193,8 @@ nvim_lsp.lua_ls.setup {
 			},
 		},
 	},
-}
+})
+vim.lsp.enable('lua_ls')
 
 -- https://github.com/oxalica/nil/blob/2f3ed6348bbf1440fcd1ab0411271497a0fbbfa4/dev/nvim-lsp.nix#L83
 nvim_lsp.nil_ls.setup {
@@ -215,6 +217,7 @@ local servers = {
 	"yamlls",
 	"zls",
 }
-for _, lsp in ipairs(servers) do
-	nvim_lsp[lsp].setup { on_attach = on_attach, capabilities = capablities }
+for _, s in ipairs(servers) do
+	vim.lsp.config(s, { on_attach = on_attach, capabilities = capablities })
+	vim.lsp.enable(s)
 end
