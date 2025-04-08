@@ -2,11 +2,11 @@
 { self, nixpkgs }:
 
 name:
-{ system
-, user
-, wsl ? false
+{
+  system,
+  user,
   # optional hardware module
-, hardware ? { }
+  hardware ? { },
 }:
 
 let
@@ -16,14 +16,9 @@ let
 
   darwin = pkgs.lib.strings.hasSuffix "darwin" system;
 
-  systemFunc =
-    if darwin
-    then self.inputs.darwin.lib.darwinSystem
-    else nixpkgs.lib.nixosSystem;
+  systemFunc = if darwin then self.inputs.darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
   home-manager =
-    if darwin
-    then self.inputs.home-manager.darwinModules
-    else self.inputs.home-manager.nixosModules;
+    if darwin then self.inputs.home-manager.darwinModules else self.inputs.home-manager.nixosModules;
 
   overlays = [
     (self: super: {
@@ -46,11 +41,12 @@ let
     home-manager.verbose = true;
     home-manager.backupFileExtension = "bak";
     home-manager.users.${user} = import ./home-manager/home.nix {
-      inherit darwin wsl;
+      inherit darwin;
     };
   };
 
-  baseConfig = { pkgs, ... }:
+  baseConfig =
+    { pkgs, ... }:
     {
       # Auto upgrade nix package and the daemon service.
       # services.nix-daemon.enable = true;

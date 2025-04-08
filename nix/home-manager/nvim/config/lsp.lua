@@ -6,6 +6,7 @@ vim.diagnostic.config({
 	},
 })
 
+-- don't show 'E', 'H' etcs in the signcolumn; it's redunant with lualine's
 -- diagnostics summary anyway
 vim.opt.signcolumn = "no"
 
@@ -66,22 +67,24 @@ local function on_attach(_, bufnr)
 	-- buf_set_keymap('n', '<C-k>', vim.lsp.buf.signature_help)
 	buf_set_keymap('n', '<C-s>', vim.lsp.buf.signature_help)
 
+	-- grr by default
 	buf_set_keymap('n', '<leader>r', vim.lsp.buf.references)
+
 	buf_set_keymap('n', '<leader>wa', vim.lsp.buf.add_workspace_folder)
 	buf_set_keymap('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder)
 	buf_set_keymap('n', '<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end)
 	buf_set_keymap('n', '<leader>D', vim.lsp.buf.type_definition)
 	buf_set_keymap('n', '<leader>ca', vim.lsp.buf.code_action)
-	buf_set_keymap('n', 'gr', vim.lsp.buf.references)
 	buf_set_keymap('n', '<leader>e', vim.diagnostic.open_float)
 	buf_set_keymap('n', '<leader>q', vim.diagnostic.setloclist)
 	-- buf_set_keymap('n', '<leader>ff', vim.lsp.buf.formatting)
+	buf_set_keymap('n', '<leader>f', function() vim.lsp.buf.format({ async = true }) end)
 	buf_set_keymap('n', '<leader>ff', function() vim.lsp.buf.format({ async = true }) end)
 
 	buf_set_keymap("n", "<leader>rs", function() vim.lsp.stop_client(vim.lsp.get_clients()) end)
 end
 
--- https://github.com/golang/tools/blob/master/gopls/doc/vim.md#imports
+-- https://github.com/golang/tools/blob/master/gopls/doc/editor/vim.md#neovim-imports
 -- https://github.com/golang/tools/blob/master/gopls/doc/features/transformation.md#source.organizeImports
 local goimports = function(client, wait_ms)
 	local params = vim.lsp.util.make_range_params(0, client.offset_encoding)
@@ -116,16 +119,9 @@ vim.lsp.config('gopls', {
 		gopls = {
 			linksInHover = true,
 			completeFunctionCalls = true,
-			usePlaceholders = true,
 			experimentalPostfixCompletions = true,
 			staticcheck = true,
 		},
-	},
-	-- FIXME: yoinked from
-	-- https://github.com/hrsh7th/nvim-cmp/wiki/Language-Server-Specific-Samples#golang-gopls
-	-- i'm not sure if it's redundant with the usePlaceholders setting above?
-	init_options = {
-		usePlaceholders = true,
 	},
 	on_attach = (function(client, bufnr)
 		vim.api.nvim_create_autocmd("BufWritePre", {
@@ -146,28 +142,6 @@ vim.lsp.config('gopls', {
 	end),
 })
 vim.lsp.enable('gopls')
-
--- vim.lsp.config('yamlls', {
---   on_attach = on_attach,
---   settings = {
--- 	-- trace = {
--- 	--   server = verbose,
--- 	-- },
--- 	redhat = {
--- 	  telemetry = {
--- 		enabled = false,
--- 	  },
--- 	},
--- 	yaml = {
--- 	  hover = true,
--- 	  completion = true,
--- 	  format = {
--- 		enable = true,
--- 	  },
--- 	},
---   },
--- })
--- vim.lsp.enable('yamlls')
 
 vim.lsp.config('lua_ls', {
 	on_attach = on_attach,
@@ -196,20 +170,6 @@ vim.lsp.config('lua_ls', {
 })
 vim.lsp.enable('lua_ls')
 
--- https://github.com/oxalica/nil/blob/2f3ed6348bbf1440fcd1ab0411271497a0fbbfa4/dev/nvim-lsp.nix#L83
-nvim_lsp.nil_ls.setup {
-	on_attach = on_attach,
-	capablities = capablities,
-	settings = {
-		['nil'] = {
-			formatting = {
-				command = { "nixpkgs-fmt" },
-			},
-		},
-	},
-}
-
--- local servers = { "rnix", "rust_analyzer", "tsserver", "golangcilsp" }
 local servers = {
 	"bashls",
 	"eslint", "ts_ls",

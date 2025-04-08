@@ -88,8 +88,7 @@
     programs.git.settings = {
       user.email = "ehden@contrastsecurity.com";
 
-      url."git@github.com:Contrast-Security-Inc/".insteadOf =
-        "https://github.com/Contrast-Security-Inc/";
+      url."git@github.com:Contrast-Security-Inc/".insteadOf = "https://github.com/Contrast-Security-Inc/";
       url."git@bitbucket.org:".insteadOf = "https://bitbucket.org/";
     };
 
