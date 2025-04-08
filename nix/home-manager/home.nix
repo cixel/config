@@ -1,5 +1,5 @@
 { darwin }:
-{ pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 {
   programs.home-manager.enable = true;
 
@@ -118,13 +118,18 @@
   programs.go = {
     enable = true;
     package = pkgs.go;
+    telemetry = {
+      mode = "on";
+    };
     # these are interpreted relative to $HOME
-    goPath = "gopath";
-    goBin = "gobin";
-    # TODO: it'd be nice if this is only set on work machines but that'd take a
-    # refactor
-    goPrivate = [
-      "github.com/Contrast-Security-Inc/*"
-    ];
+    env = {
+      GOBIN = "${config.home.homeDirectory}/gobin";
+      GOPATH = "${config.home.homeDirectory}/gopath";
+      GOPRIVATE = [
+        # TODO: it'd be nice if this is only set on work machines but that'd take a
+        # refactor
+        "github.com/Contrast-Security-Inc/*"
+      ];
+    };
   };
 }

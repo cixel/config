@@ -39,8 +39,8 @@
 
     # may want to fiddle with these so ~/go is just my one source for all
     # things outside of the toolchain and ~/golang is for inside
-    export PATH="$GOBIN:$PATH"
-    export PATH="$GOPATH/bin:$PATH"
+    export PATH="$(go env GOBIN):$PATH"
+    export PATH="$(go env GOPATH)/bin:$PATH"
     export PATH="$HOME/.cargo/bin:$PATH"
   '';
   plugins = [
