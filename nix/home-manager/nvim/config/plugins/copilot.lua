@@ -20,6 +20,6 @@ require('copilot').setup({
 	server = {
 		type = 'binary',
 		-- this should be installed by home-manager in extraPackages
-		custom_server_filepath = 'copilot-language-server',
+		custom_server_filepath = vim.fn.exepath('copilot-language-server'),
 	},
 })
