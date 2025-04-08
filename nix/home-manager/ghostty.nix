@@ -24,7 +24,6 @@
     font-family = "Hack";
     font-size = 12;
     font-thicken = true;
-    adjust-cell-width = -1;
 
     window-padding-color = "background";
     window-padding-x = 3;
