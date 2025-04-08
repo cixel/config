@@ -94,6 +94,11 @@ in
       ];
     };
 
+    programs.antigravity-cli = {
+      enable = true;
+      package = pkgs.gemini-cli-bin;
+    };
+
     programs.git.settings = {
       user.email = "ehden@contrastsecurity.com";
 
