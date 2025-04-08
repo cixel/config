@@ -14,8 +14,9 @@ in
           darwin = super.lib.strings.hasSuffix "darwin" system;
         in
         super.go.overrideAttrs (old: {
-          patches = old.patches ++ (if darwin then [ ./home-manager/fd_fsync_darwin.patch ] else [ ]);
-          env.GOROOT_BOOTSTRAP = "${super.go}/share/go";
+          # patches = old.patches ++ (if darwin then [ ./home-manager/fd_fsync_darwin.patch ] else [ ]);
+          patches = [ ];
+          GOROOT_BOOTSTRAP = "${super.go}/share/go";
         });
 
       # https://github.com/NixOS/nixpkgs/issues/154163#issuecomment-1350599022
@@ -28,7 +29,7 @@ in
         #   rev = "11176d22f82861b4b6967b77f753414f214bc632";
         #   hash = "sha256-pZIUvhcEqkIi+xSMBIRcS9GW9V/zvs8Y1/KbLYfSb1c=";
         # };
-        patches = (if super.stdenv.isDarwin then [ ./home-manager/zig_cert.patch ] else [ ]);
+        # patches = (if super.stdenv.isDarwin then [ ./home-manager/zig_cert.patch ] else [ ]);
       });
 
       tailscale = super.tailscale.overrideAttrs (old: {
