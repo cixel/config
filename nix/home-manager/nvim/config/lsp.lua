@@ -41,6 +41,10 @@ vim.api.nvim_create_autocmd("VimEnter", {
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 local function on_attach(_, bufnr)
+	-- see :h vim.lsp.formatexpr
+	-- from the lsp help docs, it seems like this should be set by default, but
+	-- isn't (at least not for go)
+	-- vim.bo[bufnr].formatexpr = 'v:lua.vim.lsp.formatexpr(#{timeout_ms:250})'
 	local buf_set_keymap = function(mode, lhs, callback)
 		vim.keymap.set(mode, lhs, callback, {
 			silent = true,
@@ -77,9 +81,14 @@ local function on_attach(_, bufnr)
 	buf_set_keymap('n', '<leader>ca', vim.lsp.buf.code_action)
 	buf_set_keymap('n', '<leader>e', vim.diagnostic.open_float)
 	buf_set_keymap('n', '<leader>q', vim.diagnostic.setloclist)
-	-- buf_set_keymap('n', '<leader>ff', vim.lsp.buf.formatting)
-	buf_set_keymap('n', '<leader>f', function() vim.lsp.buf.format({ async = true }) end)
-	buf_set_keymap('n', '<leader>ff', function() vim.lsp.buf.format({ async = true }) end)
+	-- TODO: it'd be nice to set up a custom operator so i can keep ,ff for
+	-- "format everything" and ,f<motion> or ,f<selection> for formatting
+	-- specific ranges
+	--
+	-- update: turns out, gw does what i wanted to have gq continue doing, so i
+	-- can use gq to foramt sections with lsp and gw to line wrap
+	buf_set_keymap({ 'n', 'v' }, '<leader>f', function() vim.lsp.buf.format({ async = true }) end)
+	buf_set_keymap({ 'n', 'v' }, '<leader>ff', function() vim.lsp.buf.format({ async = true }) end)
 
 	buf_set_keymap("n", "<leader>rs", function() vim.lsp.stop_client(vim.lsp.get_clients()) end)
 end
@@ -124,6 +133,11 @@ vim.lsp.config('gopls', {
 		},
 	},
 	on_attach = (function(client, bufnr)
+		-- as of 0.11, gq is invoking lsp formatting for some reason. i don't
+		-- see where this is documented, but i don't want it, since i mainly
+		-- use it for line wrapping
+		-- vim.bo[bufnr].formatprg = ''
+
 		vim.api.nvim_create_autocmd("BufWritePre", {
 			pattern = "*.go",
 			callback = function()
