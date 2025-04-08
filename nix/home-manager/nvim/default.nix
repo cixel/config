@@ -89,11 +89,6 @@
       type = "lua";
       config = builtins.readFile ./config/plugins/oil.lua;
     }
-    {
-      plugin = nvim-tree-lua;
-      type = "lua";
-      config = builtins.readFile ./config/plugins/nvim-tree.lua;
-    }
 
     {
       plugin = pkgs.vimUtils.buildVimPlugin {
