@@ -4,13 +4,18 @@
 name:
 { system
 , user
-, darwin ? false
 , wsl ? false
   # optional hardware module
 , hardware ? { }
 }:
 
 let
+  pkgs = import nixpkgs {
+    inherit system overlays;
+  };
+
+  darwin = pkgs.lib.strings.hasSuffix "darwin" system;
+
   systemFunc =
     if darwin
     then self.inputs.darwin.lib.darwinSystem
@@ -20,9 +25,6 @@ let
     then self.inputs.home-manager.darwinModules
     else self.inputs.home-manager.nixosModules;
 
-  pkgs = import nixpkgs {
-    inherit system overlays;
-  };
   overlays = [
     (self: super: {
       go = super.go.overrideAttrs (old: rec {

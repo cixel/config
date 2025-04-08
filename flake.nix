@@ -27,20 +27,25 @@
       mkSystem = import ./nix/mkSystem.nix {
         inherit self nixpkgs;
       };
+      forAllSystems = nixpkgs.lib.genAttrs [
+        "x86_64-linux"
+        "x86_64-darwin"
+        "aarch64-linux"
+        "aarch64-darwin"
+      ];
     in
     {
       darwinConfigurations."ESINAI-Q6K2T5H20N" = mkSystem "ESINAI-Q6K2T5H20N" {
         system = "aarch64-darwin";
         user = "ehdens";
-        darwin = true;
       };
 
       darwinConfigurations."ESINAI-C02X91VSJGH6" = mkSystem "ESINAI-C02X91VSJGH6" {
         system = "x86_64-darwin";
         user = "ehdens";
-        darwin = true;
       };
-      darwinConfigurations."SADMINISTRATOR-C02X91VSJGH6" = self.darwinConfigurations."ESINAI-C02X91VSJGH6";
+      darwinConfigurations."SADMINISTRATOR-C02X91VSJGH6" =
+        self.darwinConfigurations."ESINAI-C02X91VSJGH6";
 
       nixosConfigurations."vm-aarch64" = mkSystem "vm-aarch64" {
         system = "aarch64-linux";
@@ -50,7 +55,6 @@
       darwinConfigurations."alnilam" = mkSystem "alnilam" {
         system = "x86_64-darwin";
         user = "alnilam";
-        darwin = true;
       };
 
       nixosConfigurations."alnitak-wsl" = mkSystem "alnitak-wsl" {
@@ -71,5 +75,27 @@
         user = "adblock";
         hardware = hardware.nixosModules.raspberry-pi-4;
       };
+
+      packages = forAllSystems (system:
+        let
+          cfg = mkSystem "empty" {
+            inherit system;
+            user = "empty";
+          };
+        in
+        {
+          nvim =
+            let
+              pkg = cfg.config.home-manager.users.empty.programs.neovim;
+              lua = cfg.pkgs.writeText "init.lua" ''
+                ${pkg.extraLuaConfig}
+                ${pkg.generatedConfigs.lua}
+              '';
+            in
+            cfg.pkgs.writeShellScriptBin "nvim" ''
+              ${pkg.finalPackage}/bin/nvim -u ${lua} "$@"
+           '';
+        }
+      );
     };
 }

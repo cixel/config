@@ -18,8 +18,8 @@
     ripgrep # used by fzf
     fd # fzf
     bat # fzf
-    git # fugitive, nvim-tree, lualine, fzf, etc
-    nodejs # copilot
+    git # a bunch of stuff
+    jujutsu # lualine
 
     bash-language-server
     copilot-language-server
