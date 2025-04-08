@@ -87,11 +87,12 @@
   home-manager.users.${user} = {
     home.packages = [ (pkgs.python3Packages.callPackage ./home-manager/detect-secrets.nix { }) ];
 
-    programs.git = {
-      userEmail = "ehden@contrastsecurity.com";
+    programs.git.settings = {
+      user.email = "ehden@contrastsecurity.com";
 
-      extraConfig.url."git@github.com:Contrast-Security-Inc/".insteadOf = "https://github.com/Contrast-Security-Inc/";
-      extraConfig.url."git@bitbucket.org:".insteadOf = "https://bitbucket.org/";
+      url."git@github.com:Contrast-Security-Inc/".insteadOf =
+        "https://github.com/Contrast-Security-Inc/";
+      url."git@bitbucket.org:".insteadOf = "https://bitbucket.org/";
     };
 
     programs.jujutsu.settings = {
