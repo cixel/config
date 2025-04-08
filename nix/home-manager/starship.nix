@@ -3,7 +3,7 @@
   enable = true;
   enableZshIntegration = true;
   settings = {
-    scan_timeout = 5;
+    scan_timeout = 30;
     add_newline = false;
     format = lib.concatStrings [
       "$cmd_duration"
