@@ -55,6 +55,7 @@
     ".jj" # usually ignored anyway, but nobody told eza
     ",*"
     "*.qcow2" # qemu disk
+    ".claude/"
 
     "TODO"
     "NOTES"
