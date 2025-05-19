@@ -10,6 +10,7 @@ nvim/init.lua
 nvim/init.lua nvim/lua/init-home-manager.lua
 ghostty/config
 ripgrep/ripgreprc
+jj/config.toml
 
 fontconfig/
 environment.d/
