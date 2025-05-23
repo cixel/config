@@ -48,7 +48,7 @@
   home.shellAliases = {
     hms =
       if darwin then
-        "nix run nix-darwin -- -v -L switch --flake path:$HOME/.config"
+        "sudo -E nix run nix-darwin -- -v -L switch --flake path:$HOME/.config"
       else
         "sudo nixos-rebuild switch -v --flake path:$HOME/.config";
 
