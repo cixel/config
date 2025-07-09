@@ -12,8 +12,8 @@
       default-command = "log";
     };
 
-    git = {
-      push-bookmark-prefix = "ehden/push-";
+    templates = {
+      git_push_bookmark = ''"ehden/push-" ++ change_id.short()'';
     };
 
     revset-aliases = {
