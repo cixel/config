@@ -20,10 +20,10 @@
   nixpkgs.overlays = [
     (final: prev: {
       go = prev.go.overrideAttrs (old: rec {
-        version = "1.25.4";
-        src = prev.fetchurl {
+        version = "1.26.0";
+        src = pkgs.fetchurl {
           url = "https://go.dev/dl/go${version}.src.tar.gz";
-          hash = "sha256-FgBDt/F7bWC1A2lDaRf9qNUDRkC6Oa4kMca5WoicyYw=";
+          hash = "sha256-yRMqih9r0qpKrR10uCMdlSdJUEg6SVBlfubFbm6Bd5A=";
         };
       });
 
