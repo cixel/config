@@ -14,8 +14,9 @@ in
           darwin = super.lib.strings.hasSuffix "darwin" system;
         in
         super.go.overrideAttrs (old: {
-          patches = old.patches ++ (if darwin then [ ./home-manager/fd_fsync_darwin.patch ] else [ ]);
-          env.GOROOT_BOOTSTRAP = "${super.go}/share/go";
+          # patches = old.patches ++ (if darwin then [ ./home-manager/fd_fsync_darwin.patch ] else [ ]);
+          patches = [ ];
+          GOROOT_BOOTSTRAP = "${super.go}/share/go";
         });
 
       # https://github.com/NixOS/nixpkgs/issues/154163#issuecomment-1350599022
@@ -28,7 +29,7 @@ in
         #   rev = "11176d22f82861b4b6967b77f753414f214bc632";
         #   hash = "sha256-pZIUvhcEqkIi+xSMBIRcS9GW9V/zvs8Y1/KbLYfSb1c=";
         # };
-        patches = (if super.stdenv.isDarwin then [ ./home-manager/zig_cert.patch ] else [ ]);
+        # patches = (if super.stdenv.isDarwin then [ ./home-manager/zig_cert.patch ] else [ ]);
       });
 
       tailscale = super.tailscale.overrideAttrs (old: {
@@ -82,6 +83,8 @@ in
   ];
 
   home-manager.users.${user} = {
+    home.packages = [ pkgs.github-copilot-cli ];
+
     programs.neovim = {
       extraPackages = [ pkgs.copilot-language-server ];
       plugins = with pkgs.vimPlugins; [
@@ -92,6 +95,36 @@ in
         }
         blink-copilot
       ];
+    };
+
+    programs.antigravity-cli = {
+      enable = true;
+      package = pkgs.gemini-cli-bin;
+    };
+
+    programs.claude-code = {
+      enable = true;
+      package = pkgs.claude-code;
+      # @RTK is a claude-specific directive; prepend it to the shared
+      # context. Other agents get the shared file as-is.
+      context = ''
+        @RTK
+
+        ${builtins.readFile ./home-manager/agents/context.md}
+      '';
+      skills = ./home-manager/agents/skills;
+      commandsDir = ./home-manager/agents/commands;
+      mcpServers = {
+        atlassian = {
+          type = "http";
+          url = "https://mcp.atlassian.com/v1/mcp";
+        };
+        gopls-lsp = {
+          type = "stdio";
+          command = "gopls";
+          args = [ "mcp" ];
+        };
+      };
     };
 
     programs.git.settings = {
@@ -113,9 +146,6 @@ in
           user = "cixel";
         };
       };
-      settings = {
-        aliases = { };
-      };
     };
 
     programs.jujutsu.settings = {
@@ -124,5 +154,9 @@ in
         email = "ehden@contrastsecurity.com";
       };
     };
+
+    # jev-guard: keep the deterministic rules but never send commands to
+    # TypeSafe from work machines (Netskope / company code).
+    programs.pi.jevGuard.jev = false;
   };
 }
