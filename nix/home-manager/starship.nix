@@ -91,6 +91,12 @@
       shell = ["${pkgs.dash}/bin/dash" "-f" "-c" "-"];
       use_stdin = false;
     };
+    custom.jj_at_op = {
+      detect_folders = [ ".jj" ];
+      command = "jj log -r@ -n1 --color always --ignore-working-copy --at-op=@ --no-graph -T 'change_id.shortest()'";
+      shell = ["${pkgs.dash}/bin/dash" "-f" "-c" "-"];
+      use_stdin = false;
+    };
     custom.git_branch = {
       detect_folders = [ "!.jj" ".git" ];
       command = "starship module git_branch";
