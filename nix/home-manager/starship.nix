@@ -1,10 +1,23 @@
 { pkgs, lib }:
 {
+  # The starship binary stays installed and the config below is still written
+  # to ~/.config/starship.toml. Fish has migrated to tide (see
+  # ./fish/tide.fish), but tide's custom git item shells out to
+  # `starship module ...` so the rendered git prompt continues to match this
+  # configuration. Zsh continues to use starship directly.
   enable = true;
   enableZshIntegration = true;
+  enableFishIntegration = false;
   settings = {
     scan_timeout = 30;
     add_newline = false;
+
+    # Profile used by fish/tide's `_tide_item_git` to render the git portion of
+    # the prompt with a single `starship prompt --profile git` invocation
+    # (instead of three `starship module ...` calls). The jj/git-repo gating
+    # lives in tide so this profile assumes we're already inside a git repo.
+    profiles.git = "$git_branch$git_state$git_status";
+
     format = lib.concatStrings [
       "$cmd_duration"
       "$time"
@@ -41,7 +54,8 @@
     };
 
     directory = {
-      style = "bold blue";
+      style = "blue";
+      repo_root_style = "bold blue";
       fish_style_pwd_dir_length = 1;
     };
 

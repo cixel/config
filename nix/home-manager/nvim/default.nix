@@ -116,34 +116,43 @@
 
     {
       # https://nixos.org/manual/nixpkgs/unstable/#vim
-      plugin = nvim-treesitter.withAllGrammars;
-      # plugin = (nvim-treesitter.withPlugins (
-      #   plugins: with plugins; [
-      #     tree-sitter-bash
-      #     tree-sitter-c
-      #     tree-sitter-comment
-      #     tree-sitter-dockerfile
-      #     tree-sitter-go
-      #     tree-sitter-java
-      #     tree-sitter-javascript
-      #     tree-sitter-jq
-      #     tree-sitter-json
-      #     tree-sitter-lua
-      #     tree-sitter-make
-      #     tree-sitter-markdown
-      #     tree-sitter-nix
-      #     tree-sitter-python
-      #     tree-sitter-regex
-      #     tree-sitter-ruby
-      #     tree-sitter-rust
-      #     tree-sitter-toml
-      #     tree-sitter-typescript
-      #     tree-sitter-vim
-      #     tree-sitter-vimdoc
-      #     tree-sitter-yaml
-      #     tree-sitter-zig
-      #   ]
-      # ));
+      # plugin = nvim-treesitter.withAllGrammars;
+      plugin = (
+        nvim-treesitter.withPlugins (
+          plugins: with plugins; [
+            # tree-sitter-comment
+            # tree-sitter-markdown
+            tree-sitter-bash
+            tree-sitter-c
+            tree-sitter-css
+            tree-sitter-dockerfile
+            tree-sitter-go
+            tree-sitter-html
+            tree-sitter-http
+            tree-sitter-java
+            tree-sitter-javascript
+            tree-sitter-jq
+            tree-sitter-json
+            tree-sitter-latex
+            tree-sitter-lua
+            tree-sitter-make
+            tree-sitter-nix
+            tree-sitter-php
+            tree-sitter-python
+            tree-sitter-regex
+            tree-sitter-regex
+            tree-sitter-ruby
+            tree-sitter-rust
+            tree-sitter-sql
+            tree-sitter-toml
+            tree-sitter-typescript
+            tree-sitter-vim
+            tree-sitter-vimdoc
+            tree-sitter-yaml
+            tree-sitter-zig
+          ]
+        )
+      );
       type = "lua";
       config = builtins.readFile ./config/treesitter.lua;
     }
