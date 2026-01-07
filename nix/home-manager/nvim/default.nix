@@ -156,6 +156,7 @@
       config = builtins.readFile ./config/treesitter.lua;
     }
     nvim-treesitter-textobjects
+    nvim-treesitter-context
 
     {
       plugin = vim-tmux-navigator;
