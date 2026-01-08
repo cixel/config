@@ -113,9 +113,6 @@ in
           user = "cixel";
         };
       };
-      settings = {
-        aliases = { };
-      };
     };
 
     programs.jujutsu.settings = {
