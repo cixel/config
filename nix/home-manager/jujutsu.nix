@@ -69,6 +69,12 @@
           )
         ''
       ];
+      prnum = [
+        "util" "exec" "--" "bash" "-c" ''
+          bookmark=$(jj bookmark list -r 'closest_bookmark(@)' -T 'name')
+          gh pr view "$bookmark" --json number --jq .number
+        ''
+      ];
     };
   };
 }
