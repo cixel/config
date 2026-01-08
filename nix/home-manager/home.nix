@@ -13,7 +13,12 @@
   # changes in each release.
   home.stateVersion = "23.05";
 
-  home.packages = with pkgs; [
+  home.packages = with pkgs; let
+    ghmerge = writeShellScriptBin "ghmerge" ''
+      desc=$(gh pr view "$1" --json commits --jq '.commits[0].messageHeadline')
+      gh pr merge "$1" --rebase --delete-branch --subject "$desc"
+    '';
+  in [
     git
     curl
     bat
@@ -44,6 +49,8 @@
     podman-compose
 
     watchman # for jj
+
+    ghmerge
   ];
 
   home.shellAliases = {
