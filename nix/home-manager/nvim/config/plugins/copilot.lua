@@ -3,7 +3,7 @@ require('copilot').setup({
 		enabled = false,
 	},
 	suggestion = {
-		enabled = false,
+		enabled = true,
 	},
 	filetypes = {
 		yaml = false,
