@@ -48,12 +48,6 @@ local function on_attach(_, bufnr)
 		})
 	end
 
-	-- local buf_set_option = function(...)
-	-- vim.api.nvim_buf_set_option(bufnr, ...)
-	-- end
-	-- Enable completion triggered by <c-x><c-o>
-	-- buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
 	-- See `:help vim.lsp.*` for documentation on any of the below functions
 	buf_set_keymap('n', 'gD', vim.lsp.buf.type_definition)
 	buf_set_keymap('n', 'gd', vim.lsp.buf.definition)
