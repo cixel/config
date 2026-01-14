@@ -12,7 +12,7 @@
   withPython3 = false;
   withRuby = false;
 
-  extraLuaConfig = builtins.readFile ./config/init.lua;
+  initLua = builtins.readFile ./config/init.lua;
 
   extraPackages = with pkgs; [
     ripgrep # used by fzf
@@ -25,7 +25,7 @@
     copilot-language-server
     lua-language-server
     nixd
-    nixfmt-rfc-style
+    nixfmt
     typescript-language-server
     rust-analyzer
     vscode-langservers-extracted
@@ -96,7 +96,7 @@
       config = builtins.readFile ./config/plugins/lualine.lua;
     }
 
-    fugitive
+    vim-fugitive
     vim-surround
     {
       plugin = vim-matchup;
