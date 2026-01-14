@@ -7,8 +7,9 @@
 
   enableZshIntegration = true;
   enableBashIntegration = true;
+  enableFishIntegration = true;
   settings = {
-    command = "${pkgs.zsh}/bin/zsh";
+    command = "${pkgs.fish}/bin/fish --login --interactive";
 
     keybind = [
       "clear"
