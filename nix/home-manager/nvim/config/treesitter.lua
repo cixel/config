@@ -125,6 +125,6 @@ vim.keymap.set(mode, ']k', function() move.goto_next_start('@class.outer') end, 
 
 local ts_context = require('treesitter-context')
 ts_context.setup {
-	enable = true,
+	enable = false, -- enable this manually with ,l
 }
 vim.keymap.set('n', '<leader>l', function() ts_context.toggle() end, opt)
