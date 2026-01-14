@@ -33,6 +33,7 @@
       desc=$(gh pr view "$1" --json commits --jq '.commits[0].messageHeadline')
       gh pr merge "$1" --rebase --delete-branch --subject "$desc"
     '';
+    hunk = pkgs.callPackage ./hunk.nix { };
   in [
     git
     curl
@@ -65,6 +66,7 @@
 
     watchman # for jj
     ghmerge
+    hunk
   ];
 
   home.shellAliases = {
