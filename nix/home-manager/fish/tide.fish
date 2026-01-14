@@ -151,6 +151,29 @@ function _tide_custom_item_prefix
     end
 end
 
+# Context (user@host): shadow tide's stock `_tide_item_context` so we can
+# append a trailing space. The stock item leans on the left-prompt separator
+# for spacing, but we run with empty separators (every other item appends its
+# own trailing space instead -- see the jj and nix_shell items below), so
+# without this the context segment would be glued to the following item.
+function _tide_item_context
+    if set -q SSH_TTY
+        set -fx tide_context_color $tide_context_color_ssh
+    else if test "$EUID" = 0
+        set -fx tide_context_color $tide_context_color_root
+    else if test "$tide_context_always_display" = true
+        set -fx tide_context_color $tide_context_color_default
+    else
+        return
+    end
+
+    string match -qr "^(?<h>(\.?[^\.]*){0,$tide_context_hostname_parts})" @$hostname
+    _tide_print_item context $USER$h
+    # Trailing space so the next item isn't glued to user@host. Mirrors the
+    # convention used by the jj and nix_shell custom items below.
+    echo -ns ' '
+end
+
 # True inside a jj repo, even from a subdirectory of the workspace.
 #
 # `_tide_parent_dirs` is maintained by tide via an `--on-variable PWD`
