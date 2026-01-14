@@ -6,6 +6,7 @@
 /go/
 /hunk/
 /jj/
+/op/
 /rex/init.lua
 /rex/themes/
 /tmux/tmux.conf
@@ -24,6 +25,7 @@ result
 
 # random crud shoved into my config dir
 *.mdb
+*.sock
 .luarc.json
 /containers/
 /environment.d/
