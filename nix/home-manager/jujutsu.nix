@@ -45,6 +45,8 @@
       rb = [ "rebase" "-d" "trunk()" ];
       s = [ "status" "--no-pager" ];
       nt = [ "new" "trunk()" ];
+      stack = [ "log" "-r" "stack()" ];
+      id = [ "log" "-r@" "-n1" "--color" "auto" "--ignore-working-copy" "--no-graph" "-T" "change_id.short()" ];
 
       dependabot_update = [
         "util" "exec" "--" "bash" "-c" ''
