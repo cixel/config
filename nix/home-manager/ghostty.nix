@@ -3,6 +3,7 @@
   enable = true;
   # currently i'm just installing this manually or building from source
   package = null;
+  systemd.enable = false;
 
   enableZshIntegration = true;
   enableBashIntegration = true;

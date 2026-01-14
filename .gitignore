@@ -11,9 +11,11 @@ nvim/init.lua nvim/lua/init-home-manager.lua
 ghostty/config
 ripgrep/ripgreprc
 jj/
+go/
 
 fontconfig/
 environment.d/
+systemd/
 
 node_modules/
 
