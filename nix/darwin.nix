@@ -34,6 +34,7 @@
     enable = true;
     shellInit = '''';
   };
+  programs.fish.enable = true;
 
   environment.systemPackages = with pkgs; [
     # FIXME: https://github.com/LnL7/nix-darwin/issues/139
@@ -43,7 +44,7 @@
   users.users.${user} = {
     home = "/Users/${user}";
     createHome = false;
-    shell = pkgs.zsh;
+    shell = pkgs.fish;
     # packages = with pkgs; [ ];
   };
 }

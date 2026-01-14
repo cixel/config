@@ -2,6 +2,7 @@
 {
   enable = true;
   enableZshIntegration = true;
+  enableFishIntegration = true;
   settings = {
     scan_timeout = 30;
     add_newline = false;

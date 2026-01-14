@@ -13,6 +13,14 @@
   # changes in each release.
   home.stateVersion = "23.05";
 
+  # programs.go.env only writes Go's internal env file (~/.config/go/env).
+  # Export the same values to the shell so $GOPATH/$GOBIN are usable directly
+  # (e.g. in fish.nix's PATH setup) without forking `go env`.
+  home.sessionVariables = {
+    GOPATH = "${config.home.homeDirectory}/gopath";
+    GOBIN = "${config.home.homeDirectory}/gobin";
+  };
+
   home.packages = with pkgs; [
     git
     curl
@@ -74,9 +82,8 @@
   programs.starship = import ./starship.nix { inherit pkgs lib; };
   programs.tmux = import ./tmux.nix { inherit pkgs; };
   programs.zsh = import ./zsh.nix { inherit pkgs; };
-  programs.ghostty = import ./ghostty.nix {
-    inherit pkgs;
-  };
+  programs.fish = import ./fish.nix { inherit darwin; };
+  programs.ghostty = import ./ghostty.nix { inherit pkgs; };
   programs.git = import ./git.nix { inherit lib; };
   programs.jujutsu = import ./jujutsu.nix { inherit lib; };
 
@@ -84,7 +91,7 @@
     enable = true;
     enableZshIntegration = true;
     enableBashIntegration = false;
-    enableFishIntegration = false;
+    enableFishIntegration = true;
     flags = [ "--disable-up-arrow" ];
     settings = {
       update_check = false;
@@ -99,7 +106,7 @@
     enable = true;
     enableZshIntegration = false;
     enableBashIntegration = false;
-    enableFishIntegration = false;
+    enableFishIntegration = true;
 
     defaultCommand = "fd";
     fileWidgetCommand = "fd --hidden --exclude '.git'";
