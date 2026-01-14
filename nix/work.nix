@@ -15,7 +15,7 @@ in
         in
         super.go.overrideAttrs (old: {
           # patches = old.patches ++ (if darwin then [ ./home-manager/fd_fsync_darwin.patch ] else [ ]);
-          patches = [ ];
+          # patches = [ ];
           GOROOT_BOOTSTRAP = "${super.go}/share/go";
         });
 

@@ -24,10 +24,6 @@
   };
 
   home.packages = with pkgs; let
-    ghmerge = writeShellScriptBin "ghmerge" ''
-      desc=$(gh pr view "$1" --json commits --jq '.commits[0].messageHeadline')
-      gh pr merge "$1" --rebase --delete-branch --subject "$desc"
-    '';
     hunk = pkgs.callPackage ./hunk.nix { };
   in [
     git
@@ -59,8 +55,9 @@
     podman
     podman-compose
 
-    watchman # for jj
-    ghmerge
+    ffmpeg
+
+    # watchman # for jj
     hunk
   ];
 
@@ -184,7 +181,7 @@
 
   programs.neovim = import ./nvim { inherit pkgs; };
   programs.starship = import ./starship.nix { inherit pkgs lib; };
-  programs.tmux = import ./tmux.nix { inherit pkgs; };
+  programs.tmux = import ./tmux.nix { inherit pkgs config; };
   programs.zsh = import ./zsh.nix { inherit pkgs; };
   programs.fish = import ./fish.nix { inherit darwin pkgs; };
   programs.ghostty = import ./ghostty.nix { inherit pkgs; };
@@ -193,8 +190,9 @@
 
   programs.atuin = {
     enable = true;
+    daemon.enable = true;
     enableZshIntegration = true;
-    enableBashIntegration = false;
+    enableBashIntegration = true;
     enableFishIntegration = true;
     flags = [ "--disable-up-arrow" ];
     settings = {
@@ -203,18 +201,28 @@
       style = "compact";
       inline_height = 20;
       filter_mode_shell_up_key_binding = "session";
+      search_mode = "daemon-fuzzy";
+      keymap_mode = "vim-insert";
     };
   };
 
+  # The home-manager atuin module defaults the daemon launchd agent to the
+  # `user` domain (modules/programs/atuin.nix). On this machine, bootstrapping
+  # into `user/<uid>` fails with EIO (`Bootstrap failed: 5: Input/output
+  # error`), while the `gui` domain loads fine and matches the at-login
+  # auto-load behaviour of ~/Library/LaunchAgents. Plain assignment overrides
+  # the module's lib.mkDefault.
+  launchd.agents.atuin-daemon.domain = lib.mkForce "gui";
+
   programs.fzf = {
     enable = true;
-    enableZshIntegration = false;
+    enableZshIntegration = true;
     enableBashIntegration = false;
     enableFishIntegration = true;
 
-    defaultCommand = "fd";
-    fileWidgetCommand = "fd --hidden --exclude '.git'";
-    changeDirWidgetCommand = "fd --type d --hidden --exclude '.git' --follow";
+    defaultCommand = "${pkgs.fd}/bin/fd";
+    fileWidgetCommand = "${pkgs.fd}/bin/fd --hidden --exclude '.git'";
+    changeDirWidgetCommand = "${pkgs.fd}/bin/fd --type d --hidden --exclude '.git' --follow";
   };
 
   programs.ripgrep = {
@@ -232,7 +240,33 @@
 
   programs.go = {
     enable = true;
-    package = pkgs.go;
+    # nixpkgs only packages up to go_1_26; build the go1.27 release candidate
+    # from upstream source by overriding the 1.26 derivation. Revisit once
+    # nixpkgs ships go_1_27 (then this can drop back to pkgs.go).
+    package = pkgs.go_1_26.overrideAttrs (old: rec {
+      version = "1.26.4";
+      src = pkgs.fetchurl {
+        url = "https://go.dev/dl/go${version}.src.tar.gz";
+        hash = "sha256-T2aKMvv8ETLmqIH7lowvHa2mMUkqM5IRc1+7JVpCYC0=";
+      };
+      # The go1.26 vendor-checks patch adds an opt-in GO_NO_VENDOR_CHECKS
+      # escape hatch, but its import.go hunk no longer applies to 1.27rc1
+      # (the helper receiver was renamed loaderstate -> ld). Drop the patch
+      # and re-apply the equivalent additive edits inline.
+      # patches = builtins.filter
+      #   (p: !lib.hasSuffix "go_no_vendor_checks-1.26.patch" (toString p))
+      #   old.patches;
+      # postPatch = (old.postPatch or "") + ''
+      #   substituteInPlace src/cmd/go/internal/modload/import.go \
+      #     --replace-fail \
+      #     'gover.ExplicitModulesTxtImportVersion) < 0) {' \
+      #     'gover.ExplicitModulesTxtImportVersion) < 0) || os.Getenv("GO_NO_VENDOR_CHECKS") == "1" {'
+      #   substituteInPlace src/cmd/go/internal/modload/vendor.go \
+      #     --replace-fail \
+      #     'if gover.Compare(index.goVersion, "1.14") < 0 {' \
+      #     'if gover.Compare(index.goVersion, "1.14") < 0 || (os.Getenv("GO_NO_VENDOR_CHECKS") == "1" && len(vendorMeta) == 0) {'
+      # '';
+    });
     telemetry = {
       mode = "on";
     };

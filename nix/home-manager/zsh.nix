@@ -31,13 +31,14 @@
   '';
   envExtra = ''
     if [ -f $HOME/go/bin/go ]; then alias godev="$HOME/go/bin/go"; fi
-    if [ -f $HOME/.sensitive ]; then . $HOME/.sensitive; fi
+    # if [ -f $HOME/.sensitive ]; then . $HOME/.sensitive; fi
 
-    # may want to fiddle with these so ~/go is just my one source for all
-    # things outside of the toolchain and ~/golang is for inside
-    export PATH="$(go env GOBIN):$PATH"
-    export PATH="$(go env GOPATH)/bin:$PATH"
-    export PATH="$HOME/.cargo/bin:$PATH"
+    # Avoid forking `go env` from .zshenv: on work machines with EndpointSecurity
+    # interception (Falcon/Netskope/Jamf), a SIGCHLD-delivery race in zsh's
+    # waitforpid can hang interactive shells until a SIGWINCH unsticks them.
+    export GOPATH="$HOME/go"
+    export GOBIN="$HOME/gobin"
+    export PATH="$GOBIN:$GOPATH/bin:$HOME/.cargo/bin:$PATH"
   '';
   plugins = [
     {

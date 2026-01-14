@@ -19,14 +19,6 @@
 
   nixpkgs.overlays = [
     (final: prev: {
-      go = prev.go_1_26.overrideAttrs (old: rec {
-        version = "1.26.0";
-        src = pkgs.fetchurl {
-          url = "https://go.dev/dl/go${version}.src.tar.gz";
-          hash = "sha256-yRMqih9r0qpKrR10uCMdlSdJUEg6SVBlfubFbm6Bd5A=";
-        };
-      });
-
       # https://github.com/NixOS/nixpkgs/issues/154163#issuecomment-1350599022
       makeModulesClosure = x: prev.makeModulesClosure (x // { allowMissing = true; });
     })

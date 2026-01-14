@@ -90,14 +90,14 @@
 
     vim-fugitive
     vim-surround
-    {
-      plugin = vim-matchup;
-      type = "lua";
-      config = ''
-        -- don't load matchit by default, this is a full replacement
-        vim.g.loaded_matchit = 1
-      '';
-    }
+    # {
+    #   plugin = vim-matchup;
+    #   type = "lua";
+    #   config = ''
+    #     -- don't load matchit by default, this is a full replacement
+    #     vim.g.loaded_matchit = 1
+    #   '';
+    # }
     vim-repeat
     # endwise seems to interfere with nvim-autopairs at the moment, although
     # the readme does have information about making it work with endwise
@@ -106,8 +106,27 @@
       plugin = comment-nvim;
       type = "lua";
       config = ''
-        -- i prefer .txt comments because of testscript txt files
-        require('Comment.ft').set('text', '# %s')
+        -- i prefer .txt comments because of testscript txt files. fish is
+        -- handled by Neovim's built-in fish ftplugin, which sets
+        -- commentstring=# %s, so no entry is needed here.
+        local cft = require('Comment.ft')
+        cft.set('text', '# %s')
+
+        -- Neovim 0.12 changed vim.treesitter.get_parser to return nil instead
+        -- of raising when no parser is installed for the buffer's filetype.
+        -- Comment.nvim's ft.calculate only checks the pcall `ok` flag and then
+        -- dereferences the parser, so for fish/text/etc. it crashes with a
+        -- plain string error whose .msg is nil, surfacing as `[Comment.nvim] nil`.
+        -- Guard the nil parser before delegating to the original implementation.
+        local _orig_calculate = cft.calculate
+        cft.calculate = function(ctx)
+          local ok, parser = pcall(vim.treesitter.get_parser, vim.api.nvim_get_current_buf())
+          if not ok or not parser then
+            return cft.get(vim.bo.filetype, ctx.ctype)
+          end
+          return _orig_calculate(ctx)
+        end
+
         require('Comment').setup()
       '';
     }
@@ -126,6 +145,7 @@
             tree-sitter-c
             tree-sitter-css
             tree-sitter-dockerfile
+            tree-sitter-fish
             tree-sitter-go
             tree-sitter-html
             tree-sitter-http

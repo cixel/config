@@ -103,11 +103,9 @@ local goimports = function(client, wait_ms)
 		wait_ms
 	)
 
-	for _, result in pairs(results or {}) do
-		for _, r in pairs(result or {}) do
-			if r.edit then
-				vim.lsp.util.apply_workspace_edit(r.edit, client.offset_encoding)
-			end
+	for _, r in pairs((results or {}).result or {}) do
+		if r.edit then
+			vim.lsp.util.apply_workspace_edit(r.edit, client.offset_encoding)
 		end
 	end
 end

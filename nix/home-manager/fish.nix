@@ -44,7 +44,8 @@
   shellInitLast = ''
     set -gx FZF_COMPLETION_OPTS '--bind=tab:down,ctrl-y:accept'
 
-    fish_add_path --path --prepend $(go env GOBIN) $(go env GOPATH)/bin $HOME/.cargo/bin
+    # fish_add_path --path --prepend $(go env GOBIN) $(go env GOPATH)/bin $HOME/.cargo/bin
+    fish_add_path --path --prepend $HOME/gobin $HOME/gopath/bin $HOME/.cargo/bin
 
     if test -f $HOME/go/bin/go
       alias godev "$HOME/go/bin/go"
