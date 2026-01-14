@@ -49,12 +49,14 @@ in
   ];
 
   environment.variables = {
-    NIX_SSL_CERT_FILE = netskope_bundle;
+    AWS_CA_BUNDLE = netskope_bundle;
     CURL_CA_BUNDLE = netskope_bundle;
-    GIT_SSL_CAPATH = netskope_bundle;
     GIT_SSL_CAINFO = netskope_bundle;
-    SSL_CERT_FILE = netskope_bundle;
+    GIT_SSL_CAPATH = netskope_bundle;
+    NIX_SSL_CERT_FILE = netskope_bundle;
     NODE_EXTRA_CA_CERTS = netskope_bundle;
+    REQUESTS_CA_BUNDLE = netskope_bundle;
+    SSL_CERT_FILE = netskope_bundle;
   };
 
   services.tailscale = {
