@@ -21,6 +21,7 @@ nix flake lock --update-input nixpkgs  # Update single input
 
 ## Critical Rules
 
+- **Never `find /nix/store`** — `/nix/store` holds thousands of unrelated paths and many copies of nixpkgs sources, so scanning it is slow and ambiguous. Use the `nix-search` skill (`nix/home-manager/agents/skills/nix-search/SKILL.md`) which covers the right entry points: `nix eval --raw nixpkgs#foo.outPath` to resolve store paths, `nix eval --raw nixpkgs#foo.meta.position` to jump to definitions, `nix store ls -R -l <path>` / `nix store cat` to inspect, and `rg`/`fd` rooted at `$(nix eval --raw nixpkgs#path)` to grep nixpkgs source. Same rule when looking up a flake input (e.g. home-manager source): `nix eval --raw --impure --expr '(builtins.getFlake (toString ./.)).inputs.home-manager.outPath'`, then `rg` inside the returned path. Read the skill before reaching for `find`.
 - **Never edit generated files** — most app configs under `~/.config/` are Nix-generated (nvim/init.lua, git/config, tmux.conf, starship.toml, ghostty/config, jj/config.toml, etc.). Edit the `.nix` source in `nix/home-manager/` instead, then `hms`.
 - **Source of truth**: `nix/home-manager/*.nix`, `nix/home-manager/nvim/config/*.lua`, `flake.nix`, `flake.lock`
 - **`docker` is aliased to `podman`** — this repo uses podman, not Docker.

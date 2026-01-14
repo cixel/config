@@ -44,7 +44,7 @@
 #   }
 
 let
-  version = "1.0.146";
+  version = "1.0.162";
 
   # Fetch the published npm tarball. buildNpmPackage will unpack it
   # and run `npm install --omit=dev` against the pinned npmDepsHash.
@@ -52,7 +52,7 @@ let
   # set dontNpmBuild = false to run the TypeScript build step.
   src = pkgs.fetchurl {
     url = "https://registry.npmjs.org/context-mode/-/context-mode-${version}.tgz";
-    hash = "sha256-9NRGw70ROzXFa17ZDb30C+PHlHw17lBei+oU26ZqwAk=";
+    hash = "sha256-+JlqjuxMhLysVJ80NoJET8loNX7sCgSYCAjx3OcxSKA=";
   };
 
   # `package-lock.json` and `package.json` vendored from a one-shot

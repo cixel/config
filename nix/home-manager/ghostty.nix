@@ -31,7 +31,7 @@
     window-padding-x = 3;
     window-padding-y = 2;
 
-    theme = "GruvboxDarkHard";
+    theme = "Gruvbox Dark Hard";
     palette = [
       "0=#1d2021"
       "1=#fb4934"

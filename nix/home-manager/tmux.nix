@@ -1,4 +1,4 @@
-{ pkgs }:
+{ pkgs, config }:
 {
   enable = true;
   shortcut = "a";
@@ -56,6 +56,10 @@
   extraConfig = ''
     set -g terminal-overrides ",alacritty:RGB"
 
+    #### extended keys (CSI u) so modified Enter, Ctrl+/, etc. pass through
+    set -g extended-keys on
+    set -s extended-keys-format csi-u
+
     set -g base-index 1
     set -g pane-base-index 1
 
@@ -79,7 +83,7 @@
     bind c new-window -c "#{pane_current_path}"
 
     #### reload config
-    bind r source-file ~/.tmux.conf \; display-message "Config reloaded..."
+    bind r source-file ${config.xdg.configHome}/tmux/tmux.conf \; display-message "Config reloaded..."
 
     #### mouse mode
     set -g mouse on
@@ -103,6 +107,7 @@
     set-window-option -g window-status-current-style bg=red,fg=colour237 # fg=bg1
 
     # pane border
+    set-option -g pane-border-lines heavy
     set-option -g pane-active-border-style fg=colour250 #fg2
     set-option -g pane-border-style fg=colour237 #bg1
 
