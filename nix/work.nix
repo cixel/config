@@ -97,11 +97,22 @@ in
     programs.git.settings = {
       user.email = "ehden@contrastsecurity.com";
 
-      url."git@github.com:Contrast-Security-Inc/".insteadOf = "https://github.com/Contrast-Security-Inc/";
       url."git@bitbucket.org:".insteadOf = "https://bitbucket.org/";
+      url."https://github.com/Contrast-Security-Inc/".insteadOf = "git@github.com:Contrast-Security-Inc/";
+      url."https://github.com/Contrast-Security-OSS/".insteadOf = "git@github.com:Contrast-Security-OSS/";
     };
 
     programs.gh = {
+      gitCredentialHelper = {
+        enable = true;
+      };
+
+      hosts = {
+        "github.com" = {
+          git_protocol = "https";
+          user = "cixel";
+        };
+      };
       settings = {
         aliases = { };
       };

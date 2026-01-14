@@ -139,14 +139,8 @@
 
   programs.gh = {
     enable = true;
-    hosts = {
-      "github.com" = {
-        git_protocol = "ssh";
-        user = "cixel";
-      };
-    };
     settings = {
-      git_protocol = "ssh";
+      git_protocol = lib.mkDefault "ssh";
     };
   };
 }

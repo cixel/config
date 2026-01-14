@@ -45,12 +45,6 @@
       rebase = true;
     };
 
-    # this is redundant with work.nix but doesn't hurt anything
-    url = lib.mkDefault {
-      "git@github.com:Contrast-Security-Inc/".insteadOf = "https://github.com/Contrast-Security-Inc/";
-      "git@bitbucket.org:".insteadOf = "https://bitbucket.org/";
-    };
-
     difftool."vimdiff".cmd = "nvim -d $LOCAL $BASE";
   };
 
