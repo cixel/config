@@ -67,9 +67,9 @@
   home.shellAliases = {
     hms =
       if darwin then
-        "sudo -E nix run nix-darwin -- -v -L switch --flake path:$HOME/.config"
+        "sudo -E nix run nix-darwin -- -v -L switch --flake $HOME/.config"
       else
-        "sudo nixos-rebuild switch -v --flake path:$HOME/.config";
+        "sudo nixos-rebuild switch -v --flake $HOME/.config";
 
     v = "nvim";
     sudov = "sudo -E -s nvim";
