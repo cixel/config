@@ -2,6 +2,9 @@
 {
   enable = true;
 
+  # can be removed after incrementing home.stateVersion past 25.05
+  signing.format = null;
+
   settings = {
     user = {
       email = lib.mkDefault "ehdens@gmail.com";

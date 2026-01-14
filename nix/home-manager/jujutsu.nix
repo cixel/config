@@ -31,6 +31,8 @@
       "stack(x, n)" = "ancestors(reachable(x, mutable()), n)";
       "stack(x)" = "stack(x, 2)";
       "stack()" = "stack(@)";
+
+      "immutable_heads()" = "builtin_immutable_heads() | bookmarks(exact:'backburner')";
     };
 
     aliases = {
@@ -43,8 +45,8 @@
       ub = ["bookmark" "move" "--from" "closest_bookmark(@)" "--to" "closest_pushable(@)"];
 
       rb = [ "rebase" "-d" "trunk()" ];
-      s = [ "status" "--no-pager" ];
       nt = [ "new" "trunk()" ];
+      s = [ "log" "-r" "stack()" ];
       stack = [ "log" "-r" "stack()" ];
       id = [ "log" "-r@" "-n1" "--color" "auto" "--ignore-working-copy" "--no-graph" "-T" "change_id.short()" ];
 
@@ -75,6 +77,10 @@
           gh pr view "$bookmark" --json number --jq .number
         ''
       ];
+
+      backburner = ["rebase" "--ignore-immutable" "-r" "backburner" "-d" "parents(backburner)" "-d"];
+      backburner-log = ["log" "-r" "trunk() | (::backburner ~ ::trunk())"];
+      # backburner-sync = ["rebase" "--ignore-immutable" "-b" "backburner" "-d" "trunk()"];
     };
   };
 }
