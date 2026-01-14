@@ -6,6 +6,7 @@
 /go/
 /hunk/
 /jj/
+/op/
 /tmux/tmux.conf
 alacritty/alacritty.toml
 ghostty/config
@@ -22,6 +23,7 @@ result
 
 # random crud shoved into my config dir
 *.mdb
+*.sock
 .luarc.json
 /containers/
 /environment.d/

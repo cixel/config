@@ -83,7 +83,7 @@ in
   ];
 
   home-manager.users.${user} = {
-    home.packages = [ pkgs.github-copilot-cli ];
+    home.packages = [ pkgs._1password-cli pkgs.github-copilot-cli ];
 
     programs.neovim = {
       extraPackages = [ pkgs.copilot-language-server ];
