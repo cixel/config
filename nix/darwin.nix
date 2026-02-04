@@ -1,5 +1,4 @@
-{ user }:
-{ pkgs, ... }:
+{ user, pkgs, ... }:
 {
   nix = {
     # We install Nix using a separate installer so we don't want nix-darwin

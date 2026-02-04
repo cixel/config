@@ -1,15 +1,17 @@
 # work-machine specific stuff - like env vars needed for netskope
-{
-  user,
-  system,
-}:
-{ pkgs, ... }:
+{ user, system, pkgs, ... }:
+let
+  # this is all public keys, but IT doesn't want us throwing the bundle in
+  # public repos so this is just the path my work machines would both expect
+  # to find it.
+  netskope_bundle = "/Library/Application\ Support/Netskope/STAgent/data/netskope-cert-bundle.pem";
+in
 {
   nixpkgs.overlays = [
     (self: super: {
       go =
         let
-          darwin = pkgs.lib.strings.hasSuffix "darwin" system;
+          darwin = super.lib.strings.hasSuffix "darwin" system;
         in
         super.go.overrideAttrs (old: {
           patches = old.patches ++ (if darwin then [ ./home-manager/fd_fsync_darwin.patch ] else [ ]);
@@ -26,7 +28,7 @@
         #   rev = "11176d22f82861b4b6967b77f753414f214bc632";
         #   hash = "sha256-pZIUvhcEqkIi+xSMBIRcS9GW9V/zvs8Y1/KbLYfSb1c=";
         # };
-        patches = (if pkgs.stdenv.isDarwin then [ ./home-manager/zig_cert.patch ] else [ ]);
+        patches = (if super.stdenv.isDarwin then [ ./home-manager/zig_cert.patch ] else [ ]);
       });
 
       tailscale = super.tailscale.overrideAttrs (old: {
@@ -46,21 +48,14 @@
     })
   ];
 
-  environment.variables =
-    let
-      # this is all public keys, but IT doesn't want us throwing the bundle in
-      # public repos so this is just the path my work machines would both expect
-      # to find it.
-      path = "/Library/Application\ Support/Netskope/STAgent/data/netskope-cert-bundle.pem";
-    in
-    {
-      NIX_SSL_CERT_FILE = path;
-      CURL_CA_BUNDLE = path;
-      GIT_SSL_CAPATH = path;
-      GIT_SSL_CAINFO = path;
-      SSL_CERT_FILE = path;
-      NODE_EXTRA_CA_CERTS = path;
-    };
+  environment.variables = {
+    NIX_SSL_CERT_FILE = netskope_bundle;
+    CURL_CA_BUNDLE = netskope_bundle;
+    GIT_SSL_CAPATH = netskope_bundle;
+    GIT_SSL_CAINFO = netskope_bundle;
+    SSL_CERT_FILE = netskope_bundle;
+    NODE_EXTRA_CA_CERTS = netskope_bundle;
+  };
 
   services.tailscale = {
     enable = true;

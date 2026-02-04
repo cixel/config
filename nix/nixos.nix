@@ -1,5 +1,9 @@
-{ user }: { pkgs, ... }: {
+{ user, pkgs, ... }: {
   system.stateVersion = "24.05";
+
+  nixpkgs.config = {
+    allowUnfree = true;
+  };
 
   programs.zsh = {
     enable = true;

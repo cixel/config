@@ -1,4 +1,3 @@
-# https://wiki.nixos.org/wiki/NixOS_on_ARM/Raspberry_Pi_4
 { pkgs, ... }:
 {
   imports = [ ];
@@ -23,7 +22,7 @@
   services.openssh.settings.PasswordAuthentication = false;
   programs.mosh.enable = true;
   services.tailscale.enable = true;
-  networking.hostName = "banjo";
+  networking.hostName = "pi0";
 
   # https://nix.dev/tutorials/nixos/installing-nixos-on-a-raspberry-pi.html
   fileSystems = {

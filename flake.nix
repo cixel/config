@@ -24,62 +24,141 @@
 
   outputs = { self, nixpkgs, wsl, hardware, ... }:
     let
-      mkSystem = import ./nix/mkSystem.nix {
-        inherit self nixpkgs;
-      };
-      forAllSystems = nixpkgs.lib.genAttrs [
+      lib = nixpkgs.lib;
+
+      mkHost = { system, user, modules }:
+        let
+          darwin = lib.strings.hasSuffix "darwin" system;
+          systemFunc = if darwin then self.inputs.darwin.lib.darwinSystem else lib.nixosSystem;
+        in
+        systemFunc {
+          inherit system;
+          specialArgs = {
+            inherit self system user;
+          };
+          modules = modules;
+        };
+
+      forAllSystems = lib.genAttrs [
         "x86_64-linux"
         "x86_64-darwin"
         "aarch64-linux"
         "aarch64-darwin"
       ];
+
+      hosts = {
+        "ESINAI-Q6K2T5H20N" = {
+          system = "aarch64-darwin";
+          user = "ehdens";
+          modules = [
+            ./nix/base.nix
+            ./nix/darwin.nix
+            ./nix/home-manager.nix
+            ./nix/work.nix
+            ./nix/machines/ESINAI-Q6K2T5H20N.nix
+          ];
+        };
+
+        "ESINAI-C02X91VSJGH6" = {
+          system = "x86_64-darwin";
+          user = "ehdens";
+          modules = [
+            ./nix/base.nix
+            ./nix/darwin.nix
+            ./nix/home-manager.nix
+            ./nix/work.nix
+            ./nix/machines/ESINAI-C02X91VSJGH6.nix
+          ];
+        };
+
+        "vm-aarch64" = {
+          system = "aarch64-linux";
+          user = "test";
+          modules = [
+            ./nix/base.nix
+            ./nix/nixos.nix
+            ./nix/home-manager.nix
+            ./nix/machines/vm-aarch64.nix
+          ];
+        };
+
+        "alnilam" = {
+          system = "x86_64-darwin";
+          user = "alnilam";
+          modules = [
+            ./nix/base.nix
+            ./nix/darwin.nix
+            ./nix/home-manager.nix
+            ./nix/machines/alnilam.nix
+          ];
+        };
+
+        "alnitak-wsl" = {
+          system = "x86_64-linux";
+          user = "alnitak";
+          modules = [
+            ./nix/base.nix
+            ./nix/nixos.nix
+            ./nix/home-manager.nix
+            wsl.nixosModules.wsl
+            ./nix/machines/alnitak-wsl.nix
+          ];
+        };
+
+        "banjo" = {
+          system = "aarch64-linux";
+          user = "banjo";
+          modules = [
+            ./nix/base.nix
+            ./nix/nixos.nix
+            ./nix/home-manager.nix
+            hardware.nixosModules.raspberry-pi-4
+            ./nix/machines/banjo.nix
+          ];
+        };
+
+        "pi0" = {
+          system = "aarch64-linux";
+          user = "adblock";
+          modules = [
+            ./nix/base.nix
+            ./nix/nixos.nix
+            ./nix/home-manager.nix
+            hardware.nixosModules.raspberry-pi-4
+            ./nix/machines/pi0.nix
+          ];
+        };
+      };
     in
     {
-      darwinConfigurations."ESINAI-Q6K2T5H20N" = mkSystem "ESINAI-Q6K2T5H20N" {
-        system = "aarch64-darwin";
-        user = "ehdens";
+      darwinConfigurations = {
+        "ESINAI-Q6K2T5H20N" = mkHost hosts."ESINAI-Q6K2T5H20N";
+
+        "ESINAI-C02X91VSJGH6" = mkHost hosts."ESINAI-C02X91VSJGH6";
+        "SADMINISTRATOR-C02X91VSJGH6" =
+          self.darwinConfigurations."ESINAI-C02X91VSJGH6";
+
+        "alnilam" = mkHost hosts."alnilam";
       };
 
-      darwinConfigurations."ESINAI-C02X91VSJGH6" = mkSystem "ESINAI-C02X91VSJGH6" {
-        system = "x86_64-darwin";
-        user = "ehdens";
-      };
-      darwinConfigurations."SADMINISTRATOR-C02X91VSJGH6" =
-        self.darwinConfigurations."ESINAI-C02X91VSJGH6";
-
-      nixosConfigurations."vm-aarch64" = mkSystem "vm-aarch64" {
-        system = "aarch64-linux";
-        user = "test";
-      };
-
-      darwinConfigurations."alnilam" = mkSystem "alnilam" {
-        system = "x86_64-darwin";
-        user = "alnilam";
-      };
-
-      nixosConfigurations."alnitak-wsl" = mkSystem "alnitak-wsl" {
-        system = "x86_64-linux";
-        user = "alnitak";
-        hardware = wsl.nixosModules.wsl;
-      };
-
-      nixosConfigurations."banjo" = mkSystem "banjo" {
-        system = "aarch64-linux";
-        user = "banjo";
-        hardware = hardware.nixosModules.raspberry-pi-4;
-      };
-
-      nixosConfigurations."pi0" = mkSystem "pi0" {
-        system = "aarch64-linux";
-        user = "adblock";
-        hardware = hardware.nixosModules.raspberry-pi-4;
+      nixosConfigurations = {
+        "vm-aarch64" = mkHost hosts."vm-aarch64";
+        "alnitak-wsl" = mkHost hosts."alnitak-wsl";
+        "banjo" = mkHost hosts."banjo";
+        "pi0" = mkHost hosts."pi0";
       };
 
       packages = forAllSystems (system:
         let
-          cfg = mkSystem "empty" {
+          cfg = mkHost {
             inherit system;
             user = "empty";
+            modules = [
+              ./nix/base.nix
+              (if lib.strings.hasSuffix "darwin" system then ./nix/darwin.nix else ./nix/nixos.nix)
+              ./nix/home-manager.nix
+              ./nix/machines/empty.nix
+            ];
           };
         in
         {
