@@ -82,6 +82,18 @@ in
   ];
 
   home-manager.users.${user} = {
+    programs.neovim = {
+      extraPackages = [ pkgs.copilot-language-server ];
+      plugins = with pkgs.vimPlugins; [
+        {
+          plugin = copilot-lua;
+          type = "lua";
+          config = builtins.readFile ./home-manager/nvim/config/plugins/copilot.lua;
+        }
+        blink-copilot
+      ];
+    };
+
     programs.git.settings = {
       user.email = "ehden@contrastsecurity.com";
 

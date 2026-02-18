@@ -22,7 +22,6 @@
     jujutsu # lualine
 
     bash-language-server
-    copilot-language-server
     lua-language-server
     nixd
     nixfmt
@@ -34,13 +33,6 @@
   ];
 
   plugins = with pkgs.vimPlugins; [
-    {
-      plugin = copilot-lua;
-      type = "lua";
-      config = builtins.readFile ./config/plugins/copilot.lua;
-    }
-    blink-copilot
-
     {
       plugin = undotree;
       type = "lua";
