@@ -31,6 +31,28 @@ in
         patches = (if super.stdenv.isDarwin then [ ./home-manager/zig_cert.patch ] else [ ]);
       });
 
+      rtk = super.rtk.overrideAttrs (old: rec {
+        # Cargo.toml reports 0.34.3 at this commit; versionCheckHook greps
+        # `rtk --version` for this string, so it must match what the binary prints.
+        version = "0.34.3";
+        # Pinned commit: e4b48ee4ff7e92c36d46984bb897c83237eeb5df
+        # Eval-time fetch: runs in the evaluator using nix.conf ssl-cert-file,
+        # bypassing the builder sandbox entirely. Sidesteps the Netskope MITM
+        # cert handling the FOD fetchFromGitHub would otherwise need.
+        src = fetchTarball {
+          url = "https://github.com/tmchow/rtk/archive/e4b48ee4ff7e92c36d46984bb897c83237eeb5df.tar.gz";
+          sha256 = "sha256:0v1sdg668s6n9xb5h0488j47kqllhli6vwh4fh89anlsimhvg1nm";
+        };
+        cargoDeps = super.rustPlatform.importCargoLock {
+          lockFile = "${src}/Cargo.lock";
+        };
+        # Hook handlers (Claude/Cursor/Gemini/Copilot + `hook check`) only
+        # consult the Rust command registry, so commands defined as bundled
+        # TOML filters (jj, ssh, jira, ...) silently passed through. Mirror
+        # the toml_filter fallback that `rtk rewrite` already does.
+        patches = (old.patches or [ ]) ++ [ ./home-manager/rtk_hook_toml_fallback.patch ];
+      });
+
       tailscale = super.tailscale.overrideAttrs (old: {
         # undo the wrapping done by:
         # https://github.com/NixOS/nixpkgs/commit/4b2abf40c55821bada2664aff7474a77812a9bce
@@ -115,6 +137,11 @@ in
         gopls-lsp = {
           type = "stdio";
           command = "gopls";
+          args = [ "mcp" ];
+        };
+        rust-analyzer-lsp = {
+          type = "stdio";
+          command = "rust-analyzer";
           args = [ "mcp" ];
         };
       };

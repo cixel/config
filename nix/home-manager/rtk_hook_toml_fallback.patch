@@ -1,0 +1,54 @@
+Subject: hook handlers consult bundled TOML filters too
+
+`rtk rewrite` falls back from the Rust registry to
+`toml_filter::find_matching_filter` (rewrite_cmd.rs), so commands
+defined only as bundled TOML filters (jj, ssh, jira, ...) get rewritten.
+
+The PreToolUse hook handlers (Claude/Cursor/Gemini/Copilot) and the
+`rtk hook check` CLI subcommand only consulted the registry, so those
+TOML-only commands silently passed through unrewritten. Add the same
+fallback in both places so the hook pipeline matches `rtk rewrite`.
+
+--- a/src/hooks/hook_cmd.rs
++++ b/src/hooks/hook_cmd.rs
+@@ -111,13 +111,18 @@
+         .map(|c| c.hooks.exclude_commands)
+         .unwrap_or_default();
+
+-    let rewritten = rewrite_command(cmd, &excluded)?;
++    if let Some(rewritten) = rewrite_command(cmd, &excluded) {
++        if rewritten == cmd {
++            return None;
++        }
++        return Some(rewritten);
++    }
+
+-    if rewritten == cmd {
+-        return None;
++    if crate::core::toml_filter::find_matching_filter(cmd).is_some() {
++        return Some(format!("rtk {}", cmd));
+     }
+
+-    Some(rewritten)
++    None
+ }
+
+ fn handle_vscode(cmd: &str) -> Result<()> {
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -2087,8 +2087,13 @@
+                         0
+                     }
+                     None => {
+-                        eprintln!("No rewrite for: {}", raw);
+-                        1
++                        if crate::core::toml_filter::find_matching_filter(&raw).is_some() {
++                            println!("rtk {}", raw);
++                            0
++                        } else {
++                            eprintln!("No rewrite for: {}", raw);
++                            1
++                        }
+                     }
+                 }
+             }
