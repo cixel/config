@@ -1,0 +1,3 @@
+Placeholder so this directory exists in the nix source. Pi extensions live
+here as `<name>.ts` files or `<name>/index.ts` directories. See
+`../pi-AGENTS.md` for the convention.

@@ -1,6 +1,8 @@
 { darwin }:
 { config, pkgs, lib, ... }:
 {
+  imports = [ ./pi.nix ];
+
   programs.home-manager.enable = true;
 
   # This value determines the Home Manager release that your
@@ -69,6 +71,56 @@
 
     gitlines = "git ls-files | xargs wc -l";
   };
+
+  programs.pi =
+    let
+      piPlugins      = import ./agents/pi/plugins.nix              { inherit pkgs lib; };
+      contextModePlg = import ./agents/pi/npm-plugins/context-mode.nix { inherit pkgs lib; };
+      piSkillsPlg    = import ./agents/pi/npm-plugins/pi-skills.nix    { inherit pkgs lib; };
+    in
+    {
+      enable = true;
+      context = ./agents/context.md;
+      settings = {
+        defaultProvider = "anthropic";
+        defaultModel = "claude-opus-4-7";
+        defaultThinkingLevel = "high";
+        enableSkillCommands = true;
+        theme = "dark";
+        skills     = [ "~/.config/nix/home-manager/agents/skills" ];
+        prompts    = [ "~/.config/nix/home-manager/agents/commands" ];
+        extensions = [ "~/.config/nix/home-manager/agents/pi/extensions" ];
+      };
+
+      # Third-party plugins, pinned via nix. `src`/`file` can be
+      # anything: pkgs.fetchFromGitHub, a path inside another nix
+      # package, or a path inside this repo. See agents/pi/plugins.nix.
+      plugins = [
+        # pi-vim: vim-style modal editing for the prompt editor.
+        # Upstream package.json declares a `pi.extensions` manifest
+        # pointing at ./index.ts, so the source tree is consumed
+        # as-is with no path remapping.
+        (piPlugins.mkPiPlugin {
+          name = "pi-vim";
+          src = pkgs.fetchFromGitHub {
+            owner = "lajarre";
+            repo  = "pi-vim";
+            rev   = "v0.3.2";
+            hash  = "sha256-DGOWfuLhozXLsWPF3jdGdlmMKGyWZYfzF2V0SsXcDV0=";
+          };
+        })
+
+        # context-mode: MCP-style context saver. See the npm-plugins file
+        # for design notes; it bundles extension + skills + a CLI bin.
+        contextModePlg
+
+        # pi-skills: bundles the `brave-search` and `browser-tools`
+        # skills from https://github.com/badlogic/pi-skills, with
+        # their npm deps vendored via buildNpmPackage so node can
+        # invoke the helper scripts without a runtime `npm install`.
+        piSkillsPlg
+      ];
+    };
 
   programs.neovim = import ./nvim { inherit pkgs; };
   programs.starship = import ./starship.nix { inherit pkgs lib; };
