@@ -1,6 +1,8 @@
 fish_vi_key_bindings
 bind -M default V edit_command_buffer
 set -g fish_greeting
+set -g fish_prompt_pwd_dir_length 1
+set -g fish_prompt_pwd_full_dirs 3
 
 # LLM-derived color scheme, pulled from elsewhere in the config
 
