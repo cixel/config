@@ -82,7 +82,7 @@
   programs.starship = import ./starship.nix { inherit pkgs lib; };
   programs.tmux = import ./tmux.nix { inherit pkgs; };
   programs.zsh = import ./zsh.nix { inherit pkgs; };
-  programs.fish = import ./fish.nix { inherit darwin; };
+  programs.fish = import ./fish.nix { inherit darwin pkgs; };
   programs.ghostty = import ./ghostty.nix { inherit pkgs; };
   programs.git = import ./git.nix { inherit lib; };
   programs.jujutsu = import ./jujutsu.nix { inherit lib; };
