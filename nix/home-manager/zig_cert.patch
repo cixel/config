@@ -9,7 +9,7 @@ index d1c0a9682c..7c7c373a37 100644
 -        .linux => return rescanLinux(cb, gpa),
 -        .macos => return rescanMac(cb, gpa),
 +        .linux, .macos => return rescanUnix(cb, gpa),
-         .freebsd, .openbsd => return rescanBSD(cb, gpa, "/etc/ssl/cert.pem"),
+         .freebsd, .openbsd => return rescanWithPath(cb, gpa, "/etc/ssl/cert.pem"),
          .netbsd => return rescanBSD(cb, gpa, "/etc/openssl/certs/ca-certificates.crt"),
          .dragonfly => return rescanBSD(cb, gpa, "/usr/local/etc/ssl/cert.pem"),
 @@ -73,6 +72,31 @@ const rescanMac = @import("Bundle/macos.zig").rescanMac;

@@ -15,7 +15,7 @@ in
         in
         super.go.overrideAttrs (old: {
           patches = old.patches ++ (if darwin then [ ./home-manager/fd_fsync_darwin.patch ] else [ ]);
-          GOROOT_BOOTSTRAP = "${super.go}/share/go";
+          env.GOROOT_BOOTSTRAP = "${super.go}/share/go";
         });
 
       # https://github.com/NixOS/nixpkgs/issues/154163#issuecomment-1350599022

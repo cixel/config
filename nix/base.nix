@@ -19,7 +19,7 @@
 
   nixpkgs.overlays = [
     (final: prev: {
-      go = prev.go.overrideAttrs (old: rec {
+      go = prev.go_1_26.overrideAttrs (old: rec {
         version = "1.26.0";
         src = pkgs.fetchurl {
           url = "https://go.dev/dl/go${version}.src.tar.gz";
