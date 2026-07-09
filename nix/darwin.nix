@@ -9,26 +9,6 @@
     allowUnfree = true;
   };
 
-  # Re-add darwin to podman's meta.platforms. Upstream nixpkgs commit
-  # ebd782baf852 (2026-06-28) restricted podman to lib.platforms.linux,
-  # which was reverted the next day in e288608304d1 ("podman: enable on
-  # all Unix platforms"). The fix is in nixpkgs master but the
-  # nixpkgs-unstable channel we track has not advanced past it yet. This
-  # overlay cherry-picks the revert and can be dropped once we update
-  # nixpkgs past e288608304d1.
-  nixpkgs.overlays = [
-    (final: prev: {
-      # podman = prev.podman.overrideAttrs (old: {
-      #   meta = old.meta // {
-      #     platforms = old.meta.platforms ++ [
-      #       "aarch64-darwin"
-      #       "x86_64-darwin"
-      #     ];
-      #   };
-      # });
-    })
-  ];
-
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
