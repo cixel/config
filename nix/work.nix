@@ -22,16 +22,6 @@ in
       # https://github.com/NixOS/nixpkgs/issues/154163#issuecomment-1350599022
       makeModulesClosure = x: super.makeModulesClosure (x // { allowMissing = true; });
 
-      zig = super.zig.overrideAttrs (old: {
-        # src = pkgs.fetchFromGitHub {
-        #   owner = "ziglang";
-        #   repo = "zig";
-        #   rev = "11176d22f82861b4b6967b77f753414f214bc632";
-        #   hash = "sha256-pZIUvhcEqkIi+xSMBIRcS9GW9V/zvs8Y1/KbLYfSb1c=";
-        # };
-        # patches = (if super.stdenv.isDarwin then [ ./home-manager/zig_cert.patch ] else [ ]);
-      });
-
       tailscale = super.tailscale.overrideAttrs (old: {
         # undo the wrapping done by:
         # https://github.com/NixOS/nixpkgs/commit/4b2abf40c55821bada2664aff7474a77812a9bce

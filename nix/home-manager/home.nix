@@ -23,9 +23,7 @@
     GOBIN = "${config.home.homeDirectory}/gobin";
   };
 
-  home.packages = with pkgs; let
-    hunk = pkgs.callPackage ./hunk.nix { };
-  in [
+  home.packages = with pkgs; [
     git
     curl
     bat
@@ -221,8 +219,12 @@
     enableFishIntegration = true;
 
     defaultCommand = "${pkgs.fd}/bin/fd";
-    fileWidgetCommand = "${pkgs.fd}/bin/fd --hidden --exclude '.git'";
-    changeDirWidgetCommand = "${pkgs.fd}/bin/fd --type d --hidden --exclude '.git' --follow";
+    fileWidget.command = "${pkgs.fd}/bin/fd --hidden --exclude '.git'";
+    changeDirWidget.command = "${pkgs.fd}/bin/fd --type d --hidden --exclude '.git' --follow";
+
+    # Atuin is the history manager and owns Ctrl-R, so disable fzf's
+    # competing Ctrl-R binding to avoid the clash warning.
+    historyWidget.command = "";
   };
 
   programs.ripgrep = {
@@ -240,33 +242,8 @@
 
   programs.go = {
     enable = true;
-    # nixpkgs only packages up to go_1_26; build the go1.27 release candidate
-    # from upstream source by overriding the 1.26 derivation. Revisit once
-    # nixpkgs ships go_1_27 (then this can drop back to pkgs.go).
-    package = pkgs.go_1_26.overrideAttrs (old: rec {
-      version = "1.26.4";
-      src = pkgs.fetchurl {
-        url = "https://go.dev/dl/go${version}.src.tar.gz";
-        hash = "sha256-T2aKMvv8ETLmqIH7lowvHa2mMUkqM5IRc1+7JVpCYC0=";
-      };
-      # The go1.26 vendor-checks patch adds an opt-in GO_NO_VENDOR_CHECKS
-      # escape hatch, but its import.go hunk no longer applies to 1.27rc1
-      # (the helper receiver was renamed loaderstate -> ld). Drop the patch
-      # and re-apply the equivalent additive edits inline.
-      # patches = builtins.filter
-      #   (p: !lib.hasSuffix "go_no_vendor_checks-1.26.patch" (toString p))
-      #   old.patches;
-      # postPatch = (old.postPatch or "") + ''
-      #   substituteInPlace src/cmd/go/internal/modload/import.go \
-      #     --replace-fail \
-      #     'gover.ExplicitModulesTxtImportVersion) < 0) {' \
-      #     'gover.ExplicitModulesTxtImportVersion) < 0) || os.Getenv("GO_NO_VENDOR_CHECKS") == "1" {'
-      #   substituteInPlace src/cmd/go/internal/modload/vendor.go \
-      #     --replace-fail \
-      #     'if gover.Compare(index.goVersion, "1.14") < 0 {' \
-      #     'if gover.Compare(index.goVersion, "1.14") < 0 || (os.Getenv("GO_NO_VENDOR_CHECKS") == "1" && len(vendorMeta) == 0) {'
-      # '';
-    });
+    # Shared with the Gondolin guest image; see go.nix for the pin rationale.
+    package = import ./go.nix { inherit pkgs; };
     telemetry = {
       mode = "on";
     };
