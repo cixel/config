@@ -21,6 +21,25 @@
     (final: prev: {
       # https://github.com/NixOS/nixpkgs/issues/154163#issuecomment-1350599022
       makeModulesClosure = x: prev.makeModulesClosure (x // { allowMissing = true; });
+
+      # TEMPORARY: bump jujutsu ahead of nixpkgs. Drop this override once
+      # nixpkgs ships jujutsu >= 0.46.0.
+      jujutsu = prev.jujutsu.overrideAttrs (finalAttrs: old: {
+        version = "0.46.0";
+        src = prev.fetchFromGitHub {
+          owner = "jj-vcs";
+          repo = "jj";
+          tag = "v${finalAttrs.version}";
+          hash = "sha256-5A443Cjlbu3+46F1Ynfu8FSOOy1yjZSgFnCbg6dMzzk=";
+        };
+        # skip upstream test suite to keep this temporary build fast
+        doCheck = false;
+        # overriding cargoHash alone doesn't propagate into cargoDeps
+        cargoDeps = prev.rustPlatform.fetchCargoVendor {
+          inherit (finalAttrs) pname version src;
+          hash = "sha256-ugqvdijwIUrvq0gEQSzAxqSnF6Ui3qBmMvk1L2TXWEE=";
+        };
+      });
     })
   ];
 }
