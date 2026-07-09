@@ -250,6 +250,7 @@
 
   programs.gh = {
     enable = true;
+    extensions = [ pkgs.gh-stack ];
     settings = {
       git_protocol = lib.mkDefault "ssh";
       aliases = {
