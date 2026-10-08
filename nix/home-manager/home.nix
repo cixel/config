@@ -114,6 +114,14 @@
           };
         })
 
+        # jj-footer: show the jj change id (and workspace name in
+        # multi-workspace repos) in the footer slot where pi would
+        # otherwise print "(detached)" for a colocated jj repo.
+        (piPlugins.mkPiPluginFromFile {
+          name = "jj-footer";
+          file = ./agents/pi/extensions/jj-footer.ts;
+        })
+
         # context-mode: MCP-style context saver. See the npm-plugins file
         # for design notes; it bundles extension + skills + a CLI bin.
         # contextModePlg
