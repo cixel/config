@@ -1,0 +1,14 @@
+{
+  "name": "pi-gondolin",
+  "version": "0.13.0",
+  "private": true,
+  "type": "module",
+  "pi": {
+    "extensions": [
+      "./extensions/pi-gondolin.ts"
+    ]
+  },
+  "dependencies": {
+    "@earendil-works/gondolin": "0.13.0"
+  }
+}
