@@ -1,0 +1,29 @@
+diff --git a/extensions/pi-gondolin.ts b/extensions/pi-gondolin.ts
+--- a/extensions/pi-gondolin.ts
++++ b/extensions/pi-gondolin.ts
+@@ -53,7 +53,14 @@ function toGuestPath(localCwd: string, localPath: string): string {
+   // pi tools pass absolute local paths; map them into /workspace.
+   const rel = path.relative(localCwd, localPath);
+   if (rel === "") return GUEST_WORKSPACE;
+-  if (rel.startsWith("..") || path.isAbsolute(rel)) {
++  if (rel === ".." || rel.startsWith(`..${path.sep}`) || path.isAbsolute(rel)) {
++    // The system prompt advertises /workspace. Accept normalized guest
++    // paths, but prefer host paths above for projects under /workspace.
++    const guestPath = path.posix.normalize(localPath);
++    if (guestPath === GUEST_WORKSPACE || guestPath.startsWith(`${GUEST_WORKSPACE}/`)) {
++      return guestPath;
++    }
++
+     throw new Error(`path escapes workspace: ${localPath}`);
+   }
+   // Convert platform separators to POSIX for the Linux guest
+@@ -277,5 +284,6 @@ export default function (pi: ExtensionAPI) {
+   // Run user `!` commands inside the VM too
+-  pi.on("user_bash", (_event, _ctx) => {
+-    if (!vm) return;
+-    return { operations: createGondolinBashOps(vm, localCwd) };
++  pi.on("user_bash", async (_event, ctx) => {
++    // Throw on startup failure instead of falling back to host execution.
++    const activeVm = await ensureVm(ctx);
++    return { operations: createGondolinBashOps(activeVm, localCwd) };
+   });
