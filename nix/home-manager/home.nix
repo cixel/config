@@ -76,6 +76,13 @@
     let
       piPlugins      = import ./agents/pi/plugins.nix              { inherit pkgs lib; };
       contextModePlg = import ./agents/pi/npm-plugins/context-mode.nix { inherit pkgs lib; };
+      gondolinPlg    = import ./agents/pi/npm-plugins/gondolin.nix     {
+        inherit pkgs lib;
+        # Baked into the sandbox VM image. `gp` is this config's nixpkgs
+        # (same overlays/config) for the guest's Linux platform, so these
+        # are the same jj overlay and go.nix pin as on the host.
+        guestTools = gp: [ gp.nix gp.jujutsu (import ./go.nix { pkgs = gp; }) ];
+      };
       # piSkillsPlg    = import ./agents/pi/npm-plugins/pi-skills.nix    { inherit pkgs lib; };
     in
     {
@@ -113,6 +120,10 @@
             hash  = "sha256-DGOWfuLhozXLsWPF3jdGdlmMKGyWZYfzF2V0SsXcDV0=";
           };
         })
+
+        # gondolin: run read/write/edit/bash and user ! commands in a
+        # micro-VM, with the current project mounted at /workspace.
+        gondolinPlg
 
         # context-mode: MCP-style context saver. See the npm-plugins file
         # for design notes; it bundles extension + skills + a CLI bin.
