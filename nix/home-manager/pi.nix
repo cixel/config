@@ -34,9 +34,25 @@ let
   settingsFormat = pkgs.formats.json { };
   piPlugins = import ./agents/pi/plugins.nix { inherit pkgs lib; };
 
-  # Effective plugin list: cfg.plugins plus the extensions this module
-  # appends itself.
-  allPlugins = cfg.plugins;
+  # jev-guard: gate dangerous bash/write/edit calls. See
+  # agents/pi/jev-guard-plan.md and agents/pi/extensions/jev-guard.ts.
+  # The shfmt store path and the per-host jev toggle are baked into the
+  # extension at build time so it neither depends on pi's PATH nor on
+  # runtime config files.
+  jevGuardPlugin = piPlugins.mkPiPluginFromFile {
+    name = "jev-guard";
+    file = ./agents/pi/extensions/jev-guard.ts;
+    substitutions = {
+      "@shfmt@" = "${cfg.jevGuard.shfmt}/bin/shfmt";
+      "@jev@" = if cfg.jevGuard.jev then "true" else "false";
+    };
+  };
+
+  # Effective plugin list. jev-guard is always appended LAST so that no
+  # later tool_call handler can mutate a command the guard already
+  # approved.
+  allPlugins = cfg.plugins
+    ++ lib.optional cfg.jevGuard.enable { package = jevGuardPlugin; extraPackages = [ ]; };
 in
 {
   options.programs.pi = {
@@ -153,6 +169,29 @@ in
         `mkPiPlugin` helpers, and `agents/pi/npm-plugins/` for worked
         examples covering npm-deps and CLI-shipping plugins.
       '';
+    };
+  };
+
+  options.programs.pi.jevGuard = {
+    enable = lib.mkEnableOption "the jev-guard safety extension (deterministic rules + jev classifier)";
+
+    jev = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Whether the guard asks the TypeSafe `jev-latest` classifier for a
+        second opinion on every bash call. Every command is sent to
+        TypeSafe when this is on; disable on machines where that is not
+        acceptable (e.g. work hosts). Deterministic rules stay active.
+        Requires `/login typesafe` once per machine.
+      '';
+    };
+
+    shfmt = lib.mkOption {
+      type = lib.types.package;
+      default = pkgs.shfmt;
+      defaultText = lib.literalExpression "pkgs.shfmt";
+      description = "shfmt package used to parse bash commands (`shfmt --to-json`).";
     };
   };
 
