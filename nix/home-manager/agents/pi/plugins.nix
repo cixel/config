@@ -42,19 +42,38 @@ rec {
   #
   # `kind` selects the convention dir the file lands in; defaults to
   # "extensions" which is the common case.
+  #
+  # `substitutions` is an attrset of literal placeholder -> replacement
+  # applied to the copied file (via `substituteInPlace --replace-fail`,
+  # so a missing placeholder fails the build). Use it to bake store
+  # paths of runtime dependencies into an extension so it doesn't
+  # depend on pi's PATH:
+  #
+  #   substitutions = { "@shfmt@" = "''${pkgs.shfmt}/bin/shfmt"; };
   mkPiPluginFromFile =
     { name
     , file
     , kind ? "extensions"
     , filename ? null
+    , substitutions ? { }
     }:
     assert lib.assertOneOf "kind" kind validKinds;
     let
       finalName = if filename != null then filename else baseNameOf (toString file);
+      dest = "$out/${kind}/${escapeShellArg finalName}";
+      substCmds = lib.concatStringsSep "\n" (
+        lib.mapAttrsToList
+          (from: to: "substituteInPlace ${dest} --replace-fail ${escapeShellArg from} ${escapeShellArg to}")
+          substitutions
+      );
     in
     pkgs.runCommandLocal "pi-plugin-${name}" { passthru = { piPlugin = true; }; } ''
       mkdir -p $out/${kind}
-      cp ${file} $out/${kind}/${escapeShellArg finalName}
+      cp ${file} ${dest}
+      ${lib.optionalString (substitutions != { }) ''
+        chmod u+w ${dest}
+        ${substCmds}
+      ''}
     '';
 
   # Wrap an existing source tree as a pi plugin package.

@@ -144,5 +144,9 @@ in
         email = "ehden@contrastsecurity.com";
       };
     };
+
+    # jev-guard: keep the deterministic rules but never send commands to
+    # TypeSafe from work machines (Netskope / company code).
+    # programs.pi.jevGuard.jev = false;
   };
 }

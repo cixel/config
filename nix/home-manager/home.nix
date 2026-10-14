@@ -143,6 +143,13 @@
         # invoke the helper scripts without a runtime `npm install`.
         # piSkillsPlg
       ];
+
+      # jev-guard: second barrier between the agent and destructive or
+      # unauthorized actions (rm outside the project, git push, ...).
+      # Appended last by the module. Plan: agents/pi/jev-guard-plan.md.
+      # Needs `/login typesafe` once per machine for the jev half;
+      # work machines turn jev off in work.nix.
+      jevGuard.enable = true;
     };
 
   programs.neovim = import ./nvim { inherit pkgs; };
