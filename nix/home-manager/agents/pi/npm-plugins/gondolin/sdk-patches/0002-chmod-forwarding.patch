@@ -1,0 +1,229 @@
+diff --git a/dist/src/vfs/mounts.js b/dist/src/vfs/mounts.js
+index b1514da..69970d4 100644
+--- a/dist/src/vfs/mounts.js
++++ b/dist/src/vfs/mounts.js
+@@ -221,6 +221,20 @@ export class MountRouterProvider extends VirtualProviderClass {
+         }
+         throw createErrnoError(ERRNO.ENOSYS, "link", existingPath);
+     }
++    async chmod(entryPath, mode) {
++        const mount = this.requireMount(entryPath, "chmod");
++        if (mount.provider.chmod) {
++            return mount.provider.chmod(mount.relativePath, mode);
++        }
++        throw createErrnoError(ERRNO.ENOSYS, "chmod", entryPath);
++    }
++    chmodSync(entryPath, mode) {
++        const mount = this.requireMount(entryPath, "chmod");
++        if (mount.provider.chmodSync) {
++            return mount.provider.chmodSync(mount.relativePath, mode);
++        }
++        throw createErrnoError(ERRNO.ENOSYS, "chmod", entryPath);
++    }
+     async readlink(entryPath, options) {
+         const mount = this.requireMount(entryPath, "readlink");
+         if (mount.provider.readlink) {
+diff --git a/dist/src/vfs/node/vendored-node-vfs/lib/internal/vfs/providers/memory.js b/dist/src/vfs/node/vendored-node-vfs/lib/internal/vfs/providers/memory.js
+index 3066497..baca8cd 100644
+--- a/dist/src/vfs/node/vendored-node-vfs/lib/internal/vfs/providers/memory.js
++++ b/dist/src/vfs/node/vendored-node-vfs/lib/internal/vfs/providers/memory.js
+@@ -726,6 +726,22 @@ class MemoryProvider extends VirtualProvider {
+     this.linkSync(existingPath, newPath);
+   }
+ 
++  // XXX(patch): Custom code/changes added for Gondolin
++  // Add chmod support so fs-rpc SETATTR mode changes work on MemoryProvider
++  chmodSync(path, mode) {
++    if (this.readonly) {
++      throw createEROFS('chmod', path);
++    }
++
++    const entry = this._getEntry(this._normalizePath(path), 'chmod', true);
++    entry.mode = mode & 0o7777;
++    entry.ctime = DateNow();
++  }
++
++  async chmod(path, mode) {
++    this.chmodSync(path, mode);
++  }
++
+   readlinkSync(path, options) {
+     const normalized = this._normalizePath(path);
+     const entry = this._getEntry(normalized, 'readlink', false);
+diff --git a/dist/src/vfs/node/vendored-node-vfs/lib/internal/vfs/providers/real.js b/dist/src/vfs/node/vendored-node-vfs/lib/internal/vfs/providers/real.js
+index fe3bece..aa49642 100644
+--- a/dist/src/vfs/node/vendored-node-vfs/lib/internal/vfs/providers/real.js
++++ b/dist/src/vfs/node/vendored-node-vfs/lib/internal/vfs/providers/real.js
+@@ -26,6 +26,10 @@ const {
+ 
+ const { errno: ERRNO } = os.constants;
+ 
++// XXX(patch): Custom code/changes added for Gondolin
++// Permission bits plus sticky; setuid/setgid are never applied to host files.
++const kChmodAllowedBits = 0o1777;
++
+ // XXX(patch): Custom code/changes added for Gondolin
+ // This vendored provider intentionally carries local security/compat extensions
+ // (symlink-escape hardening, hard-link support wiring, and statfs support)
+@@ -410,6 +414,20 @@ class RealFSProvider extends VirtualProvider {
+     return fs.promises.link(existingRealPath, newRealPath);
+   }
+ 
++  // XXX(patch): Custom code/changes added for Gondolin
++  // chmod follows symlinks (like chmod(2)) and is confined to the root.
++  // setuid/setgid bits are dropped so guests cannot plant set-id binaries
++  // in host directories.
++  chmodSync(vfsPath, mode) {
++    const realPath = this._resolvePathFollow(vfsPath);
++    fs.chmodSync(realPath, mode & kChmodAllowedBits);
++  }
++
++  async chmod(vfsPath, mode) {
++    const realPath = this._resolvePathFollow(vfsPath);
++    return fs.promises.chmod(realPath, mode & kChmodAllowedBits);
++  }
++
+   readlinkSync(vfsPath, options) {
+     const realPath = this._resolvePathLexical(vfsPath);
+     return fs.readlinkSync(realPath, options);
+diff --git a/dist/src/vfs/provider.js b/dist/src/vfs/provider.js
+index e9d4188..eda0588 100644
+--- a/dist/src/vfs/provider.js
++++ b/dist/src/vfs/provider.js
+@@ -354,6 +354,28 @@ export class SandboxVfsProvider extends VirtualProviderClass {
+         }
+         throw createErrnoError(ERRNO.ENOSYS, "link", oldPath);
+     }
++    async chmod(path, mode) {
++        if (this.readonly) {
++            throw createErrnoError(ERRNO.EROFS, "chmod", path);
++        }
++        if (!this.backend.chmod) {
++            throw createErrnoError(ERRNO.ENOSYS, "chmod", path);
++        }
++        await this.runBefore({ op: "chmod", path, mode });
++        await this.backend.chmod(path, mode);
++        await this.runAfter({ op: "chmod", path, mode });
++    }
++    chmodSync(path, mode) {
++        if (this.readonly) {
++            throw createErrnoError(ERRNO.EROFS, "chmod", path);
++        }
++        if (!this.backend.chmodSync) {
++            throw createErrnoError(ERRNO.ENOSYS, "chmod", path);
++        }
++        this.runBeforeSync({ op: "chmod", path, mode });
++        this.backend.chmodSync(path, mode);
++        this.runAfterSync({ op: "chmod", path, mode });
++    }
+     async readlink(path, options) {
+         if (this.backend.readlink) {
+             return this.backend.readlink(path, options);
+diff --git a/dist/src/vfs/readonly-virtual.js b/dist/src/vfs/readonly-virtual.js
+index 73a4f0f..6db1d47 100644
+--- a/dist/src/vfs/readonly-virtual.js
++++ b/dist/src/vfs/readonly-virtual.js
+@@ -68,6 +68,12 @@ export class ReadonlyVirtualProvider extends VirtualProviderClass {
+     symlinkSync(_target, entryPath, _type) {
+         throw createErrnoError(ERRNO.EROFS, "symlink", entryPath);
+     }
++    async chmod(entryPath, mode) {
++        return this.chmodSync(entryPath, mode);
++    }
++    chmodSync(entryPath, _mode) {
++        throw createErrnoError(ERRNO.EROFS, "chmod", entryPath);
++    }
+     // Convenience async wrappers for optional sync overrides
+     async realpath(entryPath, options) {
+         return this.realpathSync(entryPath, options);
+diff --git a/dist/src/vfs/readonly.js b/dist/src/vfs/readonly.js
+index 8e38f14..48d538c 100644
+--- a/dist/src/vfs/readonly.js
++++ b/dist/src/vfs/readonly.js
+@@ -80,6 +80,12 @@ export class ReadonlyProvider extends VirtualProviderClass {
+     linkSync(_existingPath, newPath) {
+         throw createErrnoError(ERRNO.EROFS, "link", newPath);
+     }
++    async chmod(path, _mode) {
++        throw createErrnoError(ERRNO.EROFS, "chmod", path);
++    }
++    chmodSync(path, _mode) {
++        throw createErrnoError(ERRNO.EROFS, "chmod", path);
++    }
+     async readlink(path, options) {
+         if (this.backend.readlink) {
+             return this.backend.readlink(path, options);
+diff --git a/dist/src/vfs/rpc-service.js b/dist/src/vfs/rpc-service.js
+index 0e24b3e..8752216 100644
+--- a/dist/src/vfs/rpc-service.js
++++ b/dist/src/vfs/rpc-service.js
+@@ -130,6 +147,8 @@ export class FsRpcService {
+                 return this.handleAccess(req);
+             case "truncate":
+                 return this.handleTruncate(req);
++            case "chmod":
++                return this.handleChmod(req);
+             case "fallocate":
+                 return this.handleFallocate(req);
+             case "copy_file_range":
+@@ -430,6 +449,17 @@ export class FsRpcService {
+         await this.truncatePath(entryPath, size);
+         return {};
+     }
++    async handleChmod(req) {
++        const ino = requireUint(req.ino, "chmod", "ino");
++        const mode = requireUint(req.mode, "chmod", "mode");
++        const entryPath = this.requirePath(ino, "chmod");
++        const provider = this.provider;
++        if (typeof provider.chmod !== "function") {
++            throw createErrnoError(ERRNO.ENOSYS, "chmod", entryPath);
++        }
++        await provider.chmod(entryPath, mode & 0o7777);
++        return {};
++    }
+     async handleFallocate(req) {
+         const fh = requireUint(req.fh, "fallocate", "fh");
+         const offset = requireUint(req.offset ?? 0, "fallocate", "offset");
+diff --git a/dist/src/vfs/shadow.js b/dist/src/vfs/shadow.js
+index 2f38723..6da812f 100644
+--- a/dist/src/vfs/shadow.js
++++ b/dist/src/vfs/shadow.js
+@@ -353,6 +353,38 @@ export class ShadowProvider extends VirtualProviderClass {
+         }
+         return this.backend.renameSync(from, to);
+     }
++    async chmod(entryPath, mode) {
++        const p = normalizeVfsPath(entryPath);
++        if (this.shadowedFor("chmod", p) ||
++            (await this.resolvesToShadowed("chmod", p))) {
++            return this.writeShadowed("chmod", p, async () => {
++                if (!this.tmpfs.chmod) {
++                    throw createErrnoError(ERRNO.ENOSYS, "chmod", p);
++                }
++                return this.tmpfs.chmod(p, mode);
++            });
++        }
++        if (!this.backend.chmod) {
++            throw createErrnoError(ERRNO.ENOSYS, "chmod", p);
++        }
++        return this.backend.chmod(p, mode);
++    }
++    chmodSync(entryPath, mode) {
++        const p = normalizeVfsPath(entryPath);
++        if (this.shadowedFor("chmod", p) ||
++            this.resolvesToShadowedSync("chmod", p)) {
++            return this.writeShadowedSync("chmod", p, () => {
++                if (!this.tmpfs.chmodSync) {
++                    throw createErrnoError(ERRNO.ENOSYS, "chmod", p);
++                }
++                return this.tmpfs.chmodSync(p, mode);
++            });
++        }
++        if (!this.backend.chmodSync) {
++            throw createErrnoError(ERRNO.ENOSYS, "chmod", p);
++        }
++        return this.backend.chmodSync(p, mode);
++    }
+     async readlink(entryPath, options) {
+         const p = normalizeVfsPath(entryPath);
+         if (this.shadowedFor("readlink", p) ||
