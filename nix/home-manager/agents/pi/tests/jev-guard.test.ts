@@ -20,6 +20,7 @@ import jevGuard, {
 	decideFileWrite,
 	detectVcs,
 	jevFlags,
+	jevQuestions,
 	makeShfmtParser,
 	maxVerdict,
 	parseGitAliases,
@@ -154,6 +155,9 @@ const baseSpec: FsSpec = {
 	},
 	links: {
 		[`${HOME}/link`]: "/",
+		// Sandbox fixture links: one inside the mount, one escaping it.
+		[`${PROJ}/sublink`]: `${PROJ}/build`,
+		[`${PROJ}/evil`]: "/etc",
 	},
 };
 
@@ -200,6 +204,19 @@ const envDotCfg = mk(`${HOME}/.config`, dotFs);
 /** macOS: /tmp is a symlink to /private/tmp; $TMPDIR under /private/var. */
 const envMac = mk(PROJ, macFs, "/var/folders/zz/T");
 
+/**
+ * Sandbox mode (plan §4.6): the gondolin extension executes every tool call
+ * inside a VM with PROJ mounted at /workspace. The guard's domain is the
+ * guest: cwd/zone are guest paths, only /workspace persists to the host.
+ */
+const envSbx = buildEnv(PROJ, parse, {
+	fs: baseFs,
+	home: HOME,
+	tmpdir: "/tmp",
+	guardDir: GUARD_DIR,
+	sandbox: { guestWorkspace: "/workspace", guestHome: "/root" },
+});
+
 // Aliases from the brief (plan §3).
 for (const e of [envP, envJjc, envH]) {
 	e.gitAliases = {
@@ -225,6 +242,10 @@ envP.sessionScripts.set(`${PROJ}/edited.sh`, null); // edited: content read from
 envP.sessionScripts.set(`${PROJ}/pending.sh`, null); // edited, file not on disk yet
 envP.sessionScripts.set(`${PROJ}/noext`, "#!/usr/bin/env bash\nrm -rf ~/.zshrc\n");
 envP.sessionScripts.set(`${PROJ}/clean.sh`, "rm -rf build dist\n"); // relative targets: fine from PROJ, not after a cd
+
+// Session-written scripts, guest paths (sandbox mode keys by resolved path).
+envSbx.sessionScripts.set("/workspace/wipe.sh", "rm -rf /workspace\n");
+envSbx.sessionScripts.set("/workspace/scratch.sh", "rm -rf ~ && rm -rf /tmp/work\n");
 
 // ---------------------------------------------------------------------------
 // Table helpers
@@ -1156,6 +1177,107 @@ describe("publish class (plan §1 class 1)", () => {
 // write / edit tools (plan §2)
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Sandbox mode (gondolin VM, plan §4.6)
+// ---------------------------------------------------------------------------
+
+describe("sandbox mode (gondolin VM, plan §4.6)", () => {
+	test("buildEnv: domain is the guest; VCS/project mode come from the host", () => {
+		expect(envSbx.cwd).toBe("/workspace");
+		expect(envSbx.home).toBe("/root");
+		expect(envSbx.tmpdir).toBe("/tmp");
+		expect(envSbx.zone).toEqual(["/workspace", "/tmp", "/var/tmp"]);
+		expect(envSbx.projectMode).toBe(true); // PROJ has .git on the host
+		expect(envSbx.vcs).toBe("git");
+		expect(envSbx.sandbox?.hostWorkspace).toBe(PROJ);
+		expect(envSbx.sandbox?.guestWorkspace).toBe("/workspace");
+	});
+
+	table(envSbx, [
+		// The workspace is the zone root: inside is free, the root is guarded.
+		["rm -rf /workspace/build", "allow", { resolved: ["/workspace/build"] }],
+		["rm -rf build dist node_modules", "allow", { resolved: ["/workspace/build", "/workspace/dist", "/workspace/node_modules"] }],
+		["rm -rf .", "hard-block", { cls: "write-root", reason: "working directory" }],
+		["rm -rf $(pwd)", "hard-block", { cls: "write-root" }],
+		["rm -rf /workspace", "hard-block", { cls: "write-root" }],
+		["rm -rf /workspace/*", "confirm", { cls: "write-root" }],
+		["rm -rf /workspace/.git", "hard-block", { cls: "repo-loss" }],
+		["rm /workspace/.git/config", "hard-block", { cls: "repo-loss" }],
+		["echo x > /workspace/.pi/settings.json", "hard-block", { cls: "self-protect" }],
+
+		// Everything else in the guest is a disposable overlay: freely clobbered.
+		["rm -rf /tmp/scratch", "allow"],
+		["rm -rf /tmp /var/tmp", "allow"],
+		["rm -rf /etc /usr/local", "allow"],
+		["rm -rf ~", "allow", { resolved: ["/root"] }],
+		["rm -rf /root", "allow"],
+		["echo x > /etc/hosts", "allow"],
+		["echo x > ~/.bashrc", "allow"],
+		// …but wiping the whole guest still hard-blocks: it is the shape of the
+		// incident, and it destroys the workspace mount along with the VM.
+		["rm -rf /", "hard-block", { cls: "write-root" }],
+		["rm -rf /*", "hard-block", { cls: "write-root" }],
+		["rm -rf /workspace/..", "hard-block", { cls: "write-root" }],
+
+		// Host paths under the mount map to their guest equivalents (pi's tool
+		// descriptions use host paths; gondolin's toGuestPath accepts both).
+		[`rm -rf ${PROJ}/build`, "allow", { resolved: ["/workspace/build"] }],
+		[`rm ${PROJ}/.git/config`, "hard-block", { cls: "repo-loss" }],
+		// Host paths outside the mount don't exist in the guest: the command
+		// errors there and touches nothing on the host.
+		[`rm -rf ${HOME}/Documents`, "allow"],
+
+		// Symlinks inside the mount resolve through to guest paths; a symlink
+		// escaping the mount is refused by the guest VFS, so the guard
+		// classifies by the literal (in-workspace) location.
+		["rm -rf sublink/x", "allow", { resolved: ["/workspace/build/x"] }],
+		["rm -rf evil/hosts", "allow", { resolved: ["/workspace/evil/hosts"] }],
+
+		// cwd confusion stays confirmed: a cd can move anywhere in the guest.
+		["cd .. && rm -rf build", "confirm", { cls: "unresolvable" }],
+		["cd /tmp/x && rm -rf *", "confirm"],
+
+		// Publish / jj classes are domain-independent and unchanged.
+		["git push", "confirm", { cls: "publish" }],
+		["jj git push", "confirm", { cls: "publish" }],
+
+		// Session-written scripts keyed by guest path, gated by guest rules.
+		["bash wipe.sh", "hard-block", { cls: "write-root" }],
+		["bash scratch.sh", "allow"],
+	]);
+
+	describe("decideFileWrite in the guest", () => {
+		const cases: [path: string, verdict: Verdict, extra?: Extra][] = [
+			["/workspace/src/new.ts", "allow"],
+			// host path under the mount maps into the guest
+			[`${PROJ}/src/new.ts`, "allow", { resolved: ["/workspace/src/new.ts"] }],
+			["/root/.bashrc", "allow"],
+			["/etc/guest.conf", "allow"],
+			["/workspace", "hard-block", { cls: "write-root" }],
+			["/workspace/.pi/config", "hard-block", { cls: "self-protect" }],
+		];
+		for (const [p, verdict, extra] of cases) {
+			test(`write ${JSON.stringify(p)} -> ${verdict}`, () => {
+				checkDecision(decideFileWrite(p, envSbx), verdict, extra);
+			});
+		}
+	});
+
+	describe("jev questions in sandbox mode", () => {
+		test("host mode returns the base questions unchanged (same object)", () => {
+			expect(jevQuestions(envP)).toBe(JEV_QUESTIONS);
+		});
+		test("sandbox mode appends the disposable-VM sentence to writes_outside only", () => {
+			const q = jevQuestions(envSbx);
+			expect(q.writes_outside.instructions).toContain("disposable sandbox VM");
+			expect(q.writes_outside.instructions).toContain("persistent_roots");
+			expect(q.publishes).toBe(JEV_QUESTIONS.publishes);
+			expect(q.repo_loss).toBe(JEV_QUESTIONS.repo_loss);
+			expect(q.other_irreversible).toBe(JEV_QUESTIONS.other_irreversible);
+		});
+	});
+});
+
 describe("decideFileWrite (write / edit tools)", () => {
 	const cases: [string, GuardEnv, Verdict, FindingClass?][] = [
 		["src/new.ts", envP, "allow"],
@@ -1350,6 +1472,34 @@ describe("extension wiring (fake pi/ctx, real fs + shfmt)", () => {
 		expect(l.vcs).toBe("git");
 		expect(l.zone).toContain(l.cwd);
 		expect(calls.status.at(-1)).toMatch(/^guard ✓0 \?0 ✗0/);
+	});
+
+	test("sandbox mode: pi-gondolin.workspace marker switches the guard's domain to the guest", async () => {
+		const marker = Symbol.for("pi-gondolin.workspace");
+		(globalThis as any)[marker] = "/workspace";
+		try {
+			const { pi, ctx, calls } = await boot({ jev: NO_JEV });
+			// guest-local system paths are a disposable overlay: no confirm
+			expect(await pi.emit("tool_call", bash("rm -rf /etc /usr/local"), ctx)).toBeUndefined();
+			// host paths under the mounted project map into the guest and are allowed
+			expect(await pi.emit("tool_call", bash(`rm -rf ${join(proj, "build")}`), ctx)).toBeUndefined();
+			// the workspace itself is still protected (it persists to the host)
+			const r = await pi.emit("tool_call", bash("rm -rf /workspace"), ctx);
+			expect(r.block).toBe(true);
+			expect(r.reason).toContain("refused: /workspace");
+			const l = lastLog();
+			expect(l.sandbox).toBe("/workspace");
+			expect(l.cwd).toBe("/workspace");
+			expect(l.zone).toContain("/workspace");
+			// jev sees guest-domain state plus persistent_roots
+			const state = calls.classify.at(-1).context.state;
+			expect(state.cwd).toBe("/workspace");
+			expect(state.sandbox).toBe("gondolin");
+			expect(state.persistent_roots).toEqual(["/workspace"]);
+			expect(calls.status.at(-1)).toContain("vm:/workspace");
+		} finally {
+			delete (globalThis as any)[marker];
+		}
 	});
 
 	test("allow: inside zone, jev quiet -> undefined, logged with 4 probabilities", async () => {

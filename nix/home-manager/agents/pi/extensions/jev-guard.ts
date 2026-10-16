@@ -20,6 +20,16 @@
  * block. `PI_GUARD=off` disables everything, `PI_GUARD=log` only logs.
  * Every decision is appended to ~/.pi/agent/jev-guard/decisions.jsonl.
  *
+ * Sandbox mode (plan §4.6): when the gondolin extension routes tool execution
+ * into a VM it sets the symbol-keyed global
+ * `globalThis[Symbol.for("pi-gondolin.workspace")]` (e.g. "/workspace").
+ * The guard then
+ * treats the *guest* as its domain: cwd and the zone are guest paths, only the
+ * workspace mount persists to the host, and everything else in the guest is a
+ * disposable overlay that classifies as allow. Deleting the workspace itself
+ * (or `.git`/`.jj` under it) still hard-blocks; host paths under the mounted
+ * directory are mapped to their guest equivalents before classification.
+ *
  * Pure decision logic (`decide`, `classifyPath`, ...) is exported for the
  * bun test harness; the default export wires it into pi.
  */
@@ -111,6 +121,21 @@ export interface Decision {
 
 export type Vcs = "jj-colocated" | "jj" | "git" | null;
 
+/**
+ * Present when tool execution happens inside a sandbox VM (gondolin, plan
+ * §4.6). The guard's whole domain is then the *guest*: `cwd`, `home`,
+ * `tmpdir` and `zone` are guest paths, and only `guestWorkspace` persists to
+ * the host.
+ */
+export interface SandboxInfo {
+	/** Guest path where the session cwd is mounted (e.g. "/workspace"). */
+	guestWorkspace: string;
+	/** Host path mounted at `guestWorkspace` (realpath'd). */
+	hostWorkspace: string;
+	/** Guest home directory (the stock gondolin image runs as root). */
+	guestHome: string;
+}
+
 /** Filesystem access used for resolution; injectable so tests can fake it. */
 export interface GuardFs {
 	exists(p: string): boolean;
@@ -137,6 +162,8 @@ export interface GuardEnv {
 	sessionScripts: Map<string, string | null>;
 	/** Directory the guard itself writes to; exempt from .pi self-protection. */
 	guardDir: string;
+	/** Sandbox VM execution context (gondolin), when active. */
+	sandbox?: SandboxInfo;
 }
 
 /** Loosely typed shfmt JSON node. */
@@ -232,9 +259,22 @@ export interface PathClass {
  *
  * Guarded roots are the zone roots, `~`, `/` and the session cwd (the cwd is
  * guarded even in no-project mode: deleting it is the incident).
+ *
+ * Sandbox mode (plan §4.6): only the workspace mount persists to the host;
+ * everything else in the guest is a disposable overlay. Targets at/inside the
+ * workspace classify normally; `/` itself still hard-blocks; every other guest
+ * path (guest home, system dirs, guest temp roots) is allow — clobbering them
+ * costs nothing.
  */
 export function classifyPath(t: Target, env: GuardEnv): PathClass {
 	const p = norm(t.path);
+	if (env.sandbox) {
+		const ws = norm(env.sandbox.guestWorkspace);
+		if (p === "/") return { kind: "hard-root", root: "/" };
+		if (p !== ws && !isInside(p, ws)) return { kind: "allow" };
+		// At/inside the workspace: fall through to the normal rules, where
+		// env.cwd === ws and the zone is the guest zone (see buildEnv).
+	}
 	const comps = p.split("/").filter(Boolean);
 	if (comps.includes(".git") || comps.includes(".jj")) return { kind: "vcs-meta" };
 	if (comps.includes(".pi") && p !== norm(env.guardDir) && !isInside(p, env.guardDir)) {
@@ -455,7 +495,19 @@ export function wordLiteral(word: ShNode | undefined, env: GuardEnv, hasCd: bool
 
 /** Absolute path for a literal (no glob handling). */
 function resolveLitPath(v: string, env: GuardEnv): string {
-	return norm(isAbsolute(v) ? pathResolve(v) : pathResolve(env.cwd, v));
+	let p = norm(isAbsolute(v) ? pathResolve(v) : pathResolve(env.cwd, v));
+	// Sandbox mode: the model may legitimately emit *host* paths under the
+	// mounted directory (pi's tool descriptions use host paths; gondolin's
+	// toGuestPath accepts both). Map them to their guest equivalents so the
+	// zone check happens in one domain. Host paths outside the mount are left
+	// alone: they don't exist in the guest, where the command runs.
+	const sb = env.sandbox;
+	if (sb && isAbsolute(v)) {
+		const hw = norm(sb.hostWorkspace);
+		if (p === hw) return sb.guestWorkspace;
+		if (isInside(p, hw)) return norm(join(sb.guestWorkspace, p.slice(hw.length + 1)));
+	}
+	return p;
 }
 
 export type Resolved = { ok: true; target: Target } | { ok: false; raw: string; why: string };
@@ -1291,11 +1343,25 @@ export function agentDir(): string {
 /**
  * Build the guard environment for a session cwd (plan §4.2/§4.3). Computed once
  * per session; no per-command VCS walking.
+ *
+ * With `opts.sandbox` (plan §4.6) the guard's domain is the guest: `cwd`,
+ * `home`, `tmpdir` and `zone` are guest paths, and the returned `fs` maps the
+ * workspace mount back onto the host filesystem (for realpath/symlink
+ * resolution and session-script reads) while everything else in the guest is
+ * an empty, disposable void as far as the host is concerned. VCS detection
+ * still runs against the *host* workspace, so project mode and jj-awareness
+ * reflect the real repo.
  */
 export function buildEnv(
 	cwd: string,
 	parse: GuardEnv["parse"],
-	opts: { fs?: GuardFs; home?: string; tmpdir?: string; guardDir?: string } = {},
+	opts: {
+		fs?: GuardFs;
+		home?: string;
+		tmpdir?: string;
+		guardDir?: string;
+		sandbox?: { guestWorkspace: string; guestHome?: string } | null;
+	} = {},
 ): GuardEnv {
 	const fs = opts.fs ?? realFs;
 	const real = (p: string) => norm(fs.exists(p) ? fs.realpath(p) : p);
@@ -1304,6 +1370,62 @@ export function buildEnv(
 	const cwdR = real(cwd);
 	const { vcs, root } = detectVcs(cwdR, fs);
 	const projectMode = root !== null && root !== home && !isInside(home, root);
+	const guardDir = norm(opts.guardDir ?? join(agentDir(), "jev-guard"));
+
+	const sb = opts.sandbox;
+	if (sb) {
+		const ws = norm(sb.guestWorkspace);
+		const guestHome = norm(sb.guestHome ?? "/root");
+		const toHost = (p: string): string | null => {
+			const n = norm(p);
+			if (n === ws) return cwdR;
+			if (isInside(n, ws)) return norm(join(cwdR, n.slice(ws.length + 1)));
+			return null;
+		};
+		const mappedFs: GuardFs = {
+			exists: (p) => {
+				const h = toHost(p);
+				return h !== null && fs.exists(h);
+			},
+			isDir: (p) => {
+				const h = toHost(p);
+				return h !== null && fs.isDir(h);
+			},
+			// A symlink under the mount can point outside it; the guest VFS
+			// refuses such escapes, so leave the guest path unchanged (it will
+			// classify by its literal location and fail in the guest if written).
+			realpath: (p) => {
+				const h = toHost(p);
+				if (h === null) return norm(p);
+				const r = norm(fs.realpath(h));
+				if (r === cwdR) return ws;
+				if (isInside(r, cwdR)) return norm(join(ws, r.slice(cwdR.length + 1)));
+				return norm(p);
+			},
+			read: (p) => {
+				const h = toHost(p);
+				return h === null ? null : fs.read(h);
+			},
+		};
+		return {
+			cwd: ws,
+			home: guestHome,
+			tmpdir: "/tmp",
+			// The mount is the declared writable domain, so the workspace is in
+			// the zone unconditionally; projectMode still governs messages/VCS.
+			zone: uniq([ws, "/tmp", "/var/tmp"]),
+			projectMode,
+			vcs,
+			gitAliases: {},
+			jjAliases: {},
+			fs: mappedFs,
+			parse,
+			sessionScripts: new Map(),
+			guardDir,
+			sandbox: { guestWorkspace: ws, hostWorkspace: cwdR, guestHome },
+		};
+	}
+
 	const zone = uniq([...(projectMode ? [cwdR] : []), "/tmp", "/var/tmp", tmp, join(home, ".cache")].map(real));
 	return {
 		cwd: cwdR,
@@ -1317,7 +1439,7 @@ export function buildEnv(
 		fs,
 		parse,
 		sessionScripts: new Map(),
-		guardDir: norm(opts.guardDir ?? join(agentDir(), "jev-guard")),
+		guardDir,
 	};
 }
 
@@ -1413,6 +1535,26 @@ export type JevResult =
 	| { status: "ok"; probs: Record<string, number>; ms: number; usage?: unknown }
 	| { status: "no-auth" | "down" | "skipped" | "disabled"; ms: number; error?: string };
 
+/**
+ * jev questions for `env`. In sandbox mode (plan §4.6) `writes_outside` gets
+ * one appended sentence telling jev that only `persistent_roots` reach the
+ * host — the same "question wording is the lever" finding as the V5 experiment
+ * (redteam/jev-experiment/RESULTS.md), applied to the disposable-VM domain so
+ * jev doesn't flag harmless guest-local writes.
+ */
+export function jevQuestions(env: GuardEnv): typeof JEV_QUESTIONS {
+	if (!env.sandbox) return JEV_QUESTIONS;
+	return {
+		...JEV_QUESTIONS,
+		writes_outside: {
+			...JEV_QUESTIONS.writes_outside,
+			instructions:
+				JEV_QUESTIONS.writes_outside.instructions +
+				" The command runs inside a disposable sandbox VM whose filesystem is discarded when it stops: only writes under `persistent_roots` are mounted through to the user's real files. Treat writes anywhere else in the VM as harmless, but still answer true if a `persistent_roots` root or `cwd` itself would be deleted or emptied.",
+		},
+	};
+}
+
 /** Which jev questions are at/above the confirm threshold. */
 export function jevFlags(probs: Record<string, number>): string[] {
 	return Object.entries(probs)
@@ -1455,6 +1597,7 @@ export default function (pi: ExtensionAPI) {
 	const S = {
 		mode: readMode() as Mode,
 		env: null as GuardEnv | null,
+		envKey: null as string | null,
 		shfmt: null as string | null,
 		jev: "unknown" as "ok" | "no-auth" | "down" | "disabled" | "unknown",
 		counts: { allow: 0, confirm: 0, block: 0 },
@@ -1492,7 +1635,8 @@ export default function (pi: ExtensionAPI) {
 		const c = S.counts;
 		const parts = [`guard ✓${c.allow} ?${c.confirm} ✗${c.block}`];
 		if (S.mode === "log") parts.push("LOG ONLY");
-		if (S.env && !S.env.projectMode) parts.push("no project — writes outside temp confirm");
+		if (S.env?.sandbox) parts.push(`vm:${S.env.sandbox.guestWorkspace}`);
+		else if (S.env && !S.env.projectMode) parts.push("no project — writes outside temp confirm");
 		if (!S.shfmt) parts.push("NO shfmt");
 		if (S.jev === "no-auth") parts.push("NO JEV — /login typesafe");
 		else if (S.jev === "down") parts.push("jev DOWN");
@@ -1513,7 +1657,7 @@ export default function (pi: ExtensionAPI) {
 		}
 	}
 
-	async function askJev(ctx: ExtensionContext, state: Record<string, unknown>): Promise<JevResult> {
+	async function askJev(ctx: ExtensionContext, env: GuardEnv, state: Record<string, unknown>): Promise<JevResult> {
 		const t0 = performance.now();
 		if (JEV_BUILD === "false" || process.env.PI_GUARD_JEV === "0") {
 			S.jev = "disabled";
@@ -1528,7 +1672,7 @@ export default function (pi: ExtensionAPI) {
 		try {
 			const timeout = new Promise<null>((r) => setTimeout(() => r(null), JEV_TIMEOUT_MS + 250).unref?.());
 			const r: any = await Promise.race([
-				ctx.modelRegistry.classify(model, { state: state as any, questions: JEV_QUESTIONS }, {
+				ctx.modelRegistry.classify(model, { state: state as any, questions: jevQuestions(env) }, {
 					timeoutMs: JEV_TIMEOUT_MS,
 					maxRetries: 1,
 					maxRetryDelayMs: 0,
@@ -1559,21 +1703,43 @@ export default function (pi: ExtensionAPI) {
 	}
 
 	// ---- helpers -----------------------------------------------------------
+	/**
+	 * Sandbox marker published by the gondolin extension (plan §4.6): it sets
+	 * a symbol-keyed global at load time because every bash/write/edit call
+	 * executes inside the guest. (A global, not an env var: the gondolin test
+	 * harness poisons `process.env` access in extensions.) Read per session,
+	 * so extension load order doesn't matter.
+	 */
+	function sandboxMarker(): { guestWorkspace: string; guestHome?: string } | null {
+		const g = globalThis as Record<PropertyKey, unknown>;
+		const ws = g[Symbol.for("pi-gondolin.workspace")];
+		if (typeof ws !== "string" || !ws.startsWith("/")) return null;
+		const home = g[Symbol.for("pi-gondolin.guest-home")];
+		return {
+			guestWorkspace: norm(ws),
+			...(typeof home === "string" && home.startsWith("/") ? { guestHome: norm(home) } : {}),
+		};
+	}
+
 	function ensureEnv(ctx: ExtensionContext): GuardEnv {
-		if (S.env && S.env.cwd === norm(realFs.realpath(ctx.cwd))) return S.env;
+		const sandbox = sandboxMarker();
+		const key = `${norm(realFs.realpath(ctx.cwd))} ${sandbox?.guestWorkspace ?? "-"}`;
+		if (S.env && S.envKey === key) return S.env;
 		S.shfmt = findShfmt();
 		const parse = S.shfmt
 			? makeShfmtParser(S.shfmt)
 			: async () => {
 					throw new Error("shfmt not found");
 				};
-		S.env = buildEnv(ctx.cwd, parse);
+		S.env = buildEnv(ctx.cwd, parse, { sandbox });
+		S.envKey = key;
 		return S.env;
 	}
 
 	async function snapshot(env: GuardEnv) {
 		if (!env.vcs?.startsWith("jj") || process.env.PI_GUARD_SNAPSHOT === "0") return;
-		await run("jj", ["--color=never", "--no-pager", "debug", "snapshot"], env.cwd);
+		// jj runs on the host; in sandbox mode that is the mounted workspace.
+		await run("jj", ["--color=never", "--no-pager", "debug", "snapshot"], env.sandbox?.hostWorkspace ?? env.cwd);
 	}
 
 	function confirmTitle(kind: string, reasons: string[], env: GuardEnv, command: string, jev?: JevResult): string {
@@ -1583,7 +1749,7 @@ export default function (pi: ExtensionAPI) {
 			const flags = jevFlags(jev.probs);
 			if (flags.length) lines.push(`  jev: ${flags.map((f) => `${f} p=${jev.probs[f].toFixed(2)}`).join(", ")}`);
 		}
-		lines.push(`cwd: ${env.cwd}${env.projectMode ? "" : " (no project)"}`);
+		lines.push(`cwd: ${env.cwd}${env.sandbox ? " (gondolin VM)" : env.projectMode ? "" : " (no project)"}`);
 		lines.push(`${kind}: ${truncate(command, MAX_TITLE_CMD)}`);
 		lines.push("Continue?");
 		return lines.join("\n");
@@ -1652,6 +1818,7 @@ export default function (pi: ExtensionAPI) {
 	pi.on("session_start", async (_event, ctx) => {
 		S.mode = readMode();
 		S.env = null;
+		S.envKey = null;
 		S.counts = { allow: 0, confirm: 0, block: 0 };
 		S.cdNotes.clear();
 		if (S.mode === "off") {
@@ -1662,9 +1829,10 @@ export default function (pi: ExtensionAPI) {
 		if (JEV_BUILD === "false" || process.env.PI_GUARD_JEV === "0") S.jev = "disabled";
 		else S.jev = jevModel(ctx) ? "ok" : "no-auth";
 		status(ctx);
-		log({ event: "session_start", mode: S.mode, cwd: env.cwd, zone: env.zone, project_mode: env.projectMode, vcs: env.vcs, shfmt: S.shfmt, jev: S.jev });
+		log({ event: "session_start", mode: S.mode, cwd: env.cwd, zone: env.zone, project_mode: env.projectMode, vcs: env.vcs, sandbox: env.sandbox?.guestWorkspace ?? null, shfmt: S.shfmt, jev: S.jev });
 		try {
-			const a = await loadAliases(env.cwd);
+			// Aliases are read on the host; in sandbox mode that is the mount.
+			const a = await loadAliases(env.sandbox?.hostWorkspace ?? env.cwd);
 			env.gitAliases = a.git;
 			env.jjAliases = a.jj;
 		} catch {
@@ -1717,9 +1885,10 @@ export default function (pi: ExtensionAPI) {
 			vcs: env.vcs,
 			resolved_targets: det.resolved,
 			unresolved_targets: det.unresolved,
+			...(env.sandbox ? { sandbox: "gondolin", persistent_roots: [env.sandbox.guestWorkspace] } : {}),
 			...(det.scripts.length ? { script: det.scripts.join("\n---\n").slice(0, 16_000) } : {}),
 		};
-		const jev = await askJev(ctx, state);
+		const jev = await askJev(ctx, env, state);
 
 		// final = max(det, jev); jev only raises allow -> confirm.
 		let final = det.verdict;
@@ -1740,6 +1909,7 @@ export default function (pi: ExtensionAPI) {
 			zone: env.zone,
 			project_mode: env.projectMode,
 			vcs: env.vcs,
+			sandbox: env.sandbox?.guestWorkspace ?? null,
 			resolved: det.resolved,
 			unresolved: det.unresolved,
 			alias: det.aliasExpansions,
