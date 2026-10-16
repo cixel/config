@@ -173,6 +173,47 @@
             cfg.pkgs.writeShellScriptBin "nvim" ''
               ${pkg.finalPackage}/bin/nvim -u ${lua} "$@"
            '';
+
+          # pi-fence: unit tests (host faked; the pi package import is
+          # stubbed) plus a tripwire that the pinned pi still exports the
+          # tool factories the extension relies on and still aliases the
+          # package specifier for extension imports.
+          pi-fence-tests = cfg.pkgs.runCommand "pi-fence-unit-tests"
+            { nativeBuildInputs = [ cfg.pkgs.bun ]; }
+            ''
+              cp -r ${./nix/home-manager/agents/pi} src
+              chmod -R u+w src
+              cd src
+              bun test ./tests/pi-fence.test.ts
+              touch $out
+            '';
+          pi-fence-api-check = cfg.pkgs.runCommand "pi-fence-api-check"
+            { nativeBuildInputs = [ cfg.pkgs.nodejs ]; }
+            ''
+              node --input-type=module -e '
+                const m = await import(process.argv[1]);
+                for (const k of ["createBashTool", "createLocalBashOperations"])
+                  if (typeof m[k] !== "function")
+                    throw new Error("pi API drift: " + k + " is " + typeof m[k]);
+                console.log("pi extension API OK:", Object.keys(m).length, "exports");
+              ' ${cfg.pkgs.pi-coding-agent}/lib/node_modules/pi-monorepo/dist/index.js
+              grep -q '@earendil-works/pi-coding-agent' \
+                ${cfg.pkgs.pi-coding-agent}/lib/node_modules/pi-monorepo/dist/core/extensions/loader.js
+              touch $out
+            '';
+          # Hardware boundary test: not a build (needs the real OS sandbox).
+          pi-fence-test = cfg.pkgs.writeShellApplication {
+            name = "pi-fence-test";
+            runtimeInputs = [ cfg.pkgs.bun ];
+            text = ''
+              export PI_FENCE_BASH="''${PI_FENCE_BASH:-${cfg.pkgs.bash}/bin/bash}"
+              ${lib.optionalString cfg.pkgs.stdenv.isLinux ''
+                export PI_FENCE_BWRAP="''${PI_FENCE_BWRAP:-${cfg.pkgs.bubblewrap}/bin/bwrap}"
+              ''}
+              cd ${./nix/home-manager/agents/pi}
+              exec bun tests/pi-fence-hardware.mjs "$@"
+            '';
+          };
         }
       );
     };
