@@ -11,6 +11,10 @@ always-on second opinion, never a tiebreaker (§2, §6); no per-session
 approvals or LRU; `write`/`edit` tools are zone-checked too.
 v3.1: `PI_GUARD=off` = fully off. v3: motivation, cwd semantics (App. A).
 
+Post-v4 additions: `cd`-carried sub-script resolution + `writes_outside`
+question wording (red-team F1/F4, jev-experiment V5); **sandbox mode** for
+gondolin VM execution — the zone derives from the guest mount table (§4.6).
+
 ## 0. Motivation
 
 A pi agent ran `rm -rf $(pwd)` in the user's home directory right after a
@@ -230,6 +234,50 @@ and would also cover scripts, heredocs and `eval`. It's an npm dep + bwrap,
 has no prompts, and doesn't cover pushes or deleting the cwd itself. Possible
 later complement; not part of v1.
 
+### 4.6 Sandbox mode (gondolin VM)
+When the gondolin extension (`npm-plugins/gondolin/`) is active, every
+bash/write/edit call executes inside a micro-VM with the session cwd mounted
+at `/workspace`; the rest of the guest filesystem is a disposable CoW overlay.
+Running the host zone model there is wrong in both directions: guest paths
+like `/workspace/build` classify as "outside" (confirm noise), and disposable
+guest dirs (`/etc`, guest `~`) get host-grade protection they don't need.
+
+**Handshake:** the gondolin extension sets the symbol-keyed global
+`globalThis[Symbol.for("pi-gondolin.workspace")] = "/workspace"` (and
+optionally `"pi-gondolin.guest-home"`, default `/root`) at load time —
+fail-closed is safe because all tool execution routes through the VM. A
+global, not an env var: the gondolin test harness poisons `process.env`
+access in extensions, and both extensions share pi's module realm. The
+guard reads the marker per session, so extension load order doesn't matter.
+
+**Zone derivation:** the guard's domain becomes the guest. `cwd` =
+`$PI_GONDOLIN_WORKSPACE`, `home` = guest home, `tmpdir` = `/tmp`, zone =
+[guestWorkspace, /tmp, /var/tmp] — the workspace is in the zone
+unconditionally (the mount *is* the declared writable domain), while
+`projectMode`/`vcs` are still detected on the *host* workspace so jj snapshot
+and alias loading work. Resolution (`exists`/`realpath`/`read`) maps
+workspace paths back onto the host filesystem; symlinks escaping the mount
+are left at their literal guest path (the guest VFS refuses them anyway).
+
+**Classification:** targets at/inside the workspace classify exactly as in
+host mode (`rm -rf /workspace` hard-blocks — it deletes real host files;
+`.git`/`.jj`/`.pi` under it are protected; `/` and globs over it hard-block).
+Every other guest path — guest home, `/etc`, temp roots, host paths outside
+the mount (which don't exist in the guest) — is **allow**: clobbering them is
+discarded with the VM. Absolute host paths under the mounted directory are
+mapped to their guest equivalents before classification (pi's tool
+descriptions use host paths; gondolin's `toGuestPath` accepts both).
+
+**jev:** state gains `sandbox: "gondolin"` and `persistent_roots:
+[guestWorkspace]`, and `writes_outside` gets one appended sentence: the VM is
+disposable, only writes under `persistent_roots` reach the user's real files,
+but deleting a persistent root or `cwd` itself still counts. Same
+question-wording lever as the V5 experiment; no new questions or state-field
+arithmetic (V6/V7 false positives).
+
+The footer shows `vm:/workspace`; `decisions.jsonl` records `sandbox` per
+decision.
+
 ## 5. Class-3 precise scope (jj-aware)
 
 jj's op log makes nearly everything recoverable — hard-block only what
@@ -391,6 +439,11 @@ scripted mock model. Deviations and findings worth knowing:
   `decisions.jsonl`. Esc on the dialog is logged as `user: "cancelled"`,
   the 600 s countdown as `"timeout"`.
 - **`PI_GUARD=off`** also skips the `session_start` log line — zero trace.
+- **Sandbox mode (§4.6)** is keyed off a `Symbol.for` global set by the
+  gondolin extension at load time rather than a pi API or env var — pi has
+  no extension-to-extension channel, and the gondolin test harness poisons
+  `process.env` access. `jj debug snapshot` and alias loading run on the
+  host mount path, not the guest cwd.
 - **Footer** key `guard`: `guard ✓N ?N ✗N · [LOG ONLY] · [no project — writes
   outside temp confirm] · [NO shfmt] · [NO JEV — /login typesafe | jev DOWN
   | jev off]`.
