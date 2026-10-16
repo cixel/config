@@ -94,8 +94,10 @@ let
       install -Dm644 ${extension} extensions/pi-gondolin.ts
     '';
 
-    # Accept the /workspace paths advertised in the system prompt and
-    # keep user ! commands from falling back to the host if startup fails.
+    # Accept the /workspace paths advertised in the system prompt, keep
+    # user ! commands from falling back to the host if startup fails, and
+    # publish the pi-gondolin.workspace symbol global jev-guard derives its
+    # sandbox-mode write zone from (jev-guard-plan.md §4.6).
     patches = [ ./gondolin/pi-extension.patch ];
     patchFlags = [ "-p1" "--fuzz=0" ];
     postPatch = ''

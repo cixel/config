@@ -1,4 +1,5 @@
 diff --git a/extensions/pi-gondolin.ts b/extensions/pi-gondolin.ts
+index cdfd1ea..7b17e73 100644
 --- a/extensions/pi-gondolin.ts
 +++ b/extensions/pi-gondolin.ts
 @@ -53,7 +53,14 @@ function toGuestPath(localCwd: string, localPath: string): string {
@@ -17,7 +18,21 @@ diff --git a/extensions/pi-gondolin.ts b/extensions/pi-gondolin.ts
      throw new Error(`path escapes workspace: ${localPath}`);
    }
    // Convert platform separators to POSIX for the Linux guest
-@@ -199,6 +206,9 @@ export default function (pi: ExtensionAPI) {
+@@ -164,6 +171,13 @@ function createGondolinBashOps(vm: VM, localCwd: string): BashOperations {
+ export default function (pi: ExtensionAPI) {
+   const localCwd = process.cwd();
+ 
++  // Marker for the jev-guard extension (same process): every bash/write/edit
++  // call executes inside the guest, so the guard derives its write zone from
++  // this mount (guest workspace + disposable guest FS) instead of host paths.
++  // See jev-guard-plan.md §4.6. A symbol-keyed global, not process.env: the
++  // extension tests poison env access, and both extensions share pi's realm.
++  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("pi-gondolin.workspace")] = GUEST_WORKSPACE;
++
+   const localRead = createReadTool(localCwd);
+   const localWrite = createWriteTool(localCwd);
+   const localEdit = createEditTool(localCwd);
+@@ -186,6 +200,9 @@ export default function (pi: ExtensionAPI) {
        );
  
        const created = await VM.create({
@@ -27,7 +42,7 @@ diff --git a/extensions/pi-gondolin.ts b/extensions/pi-gondolin.ts
          vfs: {
            mounts: {
              [GUEST_WORKSPACE]: new RealFSProvider(localCwd),
-@@ -220,7 +230,8 @@ export default function (pi: ExtensionAPI) {
+@@ -202,7 +219,8 @@ export default function (pi: ExtensionAPI) {
          ),
        );
        ctx?.ui.notify(
@@ -37,7 +52,9 @@ diff --git a/extensions/pi-gondolin.ts b/extensions/pi-gondolin.ts
          "info",
        );
        return created;
-@@ -277,5 +288,6 @@ export default function (pi: ExtensionAPI) {
+@@ -275,9 +293,10 @@ export default function (pi: ExtensionAPI) {
+   });
+ 
    // Run user `!` commands inside the VM too
 -  pi.on("user_bash", (_event, _ctx) => {
 -    if (!vm) return;
@@ -47,3 +64,5 @@ diff --git a/extensions/pi-gondolin.ts b/extensions/pi-gondolin.ts
 +    const activeVm = await ensureVm(ctx);
 +    return { operations: createGondolinBashOps(activeVm, localCwd) };
    });
+ 
+   // Replace the CWD line in the system prompt so the model sees /workspace
