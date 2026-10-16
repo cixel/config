@@ -160,6 +160,10 @@
               ./nix/machines/empty.nix
             ];
           };
+          gondolin = import ./nix/home-manager/agents/pi/npm-plugins/gondolin.nix {
+            pkgs = cfg.pkgs;
+            inherit lib;
+          };
         in
         {
           nvim =
@@ -173,6 +177,13 @@
             cfg.pkgs.writeShellScriptBin "nvim" ''
               ${pkg.finalPackage}/bin/nvim -u ${lua} "$@"
            '';
+          pi-gondolin = gondolin.package;
+          pi-gondolin-image = gondolin.package.guestImage;
+          pi-gondolin-sdk-tests = gondolin.package.tests.sdk-backports;
+          pi-gondolin-extension-tests = gondolin.package.tests.extension;
+          pi-gondolin-helper-tests = gondolin.package.tests.helpers;
+          # Hardware access is unavailable inside ordinary Nix build sandboxes.
+          pi-gondolin-resume-test = gondolin.package.resumeTest;
         }
       );
     };
