@@ -123,7 +123,13 @@
 
         # gondolin: run read/write/edit/bash and user ! commands in a
         # micro-VM, with the current project mounted at /workspace.
-        gondolinPlg
+        # DISABLED on purpose: pi-fence (appended by the module; see
+        # agents/pi/pi-fence.md) is the default host-native protection,
+        # and the two cannot be co-installed — both override the bash
+        # tool and last registration silently wins. gondolin stays built
+        # and tested (flake pi-gondolin* outputs) for the untrusted-code
+        # case; a per-session pi-vm mode switch is a documented followup.
+        # gondolinPlg
 
         # context-mode: MCP-style context saver. See the npm-plugins file
         # for design notes; it bundles extension + skills + a CLI bin.
