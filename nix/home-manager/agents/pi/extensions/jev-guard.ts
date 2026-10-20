@@ -2037,16 +2037,22 @@ export default function (pi: ExtensionAPI) {
 			ctx.ui.setStatus(STATUS_KEY, undefined);
 			return;
 		}
+		// Match the stock footer: everything dim grey, with only degraded
+		// states lifted to the warning colour (like its context-% readout).
+		// The theme is absent in tests, so fall back to plain text.
+		const theme = ctx.ui.theme as ExtensionContext["ui"]["theme"] | undefined;
+		const dim = (s: string) => theme?.fg("dim", s) ?? s;
+		const warn = (s: string) => theme?.fg("warning", s) ?? s;
 		const c = S.counts;
-		const parts = [`guard ✓${c.allow} ?${c.confirm} ✗${c.block}`];
-		if (S.mode === "log") parts.push("LOG ONLY");
-		if (S.env?.sandbox) parts.push(`vm:${S.env.sandbox.guestWorkspace}`);
-		else if (S.env && !S.env.projectMode) parts.push("no project — writes outside temp confirm");
-		if (!S.shfmt) parts.push("NO shfmt");
-		if (S.jev === "no-auth") parts.push("NO JEV — /login typesafe");
-		else if (S.jev === "down") parts.push("jev DOWN");
-		else if (S.jev === "disabled") parts.push("jev off");
-		ctx.ui.setStatus(STATUS_KEY, parts.join(" · "));
+		const parts = [dim(`guard ${c.allow} allowed, ${c.confirm} asked, ${c.block} blocked`)];
+		if (S.mode === "log") parts.push(warn("LOG ONLY"));
+		if (S.env?.sandbox) parts.push(dim(`vm ${S.env.sandbox.guestWorkspace}`));
+		else if (S.env && !S.env.projectMode) parts.push(dim("no project, writes outside temp confirm"));
+		if (!S.shfmt) parts.push(warn("NO shfmt"));
+		if (S.jev === "no-auth") parts.push(warn("NO JEV, /login typesafe"));
+		else if (S.jev === "down") parts.push(warn("jev DOWN"));
+		else if (S.jev === "disabled") parts.push(dim("jev off"));
+		ctx.ui.setStatus(STATUS_KEY, parts.join(dim(" · ")));
 	}
 
 	// ---- jev ---------------------------------------------------------------

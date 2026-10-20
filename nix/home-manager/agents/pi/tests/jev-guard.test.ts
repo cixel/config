@@ -1591,7 +1591,7 @@ describe("extension wiring (fake pi/ctx, real fs + shfmt)", () => {
 		expect(l.project_mode).toBe(true);
 		expect(l.vcs).toBe("git");
 		expect(l.zone).toContain(l.cwd);
-		expect(calls.status.at(-1)).toMatch(/^guard ✓0 \?0 ✗0/);
+		expect(calls.status.at(-1)).toMatch(/^guard 0 allowed, 0 asked, 0 blocked/);
 	});
 
 	test("sandbox mode: pi-gondolin.workspace marker switches the guard's domain to the guest", async () => {
@@ -1616,7 +1616,7 @@ describe("extension wiring (fake pi/ctx, real fs + shfmt)", () => {
 			expect(state.cwd).toBe("/workspace");
 			expect(state.sandbox).toBe("gondolin");
 			expect(state.persistent_roots).toEqual(["/workspace"]);
-			expect(calls.status.at(-1)).toContain("vm:/workspace");
+			expect(calls.status.at(-1)).toContain("vm /workspace");
 		} finally {
 			delete (globalThis as any)[marker];
 		}
@@ -1700,7 +1700,7 @@ describe("extension wiring (fake pi/ctx, real fs + shfmt)", () => {
 		const yes = await boot({ hasUI: true, select: "Yes", jev: NO_JEV });
 		expect(await yes.pi.emit("tool_call", bash(cmd), yes.ctx)).toBeUndefined();
 		expect(lastLog()).toMatchObject({ final: "allow", user: "yes" });
-		expect(yes.calls.status.at(-1)).toMatch(/^guard ✓0 \?1 ✗0/);
+		expect(yes.calls.status.at(-1)).toMatch(/^guard 0 allowed, 1 asked, 0 blocked/);
 
 		const cancel = await boot({ hasUI: true, select: undefined, jev: NO_JEV });
 		const r3 = await cancel.pi.emit("tool_call", bash(cmd), cancel.ctx);
