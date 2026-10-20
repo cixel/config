@@ -114,6 +114,14 @@
           };
         })
 
+        # footer-status: move extension statuses (fence, guard, ...)
+        # from their own footer line into the empty right-hand side of
+        # the cwd line, falling back to the stock layout when narrow.
+        (piPlugins.mkPiPluginFromFile {
+          name = "footer-status";
+          file = ./agents/pi/extensions/footer-status.ts;
+        })
+
         # context-mode: MCP-style context saver. See the npm-plugins file
         # for design notes; it bundles extension + skills + a CLI bin.
         # contextModePlg
