@@ -32,6 +32,11 @@
 let
   cfg = config.programs.pi;
   settingsFormat = pkgs.formats.json { };
+  piPlugins = import ./agents/pi/plugins.nix { inherit pkgs lib; };
+
+  # Effective plugin list: cfg.plugins plus the extensions this module
+  # appends itself.
+  allPlugins = cfg.plugins;
 in
 {
   options.programs.pi = {
@@ -160,7 +165,7 @@ in
     # the unwrapped package to avoid an unnecessary derivation.
     home.packages =
       let
-        pluginBins = lib.concatMap (p: p.extraPackages) cfg.plugins;
+        pluginBins = lib.concatMap (p: p.extraPackages) allPlugins;
         wrappedPi  = pkgs.symlinkJoin {
           name = "${cfg.package.name}-with-plugin-deps";
           paths = [ cfg.package ];
@@ -179,7 +184,7 @@ in
       {
         ".pi/agent/settings.json".source =
           let
-            pluginPaths = map (p: toString p.package) cfg.plugins;
+            pluginPaths = map (p: toString p.package) allPlugins;
             mergedSettings = cfg.settings // {
               packages = (cfg.settings.packages or [ ]) ++ pluginPaths;
             };
