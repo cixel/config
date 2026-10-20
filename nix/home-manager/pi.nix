@@ -48,10 +48,30 @@ let
     };
   };
 
+  # pi-fence: run every bash tool call inside an OS write sandbox
+  # (sandbox-exec on macOS, bubblewrap on Linux) whose writable set is the
+  # session's repo root + temp/cache dirs. See agents/pi/pi-fence.md and
+  # agents/pi/extensions/pi-fence.ts. The pinned bash/bwrap store paths
+  # are baked in at build time; sandbox-exec is a macOS system binary.
+  fencePlugin = piPlugins.mkPiPluginFromFile {
+    name = "pi-fence";
+    file = ./agents/pi/extensions/pi-fence.ts;
+    substitutions = {
+      "@bash@" = "${pkgs.bash}/bin/bash";
+      "@bwrap@" =
+        if pkgs.stdenv.isLinux
+        then "${pkgs.bubblewrap}/bin/bwrap"
+        else "bwrap-unavailable-on-this-platform";
+    };
+  };
+
   # Effective plugin list. jev-guard is always appended LAST so that no
   # later tool_call handler can mutate a command the guard already
-  # approved.
+  # approved. pi-fence registers a bash tool override rather than a
+  # tool_call handler and must not be co-installed with gondolin (both
+  # override bash; last registration silently wins).
   allPlugins = cfg.plugins
+    ++ lib.optional cfg.fence.enable { package = fencePlugin; extraPackages = [ ]; }
     ++ lib.optional cfg.jevGuard.enable { package = jevGuardPlugin; extraPackages = [ ]; };
 in
 {
@@ -168,6 +188,21 @@ in
         See `agents/pi/plugins.nix` for `mkPiPluginFromFile` /
         `mkPiPlugin` helpers, and `agents/pi/npm-plugins/` for worked
         examples covering npm-deps and CLI-shipping plugins.
+      '';
+    };
+  };
+
+  options.programs.pi.fence = {
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Whether to run pi's bash tool inside the pi-fence OS write sandbox
+        (sandbox-exec on macOS, bubblewrap on Linux). The writable set is
+        the session's repo root plus temp/cache dirs; everything else is
+        read-only for agent-run commands. Fails closed: outside a jj/git
+        repo, or when the sandbox probe fails, the bash tool is disabled.
+        Disable (and `hms`) to run pi unfenced.
       '';
     };
   };
