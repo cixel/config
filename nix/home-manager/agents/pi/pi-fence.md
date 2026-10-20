@@ -89,6 +89,11 @@ session started — every bash call in the old session then failed with
 - Per-command bypass for guard-approved out-of-zone writes was designed
   for but deferred: v1 answers "the fence denied it" with "run it
   yourself". Revisit if decisions.jsonl / annoyance says otherwise.
+- Instead, the fence tells jev-guard it is on: while `active` it publishes
+  `globalThis[Symbol.for("pi-fence.zone")]` (frozen zone list), removed on
+  shutdown and never set in `blocked`/`down` (where bash refuses anyway).
+  The guard then skips confirms for writes the fence would refuse
+  (jev-guard-plan.md §4.7).
 
 ## Testing
 

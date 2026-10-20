@@ -633,6 +633,41 @@ describe("wiring", () => {
 		expect(result.ran).toEqual({ command: "ls" });
 	});
 
+	test("publishes the pi-fence.zone marker only while active", async () => {
+		const marker = Symbol.for("pi-fence.zone");
+		const g = globalThis as any;
+		delete g[marker];
+		try {
+			// active: marker is the (frozen) zone
+			const a = fakePi();
+			wireFence(a.api as never, fakeFactories().factories as never, LINUX_ENV, happyHost());
+			const ctx = fakeCtx("/home/user/repo");
+			await (a.handlers.get("session_start") as any)({}, ctx);
+			expect(g[marker]).toContain("/home/user/repo");
+			expect(Object.isFrozen(g[marker])).toBe(true);
+			// shutdown clears it
+			await (a.handlers.get("session_shutdown") as any)({}, ctx);
+			expect(g[marker]).toBeUndefined();
+
+			// blocked: never published, and a stale one is removed
+			g[marker] = ["/stale"];
+			const b = fakePi();
+			const host = new FakeHost({ existing: ["/home/user", "/tmp"] });
+			host.runHandler = () => ({ status: 128, stdout: "" });
+			wireFence(b.api as never, fakeFactories().factories as never, LINUX_ENV, host);
+			await (b.handlers.get("session_start") as any)({}, fakeCtx("/home/user"));
+			expect(g[marker]).toBeUndefined();
+
+			// lazy init before session_start publishes too
+			const c = fakePi();
+			wireFence(c.api as never, fakeFactories().factories as never, LINUX_ENV, happyHost());
+			await c.api.tool.execute("1", { command: "ls" }, undefined, undefined, fakeCtx("/home/user/repo"));
+			expect(g[marker]).toContain("/home/user/repo");
+		} finally {
+			delete g[marker];
+		}
+	});
+
 	test("shutdown clears the footer and removes the generated files", async () => {
 		const { api, handlers } = fakePi();
 		const host = happyHost();

@@ -18,6 +18,13 @@
  * second opinion on every bash call; it can raise allow -> confirm, never
  * lower. `write`/`edit` tools get the zone check only.
  *
+ * Fence mode: while pi-fence is active it publishes its writable roots at
+ * `globalThis[Symbol.for("pi-fence.zone")]`, and bash calls it would refuse
+ * anyway (wholly outside those roots) are not confirmed; neither are
+ * unresolvable *overwrite* targets (they stay inside the fence zone and cannot
+ * remove a root). Unresolvable deletes, root/cwd deletion, the band between the
+ * cwd and the fence's repo root, publishing and repo-loss gate as before.
+ *
  * Nothing is remembered across prompts. Headless (no UI) turns confirm into
  * block. `PI_GUARD=off` disables everything, `PI_GUARD=log` only logs.
  * Every decision is appended to ~/.pi/agent/jev-guard/decisions.jsonl.
@@ -119,6 +126,8 @@ export interface Decision {
 	aliasExpansions: string[];
 	/** Contents of session-written scripts this command executes. */
 	scripts: string[];
+	/** Targets left to pi-fence instead of confirming (resolved paths or raw words). */
+	fenceCovered: string[];
 }
 
 export type Vcs = "jj-colocated" | "jj" | "git" | null;
@@ -166,6 +175,11 @@ export interface GuardEnv {
 	guardDir: string;
 	/** Sandbox VM execution context (gondolin), when active. */
 	sandbox?: SandboxInfo;
+	/**
+	 * Writable roots of the pi-fence OS sandbox (realpath'd), when it is
+	 * active. bash calls only: write/edit are not fenced. See fenceDenies.
+	 */
+	fence?: string[];
 }
 
 /** Loosely typed shfmt JSON node. */
@@ -984,6 +998,7 @@ interface WalkState {
 	subs: Sub[];
 	depth: number;
 	vars?: VarScope;
+	fenceCovered: string[];
 }
 
 function words(args: ShNode[] | undefined, st: WalkState): WordInfo[] {
@@ -1085,6 +1100,26 @@ function addFinding(st: WalkState, f: Finding) {
 	st.findings.push(f);
 }
 
+/**
+ * Verbs that remove what they name (mv: the source). Unresolvable targets of
+ * these still confirm under the fence: the target might be the cwd or a zone
+ * root, which the fence leaves writable (the incident).
+ */
+const DELETE_VERBS = new Set(["Delete", "Shred", "Move", "Delete under", "Sync with --delete into"]);
+/** xargs commands whose stdin-fed targets are only overwritten, never removed. */
+const FENCE_SAFE_XARGS = new Set(["cp", "tee", "install", "ln", "dd", "truncate"]);
+
+/**
+ * pi-fence will refuse every write at or below `p`: it is outside all fence
+ * roots and contains none of them (`find ~ -delete` would reach ~/.cache).
+ */
+export function fenceDenies(p: string, env: GuardEnv): boolean {
+	const f = env.fence;
+	if (!f) return false;
+	const n = norm(p);
+	return !f.some((r) => r === n || isInside(n, r) || isInside(r, n));
+}
+
 /** Classify one write target and record the finding. */
 function judgeTarget(st: WalkState, verb: string, res: Resolved, opts: { destDir?: boolean; find?: boolean } = {}) {
 	const env = st.env;
@@ -1094,6 +1129,12 @@ function judgeTarget(st: WalkState, verb: string, res: Resolved, opts: { destDir
 	}
 	if (!res.ok) {
 		st.unresolved.push(res.raw);
+		// Fenced: an unknown overwrite target is still inside the fence zone,
+		// and overwriting can't remove a root (`> dir` fails).
+		if (env.fence && !DELETE_VERBS.has(verb)) {
+			st.fenceCovered.push(res.raw);
+			return;
+		}
 		addFinding(st, {
 			verdict: "confirm",
 			cls: "unresolvable",
@@ -1142,6 +1183,12 @@ function judgeTarget(st: WalkState, verb: string, res: Resolved, opts: { destDir
 			addFinding(st, { verdict: "confirm", cls: "write-root", target: t.path, reason: `${t.raw} expands to everything in ${t.path} (${describeRoot(c.root ?? t.path, env)}). ${verb} all of it?` });
 			return;
 		case "outside":
+			// Fenced and wholly outside the fence zone: the kernel refuses it,
+			// and a Yes here could not be honoured anyway.
+			if (fenceDenies(t.path, env)) {
+				st.fenceCovered.push(t.glob ? `${t.path}/*` : t.path);
+				return;
+			}
 			addFinding(st, { verdict: "confirm", cls: "write-outside", target: t.path, reason: `${verb} ${t.glob ? `${t.path}/*` : t.path} (outside ${zoneDescription(env)})?` });
 			return;
 	}
@@ -1415,6 +1462,11 @@ function handleArgv(st: WalkState, argv0: WordInfo[], stmt: ShNode | undefined, 
 			const { operands } = splitOperands(argv.slice(1), VALUE_FLAGS.xargs);
 			const inner = stripWrappers(operands);
 			const c = cmdName(inner[0]);
+			// Fenced: stdin-fed overwrites stay inside the fence zone and can't remove a root.
+			if (c && env.fence && FENCE_SAFE_XARGS.has(c)) {
+				st.fenceCovered.push(`xargs ${c}`);
+				return;
+			}
 			if (c && (c in WRITE_VERBS || SHELLS.has(c) || c === "git" || c === "jj")) {
 				st.unresolved.push(`xargs ${c}`);
 				addFinding(st, { verdict: "confirm", cls: "unresolvable", reason: `xargs ${c}: targets come from stdin and cannot be checked; this call runs in ${env.cwd}. Continue?` });
@@ -1488,8 +1540,9 @@ function handleArgv(st: WalkState, argv0: WordInfo[], stmt: ShNode | undefined, 
 				return;
 			}
 			const r = res(dest);
-			if (name === "rsync" && flags.some((f) => f.startsWith("--delete")) && r.ok) {
-				judgeTarget(st, "Sync with --delete into", { ok: true, target: { ...r.target, glob: true }, more: r.more?.map((t) => ({ ...t, glob: true })) });
+			if (name === "rsync" && flags.some((f) => f.startsWith("--delete"))) {
+				// Delete-class even when unresolvable (matters under the fence, see DELETE_VERBS).
+				judgeTarget(st, "Sync with --delete into", r.ok ? { ok: true, target: { ...r.target, glob: true }, more: r.more?.map((t) => ({ ...t, glob: true })) } : r);
 				return;
 			}
 			judgeTarget(st, verb, r, { destDir: true });
@@ -1537,7 +1590,7 @@ function walk(node: any, visit: (n: ShNode) => void) {
 
 /** Command name of a CallExpr after stripping wrappers (`builtin cd`, `sudo rm`), or null. */
 function callName(call: ShNode, env: GuardEnv, out?: { chdir: boolean }, vars?: VarScope): string | null {
-	const st: WalkState = { env, hasCd: false, findings: [], resolved: [], unresolved: [], aliasExpansions: [], scripts: [], subs: [], depth: 0, vars };
+	const st: WalkState = { env, hasCd: false, findings: [], resolved: [], unresolved: [], aliasExpansions: [], scripts: [], subs: [], depth: 0, vars, fenceCovered: [] };
 	const argv = stripWrappers(words(call.Args, st), out);
 	return cmdName(argv[0]);
 }
@@ -1571,7 +1624,7 @@ function lastIsCd(ast: ShNode, env: GuardEnv): boolean {
 // ---------------------------------------------------------------------------
 
 function emptyDecision(): Decision {
-	return { verdict: "allow", findings: [], resolved: [], unresolved: [], hasCd: false, lastIsCd: false, aliasExpansions: [], scripts: [] };
+	return { verdict: "allow", findings: [], resolved: [], unresolved: [], hasCd: false, lastIsCd: false, aliasExpansions: [], scripts: [], fenceCovered: [] };
 }
 
 /**
@@ -1612,7 +1665,7 @@ export async function decide(command: string, env: GuardEnv, depth = 0, outerHas
 	});
 	d.lastIsCd = lastIsCd(ast, env);
 
-	const st: WalkState = { env, hasCd: d.hasCd, findings: [], resolved: [], unresolved: [], aliasExpansions: [], scripts: [], subs: [], depth, vars };
+	const st: WalkState = { env, hasCd: d.hasCd, findings: [], resolved: [], unresolved: [], aliasExpansions: [], scripts: [], subs: [], depth, vars, fenceCovered: [] };
 	// Statement owning each CallExpr, so heredocs/redirects are visible to it.
 	const stmtOf = new WeakMap<ShNode, ShNode>();
 	try {
@@ -1632,6 +1685,7 @@ export async function decide(command: string, env: GuardEnv, depth = 0, outerHas
 	d.unresolved = st.unresolved;
 	d.aliasExpansions = st.aliasExpansions;
 	d.scripts = st.scripts;
+	d.fenceCovered = st.fenceCovered;
 
 	if (depth < MAX_DEPTH) {
 		// Sub-scripts inherit this level's cd state, not a sub-script sibling's.
@@ -1643,6 +1697,7 @@ export async function decide(command: string, env: GuardEnv, depth = 0, outerHas
 			d.unresolved.push(...sd.unresolved);
 			d.aliasExpansions.push(...sd.aliasExpansions);
 			d.scripts.push(...sd.scripts);
+			d.fenceCovered.push(...sd.fenceCovered);
 			if (sd.hasCd) d.hasCd = true;
 		}
 	} else if (st.subs.length) {
@@ -1651,6 +1706,7 @@ export async function decide(command: string, env: GuardEnv, depth = 0, outerHas
 
 	d.resolved = uniq(d.resolved);
 	d.unresolved = uniq(d.unresolved);
+	d.fenceCovered = uniq(d.fenceCovered);
 	d.verdict = d.findings.reduce<Verdict>((v, f) => maxVerdict(v, f.verdict), "allow");
 	return d;
 }
@@ -2132,6 +2188,20 @@ export default function (pi: ExtensionAPI) {
 		};
 	}
 
+	/**
+	 * pi-fence publishes its writable roots while (and only while) it is
+	 * active; when it is not, its bash tool refuses to run at all. So a
+	 * present marker means every bash call that executes is fenced. Ignored in
+	 * sandbox mode: the VM is the boundary there, and gondolin and pi-fence
+	 * both override bash (they are never co-installed).
+	 */
+	function fenceMarker(env: GuardEnv): string[] | undefined {
+		if (env.sandbox) return undefined;
+		const z = (globalThis as Record<PropertyKey, unknown>)[Symbol.for("pi-fence.zone")];
+		if (!Array.isArray(z) || !z.length || !z.every((p) => typeof p === "string" && p.startsWith("/"))) return undefined;
+		return uniq(z.map((p: string) => norm(env.fs.exists(p) ? env.fs.realpath(p) : p)));
+	}
+
 	function ensureEnv(ctx: ExtensionContext): GuardEnv {
 		const sandbox = sandboxMarker();
 		const key = `${norm(realFs.realpath(ctx.cwd))} ${sandbox?.guestWorkspace ?? "-"}`;
@@ -2240,7 +2310,7 @@ export default function (pi: ExtensionAPI) {
 		if (JEV_BUILD === "false" || process.env.PI_GUARD_JEV === "0") S.jev = "disabled";
 		else S.jev = jevModel(ctx) ? "ok" : "no-auth";
 		status(ctx);
-		log({ event: "session_start", mode: S.mode, cwd: env.cwd, zone: env.zone, project_mode: env.projectMode, vcs: env.vcs, sandbox: env.sandbox?.guestWorkspace ?? null, shfmt: S.shfmt, jev: S.jev });
+		log({ event: "session_start", mode: S.mode, cwd: env.cwd, zone: env.zone, project_mode: env.projectMode, vcs: env.vcs, sandbox: env.sandbox?.guestWorkspace ?? null, fence: fenceMarker(env) ?? null, shfmt: S.shfmt, jev: S.jev });
 		try {
 			// Aliases are read on the host; in sandbox mode that is the mount.
 			const a = await loadAliases(env.sandbox?.hostWorkspace ?? env.cwd);
@@ -2282,6 +2352,8 @@ export default function (pi: ExtensionAPI) {
 
 		if (event.toolName !== "bash") return undefined;
 		const env = ensureEnv(ctx);
+		// Re-read per call (cheap): the fence may come up after the guard's session_start.
+		env.fence = fenceMarker(env);
 		const command = String((event.input as any)?.command ?? "");
 		const t0 = performance.now();
 		const det = await decide(command, env);
@@ -2321,6 +2393,8 @@ export default function (pi: ExtensionAPI) {
 			project_mode: env.projectMode,
 			vcs: env.vcs,
 			sandbox: env.sandbox?.guestWorkspace ?? null,
+			fence: !!env.fence,
+			fence_covered: det.fenceCovered,
 			resolved: det.resolved,
 			unresolved: det.unresolved,
 			alias: det.aliasExpansions,

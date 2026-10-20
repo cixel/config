@@ -25,6 +25,7 @@ import jevGuard, {
 	maxVerdict,
 	parseGitAliases,
 	parseJjAliases,
+	realFs as realFsForTest,
 	realpathPrefix,
 	type Decision,
 	type FindingClass,
@@ -1196,6 +1197,74 @@ describe("interpreter inline code: operands are data, not scripts", () => {
 	]);
 });
 
+// ---------------------------------------------------------------------------
+// Fence mode: pi-fence is active and publishes its writable roots
+// ---------------------------------------------------------------------------
+
+const FENCE_ROOTS = [PROJ, "/tmp", "/var/tmp", `${HOME}/.cache`];
+/** Project mode under an active fence rooted at the repo. */
+const envF = mk(PROJ);
+envF.fence = FENCE_ROOTS;
+/** Session cwd is a subdir of the fenced repo: the band cwd..repo root is fence-writable. */
+const envFsub = mk(`${PROJ}/src`);
+envFsub.fence = FENCE_ROOTS;
+
+describe("fence mode: writes the fence refuses are not confirmed", () => {
+	table(envF, [
+		["cp x /etc/hosts", "allow"],
+		["echo hi > ~/notes.txt", "allow"],
+		["rm -rf ~/Documents", "allow"],
+		["find /etc -name x -delete", "allow"],
+		["ls | xargs cp -t /tmp/x", "allow"],
+		// Unresolvable overwrite targets stay inside the fence zone.
+		["cat foo > $OUT", "allow"],
+		["cp x $DEST", "allow"],
+		["mv x $DEST", "allow"],
+		["tee $LOG < x", "allow"],
+		["cd /tmp && echo x > out", "allow"],
+		// The logged `set -- $p` shape.
+		['for p in "1 2"; do set -- $p; gh run view $1 > /tmp/ci/$2.log; done', "allow"],
+	]);
+	test("covered targets are recorded for the log", async () => {
+		const d = await decide("cp x /etc/hosts; cat foo > $OUT", envF);
+		expect(d.verdict).toBe("allow");
+		expect(d.fenceCovered).toEqual(["/etc/hosts", "$OUT"]);
+	});
+});
+
+describe("fence mode: what the fence can't see still gates", () => {
+	table(envF, [
+		// Roots and the cwd are fence-writable: the incident.
+		["rm -rf ~", "hard-block", { cls: "write-root" }],
+		["rm -rf .", "hard-block", { cls: "write-root" }],
+		["rm -rf .git", "hard-block", { cls: "repo-loss" }],
+		["rm -rf *", "confirm", { cls: "write-root" }],
+		// A subtree that contains a fence root is partly writable.
+		["find ~ -name '*.log' -delete", "confirm", { cls: "write-outside" }],
+		// Unresolvable deletes might name the cwd or a root.
+		["rm -rf $X", "confirm", { cls: "unresolvable" }],
+		["cd /tmp && rm -rf build", "confirm", { cls: "unresolvable" }],
+		["mv $SRC /tmp/x", "confirm", { cls: "unresolvable" }],
+		["rsync -a --delete src/ $DEST", "confirm", { cls: "unresolvable" }],
+		["git ls-files | xargs rm", "confirm", { cls: "unresolvable" }],
+		// Not filesystem: the fence leaves the network open.
+		["git push", "confirm", { cls: "publish" }],
+		["git reflog expire --all", "hard-block", { cls: "repo-loss" }],
+	]);
+	// Inside the fence zone but outside the guard's (cwd-only) zone.
+	table(envFsub, [
+		["echo x > ../README.md", "confirm", { cls: "write-outside" }],
+		["rm -rf ../build", "confirm", { cls: "write-outside" }],
+		["cp x /etc/hosts", "allow"],
+	]);
+	// Unfenced control: the same commands confirm.
+	table(envP, [
+		["cp x /etc/hosts", "confirm", { cls: "write-outside" }],
+		["cat foo > $OUT", "confirm", { cls: "unresolvable" }],
+		["rsync -a --delete src/ $DEST", "confirm", { cls: "unresolvable", reason: "Sync with --delete into" }],
+	]);
+});
+
 describe("wrappers (sudo / env / timeout / nice / command / exec / nohup)", () => {
 	table(envP, [
 		["sudo rm -rf /", "hard-block", { cls: "write-root" }],
@@ -1619,6 +1688,47 @@ describe("extension wiring (fake pi/ctx, real fs + shfmt)", () => {
 			expect(calls.status.at(-1)).toContain("vm /workspace");
 		} finally {
 			delete (globalThis as any)[marker];
+		}
+	});
+
+	test("fence mode: pi-fence.zone marker lets the fence handle writes it refuses", async () => {
+		const marker = Symbol.for("pi-fence.zone");
+		const outside = join(root, "elsewhere", "x.txt"); // under real $HOME, outside proj
+		(globalThis as any)[marker] = Object.freeze([proj, osTmpdir()]);
+		try {
+			const { pi, ctx } = await boot({ jev: NO_JEV });
+			expect(await pi.emit("tool_call", bash(`echo hi > ${outside}`), ctx)).toBeUndefined();
+			let l = lastLog();
+			expect(l.fence).toBe(true);
+			expect(l.fence_covered).toEqual([realpathPrefix(outside, realFsForTest)]);
+			expect(await pi.emit("tool_call", bash("cat x > $OUT"), ctx)).toBeUndefined();
+			// unresolvable deletes still gate (headless: blocked)
+			const r = await pi.emit("tool_call", bash("rm -rf $X"), ctx);
+			expect(r.block).toBe(true);
+			l = lastLog();
+			expect(l.final).toBe("block");
+		} finally {
+			delete (globalThis as any)[marker];
+		}
+		// marker gone: the same write confirms again
+		const { pi, ctx } = await boot({ jev: NO_JEV });
+		const r = await pi.emit("tool_call", bash(`echo hi > ${outside}`), ctx);
+		expect(r.block).toBe(true);
+		expect(lastLog().fence).toBe(false);
+	});
+
+	test("fence marker is ignored in sandbox mode", async () => {
+		const fm = Symbol.for("pi-fence.zone");
+		const gm = Symbol.for("pi-gondolin.workspace");
+		(globalThis as any)[fm] = Object.freeze([proj]);
+		(globalThis as any)[gm] = "/workspace";
+		try {
+			const { pi, ctx } = await boot({ jev: NO_JEV });
+			await pi.emit("tool_call", bash("rm -rf /etc"), ctx);
+			expect(lastLog().fence).toBe(false);
+		} finally {
+			delete (globalThis as any)[fm];
+			delete (globalThis as any)[gm];
 		}
 	});
 
