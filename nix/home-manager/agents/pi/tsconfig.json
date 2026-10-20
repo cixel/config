@@ -1,0 +1,8 @@
+{
+	"compilerOptions": {
+		"moduleResolution": "bundler",
+		"paths": {
+			"@earendil-works/pi-coding-agent": ["./tests/pi-coding-agent-stub.ts"]
+		}
+	}
+}
