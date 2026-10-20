@@ -494,6 +494,20 @@ export interface FenceToolFactories {
 	createLocalBashOperations: (options?: { shellPath?: string }) => unknown;
 }
 
+/**
+ * Published on globalThis while the fence is active: its writable roots. jev-guard
+ * reads it to skip confirms for writes the fence will refuse anyway. A
+ * global, not an env var, for the same reason as gondolin's marker (and so
+ * fenced commands can't see or forge it). Absent whenever bash would refuse.
+ */
+export const FENCE_MARKER = Symbol.for("pi-fence.zone");
+
+export function publishFence(state: FenceState): void {
+	const g = globalThis as Record<PropertyKey, unknown>;
+	if (state.mode === "active" && state.zone.length) g[FENCE_MARKER] = Object.freeze([...state.zone]);
+	else delete g[FENCE_MARKER];
+}
+
 export function wireFence(pi: ExtensionAPI, factories: FenceToolFactories, env: FenceEnv, host: FenceHost): void {
 	const loadCwd = process.cwd();
 	const S = {
@@ -534,7 +548,10 @@ export function wireFence(pi: ExtensionAPI, factories: FenceToolFactories, env: 
 	}
 
 	function ensure(ctx: ExtensionContext | undefined): FenceState {
-		if (S.state.mode === "pending") S.state = initFence(ctx?.cwd ?? loadCwd, env, host);
+		if (S.state.mode === "pending") {
+			S.state = initFence(ctx?.cwd ?? loadCwd, env, host);
+			publishFence(S.state);
+		}
 		return S.state;
 	}
 
@@ -560,6 +577,7 @@ export function wireFence(pi: ExtensionAPI, factories: FenceToolFactories, env: 
 
 	pi.on("session_start", (_event, ctx) => {
 		S.state = initFence(ctx.cwd, env, host);
+		publishFence(S.state);
 		S.tool = null;
 		status(ctx);
 		log({
@@ -577,6 +595,7 @@ export function wireFence(pi: ExtensionAPI, factories: FenceToolFactories, env: 
 
 	pi.on("session_shutdown", (_event, ctx) => {
 		ctx.ui.setStatus(STATUS_KEY, undefined);
+		delete (globalThis as Record<PropertyKey, unknown>)[FENCE_MARKER];
 		if (S.state.scriptPath) host.remove(S.state.scriptPath);
 		if (S.state.profilePath) host.remove(S.state.profilePath);
 		S.tool = null;

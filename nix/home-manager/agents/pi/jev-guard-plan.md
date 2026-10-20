@@ -278,6 +278,36 @@ arithmetic (V6/V7 false positives).
 The footer shows `vm:/workspace`; `decisions.jsonl` records `sandbox` per
 decision.
 
+### 4.7 Fence mode (pi-fence active)
+pi-fence (`pi-fence.md`) runs every bash call under a kernel write sandbox
+whose writable set is the repo root + temp/cache. While it is `active` it
+publishes `globalThis[Symbol.for("pi-fence.zone")]` (frozen root list); in
+any other mode its bash tool refuses to run, so a present marker means the
+call *will* be fenced. The guard re-reads it per bash call and ignores it
+in sandbox mode (§4.6; gondolin and pi-fence are never co-installed).
+
+With the fence on, confirming a write the fence will refuse is pure noise:
+the user's Yes can't be honoured (no per-command bypass). So:
+
+| target | fenced verdict |
+|---|---|
+| resolved, outside every fence root and containing none | **allow** (fence refuses) |
+| resolved, a subtree containing a fence root (`find ~ -delete`) | confirm, as before |
+| unresolvable, overwrite verbs (redirect, `cp`/`mv` dest, `tee`, `install`, `ln`, `dd`, `truncate`, `xargs cp\|tee\|…`) | **allow**: stays inside the fence zone, can't remove a root |
+| unresolvable, delete verbs (`rm`, `rmdir`, `unlink`, `shred`, `mv` source, `find -delete`, `rsync --delete`, `xargs rm\|mv`) | confirm, as before: might name the cwd / a root |
+| roots, cwd, `.git`/`.jj`, `.pi`, cwd..repo-root band | unchanged |
+| publish, repo-loss, session scripts, jev | unchanged |
+
+What neither layer sees: a program (python, `go run`, `make`) destroying
+files *inside* the fence zone, and non-filesystem state (databases, cloud
+APIs). The jj op log / pre-confirm snapshot is the safety net for the
+former; gondolin for untrusted code.
+
+`decisions.jsonl` records `fence` (bool) and `fence_covered` (targets left
+to the fence) per bash decision. jev is not told about the fence (V5/V6:
+extra state fields caused false positives); watch its `writes_outside`
+raises on fenced sessions before changing that.
+
 ## 5. Class-3 precise scope (jj-aware)
 
 jj's op log makes nearly everything recoverable — hard-block only what
