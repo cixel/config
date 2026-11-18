@@ -1,6 +1,8 @@
 { darwin }:
 { config, pkgs, lib, ... }:
 {
+  imports = [ ./rex ];
+
   programs.home-manager.enable = true;
 
   # This value determines the Home Manager release that your
@@ -12,6 +14,11 @@
   # the Home Manager release notes for a list of state version
   # changes in each release.
   home.stateVersion = "23.05";
+
+  # Rex (like Terminal.app) starts shells through /usr/bin/login, which prints
+  # "Last login: ..." in every new pane unless this file exists. macOS only:
+  # on Linux it would also hide sshd's/login's motd and last-login banner.
+  home.file.".hushlogin" = lib.mkIf darwin { text = ""; };
 
   home.packages = with pkgs; [
     git
