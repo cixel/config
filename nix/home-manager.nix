@@ -1,7 +1,7 @@
-{ self, system, user, ... }:
+{ pins, system, user, ... }:
 let
   darwin = builtins.match ".*darwin" system != null;
-  hm = self.inputs.home-manager;
+  hm = pins.home-manager;
 in
 {
   imports = [

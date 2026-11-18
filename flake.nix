@@ -20,21 +20,47 @@
     hardware = {
       url = "github:NixOS/nixos-hardware/master";
     };
+
+    # Nixpkgs 26.11 dropped x86_64-darwin. Intel Macs stay on the 26.05
+    # stable branch (security fixes through end of 2026) with matching
+    # nix-darwin and home-manager releases. See `pinsFor` below.
+    nixpkgs-2605.url = "github:NixOS/nixpkgs/nixpkgs-26.05-darwin";
+    darwin-2605 = {
+      url = "github:nix-darwin/nix-darwin/nix-darwin-26.05";
+      inputs.nixpkgs.follows = "nixpkgs-2605";
+    };
+    home-manager-2605 = {
+      url = "github:nix-community/home-manager/release-26.05";
+      inputs.nixpkgs.follows = "nixpkgs-2605";
+    };
   };
 
   outputs = { self, nixpkgs, wsl, hardware, ... }:
     let
       lib = nixpkgs.lib;
 
+      # Per-system choice of nixpkgs/nix-darwin/home-manager. Modules should
+      # reach these through the `pins` specialArg, not `self.inputs`, so
+      # Intel Macs get the 26.05 set.
+      pinsFor = system:
+        if system == "x86_64-darwin" then {
+          nixpkgs = self.inputs.nixpkgs-2605;
+          darwin = self.inputs.darwin-2605;
+          home-manager = self.inputs.home-manager-2605;
+        } else {
+          inherit (self.inputs) nixpkgs darwin home-manager;
+        };
+
       mkHost = { system, user, modules }:
         let
           darwin = lib.strings.hasSuffix "darwin" system;
-          systemFunc = if darwin then self.inputs.darwin.lib.darwinSystem else lib.nixosSystem;
+          pins = pinsFor system;
+          systemFunc = if darwin then pins.darwin.lib.darwinSystem else pins.nixpkgs.lib.nixosSystem;
         in
         systemFunc {
           inherit system;
           specialArgs = {
-            inherit self system user;
+            inherit self system user pins;
           };
           modules = modules;
         };
