@@ -184,6 +184,12 @@ local function close_pane(ctx, _ev)
 end
 rex.bind(P .. "x", close_pane)
 prefix("shift+1", "pane.move_to_new_tab") -- ! (break-pane)
+-- f opens a new shell in a floating pane. F floats the current pane
+-- (Rex's default for that is alt+cmd+enter). m minimizes the floating pane
+-- (Rex's default is alt+cmd+m).
+prefix("f", "pane.new_floating")
+prefix("shift+f", "pane.float") -- F
+prefix("m", "pane.minimize_floating")
 prefix("o", "pane.focus_next")
 prefix(";", "pane.focus_previous")
 prefix("shift+e", "pane.balance") -- E (select-layout -E)
@@ -345,6 +351,10 @@ for key, dir in pairs({ h = "left", j = "down", k = "up", l = "right" }) do
     local _, err = rex.session.focus_direction({ direction = dir, wrap = false })
     return err == nil
   end)
+  -- Copy mode doesn't fall through to the function binding above, and a
+  -- mode binding must name an action. The terminal isn't reading keys in
+  -- copy mode, so there's no vim to pass through to.
+  rex.bind("copy/ctrl+" .. key, "pane.focus", { direction = dir })
 end
 
 ----------------------------------------------------------------------------
