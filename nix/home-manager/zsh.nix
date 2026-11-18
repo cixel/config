@@ -6,7 +6,6 @@
     KEYTIMEOUT = 1;
     #XDG_RUNTIME_DIR="/run/user/$(id -u)"; # https://github.com/Trundle/NixOS-WSL/issues/18
   };
-  initExtraBeforeCompInit = "";
   initContent = ''
     ### Paste utils and auto escaping URLs
     autoload -Uz bracketed-paste-magic
